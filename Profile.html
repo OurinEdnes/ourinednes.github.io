@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OCEADRA - Profile Page</title>
+    <link rel="icon" type="image/png" href="Resource/Icon.jpg">
+    
+    <!-- Fonts: Rajdhani for Sci-Fi UI, Fira Code for Terminal -->
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS for layout -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Three.js for 3D Rendering -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+    <!-- Google Model Viewer (Ini senjata rahasiamu, Oceadra!) -->
+    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.1.1/model-viewer.min.js"></script>
+
+    <style>
+        :root {
+            --ellen-maroon: #8e1b2e;
+            --ellen-light: #d83a56;
+            --ellen-dark: #4a0d17;
+            
+            /* Warna Neon Baru untuk Class Operator */
+            --neon-cyan: #00e5ff;
+            --neon-amber: #ffb703;
+            --neon-purple: #b100e8;
+            --neon-rose: #ff007f;
+
+            --bg-panel: #101014;
+            --bg-card: #15151a;
+            --text-main: #e2e8f0;
+            --text-muted: #8b99af;
+        }
+
+        /* Latar Belakang Baru: Tactical Hologram Abyss */
+        body {
+            margin: 0;
+            background-color: #050508;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(142, 27, 46, 0.15) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(0, 229, 255, 0.08) 0%, transparent 40%);
+            color: var(--text-main);
+            font-family: 'Rajdhani', sans-serif;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+            min-height: 100vh;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #030102; }
+        ::-webkit-scrollbar-thumb { background: var(--ellen-maroon); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--ellen-light); }
+
+        /* Arknights Angled Cut Style */
+        .ak-cut {
+            clip-path: polygon(0 0, calc(100% - 20px) 0, 100% 20px, 100% 100%, 20px 100%, 0 calc(100% - 20px));
+        }
+        .ak-cut-bottom {
+            clip-path: polygon(0 0, 100% 0, 100% calc(100% - 20px), calc(100% - 20px) 100%, 0 100%);
+        }
+
+        /* Scanline Overlay for aesthetic */
+        .scanlines {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            background-size: 100% 4px, 3px 100%;
+            pointer-events: none;
+            z-index: 9999;
+            opacity: 0.25;
+        }
+
+        #boot-screen {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background-color: #030102;
+            color: var(--ellen-light);
+            font-family: 'Fira Code', monospace;
+            padding: 20px;
+            z-index: 50;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            transition: opacity 1s ease-out;
+        }
+
+        .terminal-line { margin-bottom: 5px; font-size: 0.9rem; text-shadow: 0 0 5px var(--ellen-maroon); }
+        .cursor { display: inline-block; width: 10px; height: 1.2rem; background-color: var(--ellen-light); animation: blink 1s step-end infinite; }
+        @keyframes blink { 50% { opacity: 0; } }
+
+        #main-ui {
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 1.5s ease-in;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Sci-Fi Decorative Grid Background - Tactical Dots */
+        .bg-grid {
+            background-image: radial-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px);
+            background-size: 24px 24px;
+            background-position: 0 0;
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            z-index: -1;
+        }
+
+        /* Glitch Text Effect */
+        .glitch:hover {
+            animation: glitch-anim 0.2s linear infinite;
+            color: white;
+            text-shadow: 2px 0 var(--ellen-maroon), -2px 0 var(--neon-cyan);
+        }
+        @keyframes glitch-anim {
+            0% { transform: translate(0) }
+            20% { transform: translate(-2px, 2px) }
+            40% { transform: translate(-2px, -2px) }
+            60% { transform: translate(2px, 2px) }
+            80% { transform: translate(2px, -2px) }
+            100% { transform: translate(0) }
+        }
+
+        #canvas-container {
+            width: 100%;
+            height: 100%;
+            cursor: grab;
+        }
+        #canvas-container:active { cursor: grabbing; }
+
+        /* Neon Card Effect (Arsenal) */
+        .arsenal-card {
+            border-top: 3px solid var(--neon-color);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            background: linear-gradient(180deg, rgba(20, 20, 26, 0.9) 0%, rgba(10, 10, 14, 0.95) 100%);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            border-right: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .arsenal-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; height: 40px;
+            background: linear-gradient(to bottom, var(--neon-color), transparent);
+            opacity: 0.05;
+            transition: opacity 0.4s ease;
+        }
+        .arsenal-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 10px 30px -10px var(--neon-color);
+            z-index: 10;
+        }
+        .arsenal-card:hover::before {
+            opacity: 0.2;
+        }
+        .card-title {
+            color: white;
+            text-shadow: 0 0 8px var(--neon-color);
+            border-bottom-color: var(--neon-color);
+            opacity: 0.8;
+            transition: opacity 0.3s ease;
+        }
+        .arsenal-card:hover .card-title {
+            opacity: 1;
+        }
+
+        .tech-tag {
+            display: inline-block;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 4px 12px;
+            font-size: 0.8rem;
+            font-family: 'Fira Code', monospace;
+            background: rgba(0, 0, 0, 0.3);
+            color: var(--text-muted);
+            transition: all 0.3s ease;
+            clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px));
+        }
+        .arsenal-card:hover .tech-tag:hover {
+            background: var(--neon-color);
+            color: #000;
+            font-weight: 600;
+            border-color: var(--neon-color);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px var(--neon-color);
+        }
+
+        /* Interactive Archive Log */
+        .archive-item {
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border-bottom: 2px solid transparent;
+            background-color: var(--bg-card);
+        }
+        .archive-item:hover {
+            transform: translateX(15px);
+            background-color: rgba(142, 27, 46, 0.1);
+            border-bottom: 2px solid var(--ellen-light);
+            box-shadow: 0 10px 20px -10px var(--ellen-light);
+        }
+
+        .timeline-dot {
+            width: 12px;
+            height: 12px;
+            background-color: var(--ellen-light);
+            border: 2px solid #050508;
+            box-shadow: 0 0 10px var(--ellen-maroon);
+            position: absolute;
+            left: -6px;
+            top: 6px;
+            transform: rotate(45deg);
+        }
+        
+        /* CSS Khusus untuk efek Hologram pada Model-Viewer */
+        #ellen-model {
+            /* Bikin dia agak transparan (ghostly) */
+            opacity: 0.8;
+            /* Tambahin efek glow ke model viewernya (bukan model 3d nya) */
+            filter: drop-shadow(0 0 10px var(--ellen-light)) drop-shadow(0 0 20px var(--ellen-light));
+            /* Blend mode biar nyatu sama background gelap */
+            mix-blend-mode: screen; 
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="scanlines"></div>
+
+    <!-- BOOT SCREEN -->
+    <div id="boot-screen">
+        <div id="terminal-content"></div>
+        <div class="mt-4"><span id="active-typing"></span><span class="cursor"></span></div>
+        <div class="absolute bottom-5 right-5 text-sm text-gray-500 cursor-pointer hover:text-white" onclick="skipBoot()">[ CLICK TO SKIP BOOT ]</div>
+    </div>
+
+    <!-- MAIN UI -->
+    <div id="main-ui" class="relative">
+        <div class="bg-grid"></div>
+
+        <!-- Header / Nav -->
+        <header class="w-full border-b border-[#8e1b2e40] bg-[#050508aa] backdrop-blur-md sticky top-0 z-40">
+            <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+                <div class="flex items-center gap-4">
+                    <div class="w-10 h-10 bg-[var(--ellen-maroon)] ak-cut flex items-center justify-center font-bold text-xl text-white shadow-[0_0_10px_#8e1b2e]">O</div>
+                    <div>
+                        <h1 class="text-2xl font-bold tracking-widest text-[var(--ellen-light)]">OCEADRA<span class="text-white">_SYS</span></h1>
+                        <p class="text-xs text-[var(--ellen-maroon)] tracking-widest font-mono">OP_ID: OCEADRA</p>
+                    </div>
+                </div>
+                <nav class="hidden md:flex gap-8 text-sm tracking-widest font-bold">
+                    <a href="#overview" class="hover:text-[var(--ellen-light)] transition-colors hover:drop-shadow-[0_0_5px_#d83a56]">OVERVIEW</a>
+                    <a href="#arsenal" class="hover:text-[var(--neon-cyan)] transition-colors hover:drop-shadow-[0_0_5px_#00e5ff]">ARSENAL</a>
+                    <a href="#records" class="hover:text-[var(--ellen-light)] transition-colors hover:drop-shadow-[0_0_5px_#d83a56]">COMBAT RECORDS</a>
+                    <a href="#archives" class="hover:text-[var(--ellen-light)] transition-colors hover:drop-shadow-[0_0_5px_#d83a56]">ARCHIVES</a>
+                </nav>
+            </div>
+        </header>
+
+        <!-- Main Content Grid -->
+        <main class="max-w-7xl mx-auto px-6 py-12 flex-grow w-full space-y-32">
+            
+            <!-- Hero Section -->
+            <section id="overview" class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center pt-8">
+                <!-- Left: Text & Info -->
+                <div class="space-y-6 relative z-10">
+                    <div class="absolute -left-6 top-0 w-1 h-full bg-gradient-to-b from-[var(--ellen-maroon)] to-transparent opacity-50"></div>
+                    
+                    <div class="inline-block border border-[var(--ellen-maroon)] text-[var(--ellen-light)] px-3 py-1 text-xs font-mono mb-2 bg-[#8e1b2e20] shadow-[0_0_10px_rgba(142,27,46,0.3)]">
+                        PROXY LEVEL: INFORMATICS STUDENT
+                    </div>
+                    <h2 class="text-5xl lg:text-7xl font-bold uppercase leading-none tracking-tighter drop-shadow-lg">
+                        Tech <span class="text-[var(--ellen-maroon)] glitch">Proxy</span><br>
+                        Oceadra
+                    </h2>
+                    <p class="text-[var(--text-muted)] text-lg max-w-lg leading-relaxed mt-4 bg-[#0a0a0e80] backdrop-blur-sm p-4 rounded-xl border-l-2 border-[var(--neon-cyan)] shadow-[0_4px_20px_rgba(0,229,255,0.05)]">
+                        Mahasiswa Informatika Universitas Ahmad Dahlan (UAD) yang bersemangat dan inovatif. Memiliki ketertarikan tinggi pada <span class="text-[var(--neon-cyan)] font-bold drop-shadow-[0_0_5px_#00e5ff]">Computer Vision</span> dan <span class="text-[var(--ellen-light)] font-bold drop-shadow-[0_0_5px_#d83a56]">Software Development</span>. Selalu antusias memecahkan masalah melalui barisan kode dan mengeksekusi *bugs* dengan presisi!
+                    </p>
+                    
+                    <!-- Quick Stats -->
+                    <div class="flex gap-4 pt-4">
+                        <a href="https://github.com/OurinEdnes/" target="_blank" class="bg-[var(--ellen-maroon)] hover:bg-[var(--ellen-light)] text-white px-6 py-3 font-bold ak-cut transition-all flex items-center gap-2 hover:shadow-[0_0_15px_#d83a56]">
+                            <span>GITHUB LINK</span>
+                        </a>
+                        <a href="mailto:Banunajieh@gmail.com" class="bg-transparent border border-[var(--neon-cyan)] text-[var(--neon-cyan)] hover:bg-[#00e5ff20] px-6 py-3 font-bold ak-cut transition-all hover:shadow-[inset_0_0_10px_#00e5ff]">
+                            CONTACT ME
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Right: 3D Canvas Switcher Container -->
+                <div class="relative w-full flex justify-center items-center h-[400px]">
+                    <!-- Decorative framing -->
+                    <div class="absolute inset-0 border border-[#8e1b2e30] ak-cut pointer-events-none shadow-[inset_0_0_30px_rgba(142,27,46,0.1)] z-10"></div>
+                    <div class="absolute top-[-10px] left-[-10px] w-5 h-5 border-t-2 border-l-2 border-[var(--neon-cyan)] drop-shadow-[0_0_5px_#00e5ff] z-10"></div>
+                    <div class="absolute bottom-[-10px] right-[-10px] w-5 h-5 border-b-2 border-r-2 border-[var(--ellen-maroon)] drop-shadow-[0_0_5px_#8e1b2e] z-10"></div>
+                    
+                    <div class="absolute top-4 left-4 text-xs font-mono text-[var(--neon-cyan)] pointer-events-none z-20 animate-pulse">
+                        [ DRAG TO ROTATE ]
+                    </div>
+
+                    <!-- Tombol Ganti Model -->
+                    <button id="btn-switch-model" class="absolute top-4 right-4 bg-[#0a0a0eaa] border border-[var(--neon-cyan)] text-[var(--neon-cyan)] text-xs font-mono px-3 py-1 hover:bg-[var(--neon-cyan)] hover:text-black transition-all z-30 cursor-pointer shadow-[0_0_10px_rgba(0,229,255,0.2)]">
+                        SWITCH MODEL // REAPER UAV
+                    </button>
+                    
+                    <!-- 3D AREA 1: Three.js Canvas Container (Untuk UAV) -->
+                    <div id="canvas-container" class="absolute inset-0 w-full h-full ak-cut bg-[#050508aa] backdrop-blur-sm z-0"></div>
+
+                    <!-- 3D AREA 2: Model-Viewer (Untuk Senjata Ellen Joe) - Disembunyikan dulu (class "hidden") -->
+                    <!-- PERHATIKAN ATRIBUT BARU DI SINI: orientation, exposure, auto-rotate -->
+                    <model-viewer
+                        id="ellen-model"
+                        src="Resource/weapon-ellen-joe-by-ghost73/source/weapon-ellen-joe/weapon.ellen.joe.gltf"
+                        alt="3D model Senjata Ellen Joe"
+                        auto-rotate 
+                        rotation-per-second="20deg" 
+                        camera-controls
+                        camera-orbit="0deg 90deg auto" 
+                        orientation="-90deg -60deg 0deg" 
+                        exposure="2" 
+                        shadow-intensity="0" 
+                        environment-image="neutral"
+                        class="absolute inset-0 w-full h-full ak-cut hidden z-0"
+                        style="background-color: transparent;">
+                    </model-viewer>
+                </div>
+            </section>
+
+            <!-- Skills / Arsenal Section -->
+            <section id="arsenal">
+                <div class="flex items-center gap-4 mb-10">
+                    <h3 class="text-3xl font-bold uppercase tracking-wider text-white drop-shadow-[0_0_8px_rgba(255,255,255,0.2)]">Operator <span class="text-[var(--ellen-maroon)]">Arsenal</span></h3>
+                    <div class="flex-grow h-[1px] bg-gradient-to-r from-[var(--ellen-maroon)] to-transparent"></div>
+                    <div class="text-xs font-mono text-[var(--text-muted)]">SYS.CAPABILITIES</div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <!-- Card 1: Cyber Cyan (Programming) -->
+                    <div class="p-6 ak-cut arsenal-card" style="--neon-color: var(--neon-cyan);">
+                        <h4 class="font-bold mb-4 font-mono text-sm border-b pb-2 card-title">01 // PROG. & AI</h4>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="tech-tag">Java</span>
+                            <span class="tech-tag">C++</span>
+                            <span class="tech-tag">Python (Flask)</span>
+                            <span class="tech-tag">PHP</span>
+                            <span class="tech-tag">MediaPipe</span>
+                            <span class="tech-tag">OpenCV</span>
+                            <span class="tech-tag">JavaCV</span>
+                        </div>
+                    </div>
+                    <!-- Card 2: Warning Amber (Hardware) -->
+                    <div class="p-6 ak-cut arsenal-card" style="--neon-color: var(--neon-amber);">
+                        <h4 class="font-bold mb-4 font-mono text-sm border-b pb-2 card-title">02 // HARDWARE</h4>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="tech-tag">Raspberry Pi</span>
+                            <span class="tech-tag">Network Config</span>
+                            <span class="tech-tag">Interfacing</span>
+                            <span class="tech-tag">UAV Comms</span>
+                        </div>
+                    </div>
+                    <!-- Card 3: Void Purple (Database) -->
+                    <div class="p-6 ak-cut arsenal-card" style="--neon-color: var(--neon-purple);">
+                        <h4 class="font-bold mb-4 font-mono text-sm border-b pb-2 card-title">03 // DATABASE</h4>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="tech-tag">SQL</span>
+                            <span class="tech-tag">MariaDB</span>
+                            <span class="tech-tag">SQLite</span>
+                            <span class="tech-tag">NoSQL</span>
+                            <span class="tech-tag">MongoDB</span>
+                        </div>
+                    </div>
+                    <!-- Card 4: Ellen Rose (Design) -->
+                    <div class="p-6 ak-cut arsenal-card" style="--neon-color: var(--neon-rose);">
+                        <h4 class="font-bold mb-4 font-mono text-sm border-b pb-2 card-title">04 // DESIGN & MGMT</h4>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="tech-tag">UI/UX Design</span>
+                            <span class="tech-tag">Figma</span>
+                            <span class="tech-tag">DaVinci Resolve</span>
+                            <span class="tech-tag">Team Leadership</span>
+                            <span class="tech-tag">Public Speaking</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Combat Records / Experience Section -->
+            <section id="records">
+                <div class="flex items-center gap-4 mb-10">
+                    <h3 class="text-3xl font-bold uppercase tracking-wider text-white">Combat <span class="text-[var(--ellen-maroon)]">Records</span></h3>
+                    <div class="flex-grow h-[1px] bg-gradient-to-r from-[var(--ellen-maroon)] to-transparent"></div>
+                    <div class="text-xs font-mono text-[var(--text-muted)]">OP.EXPERIENCE</div>
+                </div>
+
+                <!-- Showcase Video Card (Primary Experience) -->
+                <div class="bg-[var(--bg-panel)] ak-cut-bottom p-1 mb-12 shadow-[0_10px_30px_-15px_#8e1b2e]">
+                    <div class="bg-[#050508] p-6 ak-cut-bottom border border-[#8e1b2e30]">
+                        <div class="flex flex-col lg:flex-row gap-8">
+                            <!-- Video Wrapper -->
+                            <div class="w-full lg:w-3/5 relative group cursor-pointer">
+                                <div class="absolute -inset-1 bg-gradient-to-r from-[#d83a56] to-[#00e5ff] blur opacity-20 group-hover:opacity-60 transition duration-1000"></div>
+                                <div class="relative w-full aspect-video bg-black border border-[var(--ellen-maroon)] overflow-hidden">
+                                    <div class="absolute top-2 right-2 text-red-500 text-xs font-mono z-10 bg-black/50 px-2 py-1 border border-red-500 animate-pulse">REC ⏺</div>
+                                    <div class="absolute bottom-2 left-2 text-[var(--ellen-light)] text-xs font-mono z-10 drop-shadow-md">SYS.UAV_VISION_ACTIVE</div>
+                                    
+                                    <!-- Video UAV -->
+                                    <video class="w-full h-full object-cover" controls muted poster="https://placehold.co/1280x720/101014/8e1b2e?text=UAV+Object+Detection+Feed">
+                                        <source src="Resource/YoloV8 UAV.mp4" type="video/mp4">
+                                        Browser error. System failure.
+                                    </video>
+                                </div>
+                            </div>
+
+                            <!-- Video Info (Tim KRTI) -->
+                            <div class="w-full lg:w-2/5 flex flex-col justify-center">
+                                <div class="inline-block bg-[var(--ellen-maroon)] text-white text-xs font-bold px-2 py-1 mb-4 w-max ak-cut font-mono shadow-[0_0_10px_#8e1b2e]">
+                                    [ 2025 ] // KRTI REGIONAL
+                                </div>
+                                <h4 class="text-2xl font-bold mb-2 text-white">UAV Network & Comms Integration</h4>
+                                <p class="text-[var(--ellen-light)] text-sm mb-4 font-bold drop-shadow-[0_0_2px_#d83a56]">Tim Universitas - Kontes Robot Terbang Indonesia (KRTI)</p>
+                                <p class="text-[var(--text-muted)] text-sm mb-6 leading-relaxed">
+                                    Bertanggung jawab penuh atas konfigurasi, manajemen jaringan, dan konektivitas pada perangkat Raspberry Pi di wahana udara nirawak (UAV). Mengamankan integrasi data dan memastikan transmisi komunikasi stabil secara *real-time* antara sistem robot terbang dan stasiun kendali darat.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Secondary Records List -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <!-- A.R.C.S Project -->
+                    <div class="bg-[var(--bg-card)] p-6 ak-cut border-l-4 border-[var(--neon-cyan)] relative hover:bg-[#0a0a0e] transition-colors group">
+                        <div class="absolute top-0 right-0 bg-[#00e5ff20] text-[var(--neon-cyan)] text-xs px-2 py-1 font-mono group-hover:bg-[var(--neon-cyan)] group-hover:text-black transition-colors">2025</div>
+                        <h4 class="text-xl font-bold text-white mb-2 group-hover:text-[var(--neon-cyan)] transition-colors">Proyek A.R.C.S</h4>
+                        <p class="text-[var(--ellen-light)] text-sm mb-4 font-mono">Software Developer (Aerial Rescue & Color Search)</p>
+                        <p class="text-[var(--text-muted)] text-sm leading-relaxed">
+                            Mengembangkan purwarupa perangkat lunak berbasis Java untuk mendukung operasi penyelamatan (SAR). Mengimplementasikan algoritma deteksi warna HSV dan pelacakan objek secara *real-time* menggunakan simulasi input kamera.
+                        </p>
+                    </div>
+
+                    <!-- MediaPipe Project -->
+                    <div class="bg-[var(--bg-card)] p-6 ak-cut border-l-4 border-[var(--neon-amber)] relative hover:bg-[#0a0a0e] transition-colors group">
+                        <div class="absolute top-0 right-0 bg-[#ffb70320] text-[var(--neon-amber)] text-xs px-2 py-1 font-mono group-hover:bg-[var(--neon-amber)] group-hover:text-black transition-colors">2026 - PRESENT</div>
+                        <h4 class="text-xl font-bold text-white mb-2 group-hover:text-[var(--neon-amber)] transition-colors">HCI Hand-Landmark System</h4>
+                        <p class="text-[var(--ellen-light)] text-sm mb-4 font-mono">Software Developer</p>
+                        <p class="text-[var(--text-muted)] text-sm leading-relaxed">
+                            Merancang sistem interaksi manusia-komputer berbasis pengenalan gerakan tangan. Mengimplementasikan arsitektur MediaPipe untuk mendeteksi *hand-landmark* akurat guna optimasi kontrol kursor dan *virtual keyboard*.
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Education & Training (Archives) -->
+            <section id="archives">
+                <div class="flex items-center gap-4 mb-10">
+                    <h3 class="text-3xl font-bold uppercase tracking-wider text-white">Data <span class="text-[var(--ellen-maroon)]">Archives</span></h3>
+                    <div class="flex-grow h-[1px] bg-gradient-to-r from-[var(--ellen-maroon)] to-transparent"></div>
+                    <div class="text-xs font-mono text-[var(--text-muted)]">EDU.LOGS</div>
+                </div>
+
+                <div class="relative pl-6 border-l-2 border-[#8e1b2e40] space-y-8">
+                    <!-- UAD -->
+                    <div class="relative group">
+                        <div class="timeline-dot group-hover:scale-125 group-hover:bg-[var(--neon-cyan)] group-hover:border-[var(--neon-cyan)] group-hover:shadow-[0_0_15px_#00e5ff] transition-all"></div>
+                        <div class="p-5 ak-cut ml-4 archive-item">
+                            <span class="text-[var(--ellen-maroon)] text-sm font-mono font-bold block mb-1 group-hover:text-[var(--neon-cyan)] transition-colors">CURRENT STATUS</span>
+                            <h4 class="text-xl font-bold text-white">Universitas Ahmad Dahlan</h4>
+                            <p class="text-[var(--text-muted)] group-hover:text-gray-300 transition-colors">Jurusan Informatika</p>
+                        </div>
+                    </div>
+
+                    <!-- Courses -->
+                    <div class="relative group">
+                        <div class="timeline-dot group-hover:scale-125 group-hover:bg-[var(--neon-cyan)] group-hover:border-[var(--neon-cyan)] group-hover:shadow-[0_0_15px_#00e5ff] transition-all"></div>
+                        <div class="p-5 ak-cut ml-4 archive-item">
+                            <span class="text-[var(--ellen-maroon)] text-sm font-mono font-bold block mb-1 group-hover:text-[var(--neon-cyan)] transition-colors">SPECIAL TRAINING LOGS</span>
+                            <ul class="text-[var(--text-muted)] space-y-2 mt-2 group-hover:text-gray-300 transition-colors">
+                                <li class="flex items-start gap-2">
+                                    <span class="text-[var(--ellen-light)] mt-1 drop-shadow-[0_0_3px_#d83a56]">▹</span> 
+                                    <span>Pelatihan Public Speaking HMIF - <strong class="text-white">Predikat: The Best Student</strong> (2024)</span>
+                                </li>
+                                <li class="flex items-start gap-2">
+                                    <span class="text-[var(--ellen-light)] mt-1 drop-shadow-[0_0_3px_#d83a56]">▹</span> 
+                                    <span>Pelatihan Bahasa Inggris - Mr. Language Pare (2023)</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+
+        <!-- Footer -->
+        <footer class="w-full border-t border-[#8e1b2e40] bg-[#030102] py-8 text-center text-xs text-[var(--text-muted)] font-mono mt-auto z-10 relative">
+            <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center px-6">
+                <p>© 2026 OCEADRA OS. ALL RIGHTS RESERVED. // YOGYAKARTA, ID.</p>
+                <div class="flex gap-4 mt-4 md:mt-0">
+                    <a href="https://github.com/OurinEdnes/" target="_blank" class="hover:text-[var(--ellen-light)] transition-colors hover:drop-shadow-[0_0_5px_#d83a56]">GITHUB</a>
+                    <span class="text-[var(--ellen-maroon)]">|</span>
+                    <a href="mailto:banunajieh@gmail.com" class="hover:text-[var(--ellen-light)] transition-colors hover:drop-shadow-[0_0_5px_#d83a56]">EMAIL</a>
+                    <span class="text-[var(--ellen-maroon)]">|</span>
+                    <span class="hover:text-[var(--neon-cyan)] transition-colors drop-shadow-[0_0_2px_#00e5ff]">+62 859 6591-1133</span>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        // ==========================================
+        // 1. TERMINAL BOOT SEQUENCE LOGIC
+        // ==========================================
+        const bootScreen = document.getElementById('boot-screen');
+        const mainUI = document.getElementById('main-ui');
+        const terminalContent = document.getElementById('terminal-content');
+        const activeTyping = document.getElementById('active-typing');
+
+        const bootSequence = [
+            "INIT OCEADRA_OS...",
+            "Loading Kernel Modules: [OK]",
+            "Mounting VFS: [OK]",
+            "Establishing connection to Victoria Proxy Server...",
+            "Checking Informatics Modules: Java, Python, C++ [LOADED]",
+            "Initializing Computer Vision Core: OpenCV & MediaPipe [OK]",
+            "Bypassing firewall protocols...",
+            "Decrypting Operator Profile: OCEADRA",
+            "Access Granted. Welcome back, Proxy Oceadra."
+        ];
+
+        let lineIndex = 0;
+        let charIndex = 0;
+        let isBooting = true;
+        let typingSpeed = 25; // ms per char
+
+        function typeLine() {
+            if (!isBooting) return;
+
+            if (lineIndex < bootSequence.length) {
+                const currentLine = bootSequence[lineIndex];
+                
+                if (charIndex < currentLine.length) {
+                    activeTyping.innerHTML += currentLine.charAt(charIndex);
+                    charIndex++;
+                    setTimeout(typeLine, typingSpeed);
+                } else {
+                    const div = document.createElement('div');
+                    div.className = 'terminal-line';
+                    div.innerHTML = activeTyping.innerHTML;
+                    terminalContent.appendChild(div);
+                    
+                    activeTyping.innerHTML = '';
+                    charIndex = 0;
+                    lineIndex++;
+                    
+                    setTimeout(typeLine, Math.random() * 150 + 50);
+                }
+            } else {
+                setTimeout(endBoot, 600);
+            }
+        }
+
+        function endBoot() {
+            if(!isBooting) return;
+            isBooting = false;
+            bootScreen.style.opacity = '0';
+            setTimeout(() => {
+                bootScreen.style.display = 'none';
+                mainUI.style.visibility = 'visible';
+                mainUI.style.opacity = '1';
+                initThreeJS(); 
+            }, 800);
+        }
+
+        function skipBoot() {
+            if(isBooting) endBoot();
+        }
+
+        window.onload = () => {
+            setTimeout(typeLine, 300);
+        };
+
+
+        // ==========================================
+        // 2. THREE.JS & MODEL-VIEWER HYBRID LOGIC
+        // ==========================================
+
+        function initThreeJS() {
+            const container = document.getElementById('canvas-container');
+            const ellenModel = document.getElementById('ellen-model');
+            if(!container) return;
+            
+            const scene = new THREE.Scene();
+            const camera = new THREE.PerspectiveCamera(45, container.clientWidth / container.clientHeight, 0.1, 1000);
+            camera.position.z = 5; 
+
+            const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+            renderer.setSize(container.clientWidth, container.clientHeight);
+            renderer.setPixelRatio(window.devicePixelRatio);
+            container.appendChild(renderer.domElement);
+
+            const coreGroup = new THREE.Group();
+
+            // Material
+            const innerMat = new THREE.MeshStandardMaterial({ color: 0x8e1b2e, roughness: 0.2, metalness: 0.9, flatShading: true });
+            const outerMat = new THREE.MeshBasicMaterial({ color: 0x00e5ff, wireframe: true, transparent: true, opacity: 0.4 });
+
+            function createMeshPart(geo, matSolid, matWire, wireScale = 1.05) {
+                const group = new THREE.Group();
+                group.add(new THREE.Mesh(geo, matSolid));
+                const wire = new THREE.Mesh(geo, matWire);
+                wire.scale.set(wireScale, wireScale, wireScale);
+                group.add(wire);
+                return group;
+            }
+
+            // =====================================
+            // MODEL 1: UAV (REAPER STYLE) - PROCEDURAL (Three.js)
+            // =====================================
+            const uavGroup = new THREE.Group();
+            
+            // Badan Utama Pesawat
+            const bodyGeo = new THREE.CylinderGeometry(0.15, 0.1, 2.5, 16);
+            const body = createMeshPart(bodyGeo, innerMat, outerMat, 1.05);
+            body.rotation.z = Math.PI / 2;
+            uavGroup.add(body);
+
+            // Kubah Kepala Depan
+            const noseGeo = new THREE.SphereGeometry(0.25, 16, 16);
+            const nose = createMeshPart(noseGeo, innerMat, outerMat, 1.05);
+            nose.position.set(1.2, 0.05, 0);
+            nose.scale.set(1.5, 1, 1);
+            uavGroup.add(nose);
+
+            // Bola Sensor
+            const sensorGeo = new THREE.SphereGeometry(0.1, 16, 16);
+            const sensor = createMeshPart(sensorGeo, innerMat, outerMat, 1.1);
+            sensor.position.set(1.0, -0.15, 0);
+            uavGroup.add(sensor);
+
+            // Sayap
+            const wingGeo = new THREE.BoxGeometry(0.4, 0.04, 3.5);
+            const wing = createMeshPart(wingGeo, innerMat, outerMat, 1.05);
+            wing.position.set(0.2, 0, 0);
+            uavGroup.add(wing);
+
+            // Ekor V
+            const tailGeo = new THREE.BoxGeometry(0.3, 0.04, 0.8);
+            const tail1 = createMeshPart(tailGeo, innerMat, outerMat, 1.05);
+            tail1.position.set(-1.1, -0.2, 0.3);
+            tail1.rotation.x = Math.PI / 4;
+            uavGroup.add(tail1);
+
+            const tail2 = createMeshPart(tailGeo, innerMat, outerMat, 1.05);
+            tail2.position.set(-1.1, -0.2, -0.3);
+            tail2.rotation.x = -Math.PI / 4;
+            uavGroup.add(tail2);
+
+            // Ekor Vertikal
+            const vTailGeo = new THREE.BoxGeometry(0.3, 0.5, 0.04);
+            const vTail = createMeshPart(vTailGeo, innerMat, outerMat, 1.05);
+            vTail.position.set(-1.1, 0.25, 0);
+            uavGroup.add(vTail);
+
+            // Baling-baling
+            const propGroup = new THREE.Group();
+            const propGeo = new THREE.BoxGeometry(0.05, 0.8, 0.05);
+            const prop1 = createMeshPart(propGeo, innerMat, outerMat, 1.1);
+            const prop2 = createMeshPart(propGeo, innerMat, outerMat, 1.1);
+            prop2.rotation.x = Math.PI / 2;
+            propGroup.add(prop1);
+            propGroup.add(prop2);
+            propGroup.position.set(-1.3, 0, 0);
+            uavGroup.add(propGroup);
+
+            uavGroup.userData.propeller = propGroup;
+            uavGroup.rotation.y = Math.PI / 4; 
+            uavGroup.rotation.z = Math.PI / 12; 
+
+            coreGroup.add(uavGroup);
+            scene.add(coreGroup);
+
+            // =====================================
+            // PENCAHAYAAN
+            // =====================================
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.4);
+            scene.add(ambientLight);
+            const pointLight = new THREE.PointLight(0xff4d6d, 2.5, 50);
+            pointLight.position.set(5, 5, 5);
+            scene.add(pointLight);
+            const pointLightCyan = new THREE.PointLight(0x00e5ff, 2, 50);
+            pointLightCyan.position.set(-5, -5, -5);
+            scene.add(pointLightCyan);
+
+            // =====================================
+            // LOGIKA TOMBOL GANTI MODEL (HYBRID)
+            // =====================================
+            let currentModel = 'UAV'; 
+            const btnSwitch = document.getElementById('btn-switch-model');
+
+            btnSwitch.addEventListener('click', () => {
+                if (currentModel === 'UAV') {
+                    // Sembunyikan Three.js (UAV), Tampilkan Model-Viewer (Ellen)
+                    container.classList.add('hidden');
+                    ellenModel.classList.remove('hidden');
+                    
+                    currentModel = 'ELLEN';
+                    btnSwitch.innerHTML = "SWITCH MODEL // ELLEN'S WEAPON";
+                    btnSwitch.style.borderColor = "var(--ellen-light)";
+                    btnSwitch.style.color = "var(--ellen-light)";
+                } else {
+                    // Sembunyikan Model-Viewer (Ellen), Tampilkan Three.js (UAV)
+                    ellenModel.classList.add('hidden');
+                    container.classList.remove('hidden');
+                    
+                    currentModel = 'UAV';
+                    btnSwitch.innerHTML = "SWITCH MODEL // REAPER UAV";
+                    btnSwitch.style.borderColor = "var(--neon-cyan)";
+                    btnSwitch.style.color = "var(--neon-cyan)";
+                }
+            });
+
+            // =====================================
+            // INTERAKSI MOUSE & ANIMASI THREE.JS
+            // =====================================
+            let isDragging = false;
+            let previousMousePosition = { x: 0, y: 0 };
+
+            container.addEventListener('mousedown', (e) => { isDragging = true; });
+            container.addEventListener('mousemove', (e) => {
+                if (isDragging) {
+                    const deltaMove = {
+                        x: e.offsetX - previousMousePosition.x,
+                        y: e.offsetY - previousMousePosition.y
+                    };
+                    coreGroup.rotation.y += deltaMove.x * 0.01;
+                    coreGroup.rotation.x += deltaMove.y * 0.01;
+                }
+                previousMousePosition = { x: e.offsetX, y: e.offsetY };
+            });
+            window.addEventListener('mouseup', () => { isDragging = false; });
+            
+            container.addEventListener('touchstart', (e) => {
+                isDragging = true;
+                previousMousePosition = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+            }, {passive: true});
+            container.addEventListener('touchmove', (e) => {
+                if (isDragging) {
+                    const deltaMove = {
+                        x: e.touches[0].clientX - previousMousePosition.x,
+                        y: e.touches[0].clientY - previousMousePosition.y
+                    };
+                    coreGroup.rotation.y += deltaMove.x * 0.01;
+                    coreGroup.rotation.x += deltaMove.y * 0.01;
+                    previousMousePosition = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+                }
+            }, {passive: true});
+            window.addEventListener('touchend', () => { isDragging = false; });
+
+            function animate() {
+                requestAnimationFrame(animate);
+                
+                // Animasi UAV muter-muter aja, karena Ellen sekarang diurus sama <model-viewer>
+                if (!isDragging) {
+                    uavGroup.rotation.y -= 0.005;
+                }
+                if (uavGroup.userData.propeller) {
+                    uavGroup.userData.propeller.rotation.x -= 0.2; 
+                }
+                
+                renderer.render(scene, camera);
+            }
+
+            window.addEventListener('resize', () => {
+                if(container.clientWidth > 0) {
+                    camera.aspect = container.clientWidth / container.clientHeight;
+                    camera.updateProjectionMatrix();
+                    renderer.setSize(container.clientWidth, container.clientHeight);
+                }
+            });
+
+            animate();
+        }
+    </script>
+</body>
+</html>
