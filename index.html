@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OCEADRA - Profile Page</title>
-    <link rel="icon" type="image/png" href="Resource/Icon.jpg">
+    <title>OCEADRA_OS // ENDFIELD_UI</title>
     
     <!-- Fonts: Rajdhani for Sci-Fi UI, Fira Code for Terminal -->
     <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -47,6 +46,7 @@
             font-family: 'Rajdhani', sans-serif;
             overflow-x: hidden;
             scroll-behavior: smooth;
+            scroll-padding-top: 90px;
             min-height: 100vh;
         }
 
@@ -217,12 +217,19 @@
         
         /* CSS Khusus untuk efek Hologram pada Model-Viewer */
         #ellen-model {
-            /* Bikin dia agak transparan (ghostly) */
             opacity: 0.8;
-            /* Tambahin efek glow ke model viewernya (bukan model 3d nya) */
             filter: drop-shadow(0 0 10px var(--ellen-light)) drop-shadow(0 0 20px var(--ellen-light));
-            /* Blend mode biar nyatu sama background gelap */
             mix-blend-mode: screen; 
+        }
+
+        /* Language Toggle Dropdown CSS */
+        .lang-dropdown {
+            transform-origin: top;
+            transform: scaleY(0);
+            transition: transform 0.2s ease-out;
+        }
+        .lang-container:hover .lang-dropdown {
+            transform: scaleY(1);
         }
 
     </style>
@@ -252,12 +259,29 @@
                         <p class="text-xs text-[var(--ellen-maroon)] tracking-widest font-mono">OP_ID: OCEADRA</p>
                     </div>
                 </div>
-                <nav class="hidden md:flex gap-8 text-sm tracking-widest font-bold">
-                    <a href="#overview" class="hover:text-[var(--ellen-light)] transition-colors hover:drop-shadow-[0_0_5px_#d83a56]">OVERVIEW</a>
-                    <a href="#arsenal" class="hover:text-[var(--neon-cyan)] transition-colors hover:drop-shadow-[0_0_5px_#00e5ff]">ARSENAL</a>
-                    <a href="#records" class="hover:text-[var(--ellen-light)] transition-colors hover:drop-shadow-[0_0_5px_#d83a56]">COMBAT RECORDS</a>
-                    <a href="#archives" class="hover:text-[var(--ellen-light)] transition-colors hover:drop-shadow-[0_0_5px_#d83a56]">ARCHIVES</a>
-                </nav>
+                
+                <!-- Navbar Container (Menu + Lang Toggle) -->
+                <div class="flex items-center gap-8">
+                    <nav class="hidden md:flex gap-8 text-sm tracking-widest font-bold">
+                        <a href="#overview" data-i18n="nav-overview" class="hover:text-[var(--ellen-light)] transition-colors hover:drop-shadow-[0_0_5px_#d83a56]">OVERVIEW</a>
+                        <a href="#arsenal" data-i18n="nav-arsenal" class="hover:text-[var(--neon-cyan)] transition-colors hover:drop-shadow-[0_0_5px_#00e5ff]">ARSENAL</a>
+                        <a href="#records" data-i18n="nav-records" class="hover:text-[var(--ellen-light)] transition-colors hover:drop-shadow-[0_0_5px_#d83a56]">COMBAT RECORDS</a>
+                        <a href="#archives" data-i18n="nav-archives" class="hover:text-[var(--ellen-light)] transition-colors hover:drop-shadow-[0_0_5px_#d83a56]">ARCHIVES</a>
+                    </nav>
+
+                    <!-- Language Switcher Dropdown -->
+                    <div class="lang-container relative z-50">
+                        <button class="flex items-center gap-2 text-xs font-mono text-[var(--neon-cyan)] border border-[var(--neon-cyan)] px-3 py-1 bg-[#0a0a0eaa] hover:bg-[var(--neon-cyan)] hover:text-black transition-colors ak-cut">
+                            <span id="current-lang">ID</span>
+                            <span>▼</span>
+                        </button>
+                        <div class="lang-dropdown absolute right-0 mt-1 w-24 bg-[var(--bg-card)] border border-[var(--neon-cyan)] flex flex-col ak-cut shadow-[0_0_15px_rgba(0,229,255,0.2)]">
+                            <button onclick="setLanguage('id')" class="text-left px-3 py-2 text-xs font-mono text-[var(--neon-cyan)] hover:bg-[var(--neon-cyan)] hover:text-black transition-colors">INDONESIA</button>
+                            <button onclick="setLanguage('en')" class="text-left px-3 py-2 text-xs font-mono text-[var(--neon-cyan)] hover:bg-[var(--neon-cyan)] hover:text-black transition-colors">ENGLISH</button>
+                            <button onclick="setLanguage('ja')" class="text-left px-3 py-2 text-xs font-mono text-[var(--neon-cyan)] hover:bg-[var(--neon-cyan)] hover:text-black transition-colors">JAPANESE</button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </header>
 
@@ -270,36 +294,35 @@
                 <div class="space-y-6 relative z-10">
                     <div class="absolute -left-6 top-0 w-1 h-full bg-gradient-to-b from-[var(--ellen-maroon)] to-transparent opacity-50"></div>
                     
-                    <div class="inline-block border border-[var(--ellen-maroon)] text-[var(--ellen-light)] px-3 py-1 text-xs font-mono mb-2 bg-[#8e1b2e20] shadow-[0_0_10px_rgba(142,27,46,0.3)]">
+                    <div data-i18n="proxy-level" class="inline-block border border-[var(--ellen-maroon)] text-[var(--ellen-light)] px-3 py-1 text-xs font-mono mb-2 bg-[#8e1b2e20] shadow-[0_0_10px_rgba(142,27,46,0.3)]">
                         PROXY LEVEL: INFORMATICS STUDENT
                     </div>
                     <h2 class="text-5xl lg:text-7xl font-bold uppercase leading-none tracking-tighter drop-shadow-lg">
                         Tech <span class="text-[var(--ellen-maroon)] glitch">Proxy</span><br>
                         Oceadra
                     </h2>
-                    <p class="text-[var(--text-muted)] text-lg max-w-lg leading-relaxed mt-4 bg-[#0a0a0e80] backdrop-blur-sm p-4 rounded-xl border-l-2 border-[var(--neon-cyan)] shadow-[0_4px_20px_rgba(0,229,255,0.05)]">
+                    <p data-i18n="bio-text" class="text-[var(--text-muted)] text-lg max-w-lg leading-relaxed mt-4 bg-[#0a0a0e80] backdrop-blur-sm p-4 rounded-xl border-l-2 border-[var(--neon-cyan)] shadow-[0_4px_20px_rgba(0,229,255,0.05)]">
                         Mahasiswa Informatika Universitas Ahmad Dahlan (UAD) yang bersemangat dan inovatif. Memiliki ketertarikan tinggi pada <span class="text-[var(--neon-cyan)] font-bold drop-shadow-[0_0_5px_#00e5ff]">Computer Vision</span> dan <span class="text-[var(--ellen-light)] font-bold drop-shadow-[0_0_5px_#d83a56]">Software Development</span>. Selalu antusias memecahkan masalah melalui barisan kode dan mengeksekusi *bugs* dengan presisi!
                     </p>
                     
                     <!-- Quick Stats -->
                     <div class="flex gap-4 pt-4">
                         <a href="https://github.com/OurinEdnes/" target="_blank" class="bg-[var(--ellen-maroon)] hover:bg-[var(--ellen-light)] text-white px-6 py-3 font-bold ak-cut transition-all flex items-center gap-2 hover:shadow-[0_0_15px_#d83a56]">
-                            <span>GITHUB LINK</span>
+                            <span data-i18n="btn-github">GITHUB LINK</span>
                         </a>
                         <a href="mailto:Banunajieh@gmail.com" class="bg-transparent border border-[var(--neon-cyan)] text-[var(--neon-cyan)] hover:bg-[#00e5ff20] px-6 py-3 font-bold ak-cut transition-all hover:shadow-[inset_0_0_10px_#00e5ff]">
-                            CONTACT ME
+                            <span data-i18n="btn-contact">CONTACT ME</span>
                         </a>
                     </div>
                 </div>
 
                 <!-- Right: 3D Canvas Switcher Container -->
                 <div class="relative w-full flex justify-center items-center h-[400px]">
-                    <!-- Decorative framing -->
                     <div class="absolute inset-0 border border-[#8e1b2e30] ak-cut pointer-events-none shadow-[inset_0_0_30px_rgba(142,27,46,0.1)] z-10"></div>
                     <div class="absolute top-[-10px] left-[-10px] w-5 h-5 border-t-2 border-l-2 border-[var(--neon-cyan)] drop-shadow-[0_0_5px_#00e5ff] z-10"></div>
                     <div class="absolute bottom-[-10px] right-[-10px] w-5 h-5 border-b-2 border-r-2 border-[var(--ellen-maroon)] drop-shadow-[0_0_5px_#8e1b2e] z-10"></div>
                     
-                    <div class="absolute top-4 left-4 text-xs font-mono text-[var(--neon-cyan)] pointer-events-none z-20 animate-pulse">
+                    <div data-i18n="3d-drag" class="absolute top-4 left-4 text-xs font-mono text-[var(--neon-cyan)] pointer-events-none z-20 animate-pulse">
                         [ DRAG TO ROTATE ]
                     </div>
 
@@ -311,17 +334,16 @@
                     <!-- 3D AREA 1: Three.js Canvas Container (Untuk UAV) -->
                     <div id="canvas-container" class="absolute inset-0 w-full h-full ak-cut bg-[#050508aa] backdrop-blur-sm z-0"></div>
 
-                    <!-- 3D AREA 2: Model-Viewer (Untuk Senjata Ellen Joe) - Disembunyikan dulu (class "hidden") -->
-                    <!-- PERHATIKAN ATRIBUT BARU DI SINI: orientation, exposure, auto-rotate -->
+                    <!-- 3D AREA 2: Model-Viewer (Untuk Senjata Ellen Joe) -->
                     <model-viewer
                         id="ellen-model"
                         src="Resource/weapon-ellen-joe-by-ghost73/source/weapon-ellen-joe/weapon.ellen.joe.gltf"
                         alt="3D model Senjata Ellen Joe"
                         auto-rotate 
-                        rotation-per-second="20deg" 
+                        rotation-per-second="30deg" 
                         camera-controls
                         camera-orbit="0deg 90deg auto" 
-                        orientation="-90deg -60deg 0deg" 
+                        orientation="-90deg 0deg 0deg" 
                         exposure="2" 
                         shadow-intensity="0" 
                         environment-image="neutral"
@@ -334,15 +356,16 @@
             <!-- Skills / Arsenal Section -->
             <section id="arsenal">
                 <div class="flex items-center gap-4 mb-10">
-                    <h3 class="text-3xl font-bold uppercase tracking-wider text-white drop-shadow-[0_0_8px_rgba(255,255,255,0.2)]">Operator <span class="text-[var(--ellen-maroon)]">Arsenal</span></h3>
+                    <h3 class="text-3xl font-bold uppercase tracking-wider text-white drop-shadow-[0_0_8px_rgba(255,255,255,0.2)]">
+                        <span data-i18n="sec-arsenal-1">Operator</span> <span class="text-[var(--ellen-maroon)]" data-i18n="sec-arsenal-2">Arsenal</span>
+                    </h3>
                     <div class="flex-grow h-[1px] bg-gradient-to-r from-[var(--ellen-maroon)] to-transparent"></div>
                     <div class="text-xs font-mono text-[var(--text-muted)]">SYS.CAPABILITIES</div>
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                    <!-- Card 1: Cyber Cyan (Programming) -->
                     <div class="p-6 ak-cut arsenal-card" style="--neon-color: var(--neon-cyan);">
-                        <h4 class="font-bold mb-4 font-mono text-sm border-b pb-2 card-title">01 // PROG. & AI</h4>
+                        <h4 data-i18n="card-prog" class="font-bold mb-4 font-mono text-sm border-b pb-2 card-title">01 // PROG. & AI</h4>
                         <div class="flex flex-wrap gap-2">
                             <span class="tech-tag">Java</span>
                             <span class="tech-tag">C++</span>
@@ -353,9 +376,8 @@
                             <span class="tech-tag">JavaCV</span>
                         </div>
                     </div>
-                    <!-- Card 2: Warning Amber (Hardware) -->
                     <div class="p-6 ak-cut arsenal-card" style="--neon-color: var(--neon-amber);">
-                        <h4 class="font-bold mb-4 font-mono text-sm border-b pb-2 card-title">02 // HARDWARE</h4>
+                        <h4 data-i18n="card-hard" class="font-bold mb-4 font-mono text-sm border-b pb-2 card-title">02 // HARDWARE</h4>
                         <div class="flex flex-wrap gap-2">
                             <span class="tech-tag">Raspberry Pi</span>
                             <span class="tech-tag">Network Config</span>
@@ -363,9 +385,8 @@
                             <span class="tech-tag">UAV Comms</span>
                         </div>
                     </div>
-                    <!-- Card 3: Void Purple (Database) -->
                     <div class="p-6 ak-cut arsenal-card" style="--neon-color: var(--neon-purple);">
-                        <h4 class="font-bold mb-4 font-mono text-sm border-b pb-2 card-title">03 // DATABASE</h4>
+                        <h4 data-i18n="card-db" class="font-bold mb-4 font-mono text-sm border-b pb-2 card-title">03 // DATABASE</h4>
                         <div class="flex flex-wrap gap-2">
                             <span class="tech-tag">SQL</span>
                             <span class="tech-tag">MariaDB</span>
@@ -374,9 +395,8 @@
                             <span class="tech-tag">MongoDB</span>
                         </div>
                     </div>
-                    <!-- Card 4: Ellen Rose (Design) -->
                     <div class="p-6 ak-cut arsenal-card" style="--neon-color: var(--neon-rose);">
-                        <h4 class="font-bold mb-4 font-mono text-sm border-b pb-2 card-title">04 // DESIGN & MGMT</h4>
+                        <h4 data-i18n="card-design" class="font-bold mb-4 font-mono text-sm border-b pb-2 card-title">04 // DESIGN & MGMT</h4>
                         <div class="flex flex-wrap gap-2">
                             <span class="tech-tag">UI/UX Design</span>
                             <span class="tech-tag">Figma</span>
@@ -391,23 +411,22 @@
             <!-- Combat Records / Experience Section -->
             <section id="records">
                 <div class="flex items-center gap-4 mb-10">
-                    <h3 class="text-3xl font-bold uppercase tracking-wider text-white">Combat <span class="text-[var(--ellen-maroon)]">Records</span></h3>
+                    <h3 class="text-3xl font-bold uppercase tracking-wider text-white">
+                        <span data-i18n="sec-records-1">Combat</span> <span class="text-[var(--ellen-maroon)]" data-i18n="sec-records-2">Records</span>
+                    </h3>
                     <div class="flex-grow h-[1px] bg-gradient-to-r from-[var(--ellen-maroon)] to-transparent"></div>
                     <div class="text-xs font-mono text-[var(--text-muted)]">OP.EXPERIENCE</div>
                 </div>
 
-                <!-- Showcase Video Card (Primary Experience) -->
                 <div class="bg-[var(--bg-panel)] ak-cut-bottom p-1 mb-12 shadow-[0_10px_30px_-15px_#8e1b2e]">
                     <div class="bg-[#050508] p-6 ak-cut-bottom border border-[#8e1b2e30]">
                         <div class="flex flex-col lg:flex-row gap-8">
-                            <!-- Video Wrapper -->
                             <div class="w-full lg:w-3/5 relative group cursor-pointer">
                                 <div class="absolute -inset-1 bg-gradient-to-r from-[#d83a56] to-[#00e5ff] blur opacity-20 group-hover:opacity-60 transition duration-1000"></div>
                                 <div class="relative w-full aspect-video bg-black border border-[var(--ellen-maroon)] overflow-hidden">
                                     <div class="absolute top-2 right-2 text-red-500 text-xs font-mono z-10 bg-black/50 px-2 py-1 border border-red-500 animate-pulse">REC ⏺</div>
                                     <div class="absolute bottom-2 left-2 text-[var(--ellen-light)] text-xs font-mono z-10 drop-shadow-md">SYS.UAV_VISION_ACTIVE</div>
                                     
-                                    <!-- Video UAV -->
                                     <video class="w-full h-full object-cover" controls muted poster="https://placehold.co/1280x720/101014/8e1b2e?text=UAV+Object+Detection+Feed">
                                         <source src="Resource/YoloV8 UAV.mp4" type="video/mp4">
                                         Browser error. System failure.
@@ -415,14 +434,13 @@
                                 </div>
                             </div>
 
-                            <!-- Video Info (Tim KRTI) -->
                             <div class="w-full lg:w-2/5 flex flex-col justify-center">
-                                <div class="inline-block bg-[var(--ellen-maroon)] text-white text-xs font-bold px-2 py-1 mb-4 w-max ak-cut font-mono shadow-[0_0_10px_#8e1b2e]">
+                                <div data-i18n="proj1-tag" class="inline-block bg-[var(--ellen-maroon)] text-white text-xs font-bold px-2 py-1 mb-4 w-max ak-cut font-mono shadow-[0_0_10px_#8e1b2e]">
                                     [ 2025 ] // KRTI REGIONAL
                                 </div>
-                                <h4 class="text-2xl font-bold mb-2 text-white">UAV Network & Comms Integration</h4>
-                                <p class="text-[var(--ellen-light)] text-sm mb-4 font-bold drop-shadow-[0_0_2px_#d83a56]">Tim Universitas - Kontes Robot Terbang Indonesia (KRTI)</p>
-                                <p class="text-[var(--text-muted)] text-sm mb-6 leading-relaxed">
+                                <h4 data-i18n="proj1-title" class="text-2xl font-bold mb-2 text-white">UAV Network & Comms Integration</h4>
+                                <p data-i18n="proj1-sub" class="text-[var(--ellen-light)] text-sm mb-4 font-bold drop-shadow-[0_0_2px_#d83a56]">Tim Universitas - Kontes Robot Terbang Indonesia (KRTI)</p>
+                                <p data-i18n="proj1-desc" class="text-[var(--text-muted)] text-sm mb-6 leading-relaxed">
                                     Bertanggung jawab penuh atas konfigurasi, manajemen jaringan, dan konektivitas pada perangkat Raspberry Pi di wahana udara nirawak (UAV). Mengamankan integrasi data dan memastikan transmisi komunikasi stabil secara *real-time* antara sistem robot terbang dan stasiun kendali darat.
                                 </p>
                             </div>
@@ -430,62 +448,58 @@
                     </div>
                 </div>
 
-                <!-- Secondary Records List -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    <!-- A.R.C.S Project -->
                     <div class="bg-[var(--bg-card)] p-6 ak-cut border-l-4 border-[var(--neon-cyan)] relative hover:bg-[#0a0a0e] transition-colors group">
                         <div class="absolute top-0 right-0 bg-[#00e5ff20] text-[var(--neon-cyan)] text-xs px-2 py-1 font-mono group-hover:bg-[var(--neon-cyan)] group-hover:text-black transition-colors">2025</div>
-                        <h4 class="text-xl font-bold text-white mb-2 group-hover:text-[var(--neon-cyan)] transition-colors">Proyek A.R.C.S</h4>
-                        <p class="text-[var(--ellen-light)] text-sm mb-4 font-mono">Software Developer (Aerial Rescue & Color Search)</p>
-                        <p class="text-[var(--text-muted)] text-sm leading-relaxed">
+                        <h4 data-i18n="proj2-title" class="text-xl font-bold text-white mb-2 group-hover:text-[var(--neon-cyan)] transition-colors">Proyek A.R.C.S</h4>
+                        <p data-i18n="proj2-sub" class="text-[var(--ellen-light)] text-sm mb-4 font-mono">Software Developer (Aerial Rescue & Color Search)</p>
+                        <p data-i18n="proj2-desc" class="text-[var(--text-muted)] text-sm leading-relaxed">
                             Mengembangkan purwarupa perangkat lunak berbasis Java untuk mendukung operasi penyelamatan (SAR). Mengimplementasikan algoritma deteksi warna HSV dan pelacakan objek secara *real-time* menggunakan simulasi input kamera.
                         </p>
                     </div>
 
-                    <!-- MediaPipe Project -->
                     <div class="bg-[var(--bg-card)] p-6 ak-cut border-l-4 border-[var(--neon-amber)] relative hover:bg-[#0a0a0e] transition-colors group">
                         <div class="absolute top-0 right-0 bg-[#ffb70320] text-[var(--neon-amber)] text-xs px-2 py-1 font-mono group-hover:bg-[var(--neon-amber)] group-hover:text-black transition-colors">2026 - PRESENT</div>
-                        <h4 class="text-xl font-bold text-white mb-2 group-hover:text-[var(--neon-amber)] transition-colors">HCI Hand-Landmark System</h4>
-                        <p class="text-[var(--ellen-light)] text-sm mb-4 font-mono">Software Developer</p>
-                        <p class="text-[var(--text-muted)] text-sm leading-relaxed">
+                        <h4 data-i18n="proj3-title" class="text-xl font-bold text-white mb-2 group-hover:text-[var(--neon-amber)] transition-colors">HCI Hand-Landmark System</h4>
+                        <p data-i18n="proj3-sub" class="text-[var(--ellen-light)] text-sm mb-4 font-mono">Software Developer</p>
+                        <p data-i18n="proj3-desc" class="text-[var(--text-muted)] text-sm leading-relaxed">
                             Merancang sistem interaksi manusia-komputer berbasis pengenalan gerakan tangan. Mengimplementasikan arsitektur MediaPipe untuk mendeteksi *hand-landmark* akurat guna optimasi kontrol kursor dan *virtual keyboard*.
                         </p>
                     </div>
                 </div>
             </section>
 
-            <!-- Education & Training (Archives) -->
             <section id="archives">
                 <div class="flex items-center gap-4 mb-10">
-                    <h3 class="text-3xl font-bold uppercase tracking-wider text-white">Data <span class="text-[var(--ellen-maroon)]">Archives</span></h3>
+                    <h3 class="text-3xl font-bold uppercase tracking-wider text-white">
+                        <span data-i18n="sec-archives-1">Data</span> <span class="text-[var(--ellen-maroon)]" data-i18n="sec-archives-2">Archives</span>
+                    </h3>
                     <div class="flex-grow h-[1px] bg-gradient-to-r from-[var(--ellen-maroon)] to-transparent"></div>
                     <div class="text-xs font-mono text-[var(--text-muted)]">EDU.LOGS</div>
                 </div>
 
                 <div class="relative pl-6 border-l-2 border-[#8e1b2e40] space-y-8">
-                    <!-- UAD -->
                     <div class="relative group">
                         <div class="timeline-dot group-hover:scale-125 group-hover:bg-[var(--neon-cyan)] group-hover:border-[var(--neon-cyan)] group-hover:shadow-[0_0_15px_#00e5ff] transition-all"></div>
                         <div class="p-5 ak-cut ml-4 archive-item">
-                            <span class="text-[var(--ellen-maroon)] text-sm font-mono font-bold block mb-1 group-hover:text-[var(--neon-cyan)] transition-colors">CURRENT STATUS</span>
-                            <h4 class="text-xl font-bold text-white">Universitas Ahmad Dahlan</h4>
-                            <p class="text-[var(--text-muted)] group-hover:text-gray-300 transition-colors">Jurusan Informatika</p>
+                            <span data-i18n="edu1-tag" class="text-[var(--ellen-maroon)] text-sm font-mono font-bold block mb-1 group-hover:text-[var(--neon-cyan)] transition-colors">CURRENT STATUS</span>
+                            <h4 data-i18n="edu1-title" class="text-xl font-bold text-white">Universitas Ahmad Dahlan</h4>
+                            <p data-i18n="edu1-sub" class="text-[var(--text-muted)] group-hover:text-gray-300 transition-colors">Jurusan Informatika</p>
                         </div>
                     </div>
 
-                    <!-- Courses -->
                     <div class="relative group">
                         <div class="timeline-dot group-hover:scale-125 group-hover:bg-[var(--neon-cyan)] group-hover:border-[var(--neon-cyan)] group-hover:shadow-[0_0_15px_#00e5ff] transition-all"></div>
                         <div class="p-5 ak-cut ml-4 archive-item">
-                            <span class="text-[var(--ellen-maroon)] text-sm font-mono font-bold block mb-1 group-hover:text-[var(--neon-cyan)] transition-colors">SPECIAL TRAINING LOGS</span>
+                            <span data-i18n="edu2-tag" class="text-[var(--ellen-maroon)] text-sm font-mono font-bold block mb-1 group-hover:text-[var(--neon-cyan)] transition-colors">SPECIAL TRAINING LOGS</span>
                             <ul class="text-[var(--text-muted)] space-y-2 mt-2 group-hover:text-gray-300 transition-colors">
                                 <li class="flex items-start gap-2">
                                     <span class="text-[var(--ellen-light)] mt-1 drop-shadow-[0_0_3px_#d83a56]">▹</span> 
-                                    <span>Pelatihan Public Speaking HMIF - <strong class="text-white">Predikat: The Best Student</strong> (2024)</span>
+                                    <span data-i18n="edu2-li1">Pelatihan Public Speaking HMIF - <strong class="text-white">Predikat: The Best Student</strong> (2024)</span>
                                 </li>
                                 <li class="flex items-start gap-2">
                                     <span class="text-[var(--ellen-light)] mt-1 drop-shadow-[0_0_3px_#d83a56]">▹</span> 
-                                    <span>Pelatihan Bahasa Inggris - Mr. Language Pare (2023)</span>
+                                    <span data-i18n="edu2-li2">Pelatihan Bahasa Inggris - Mr. Language Pare (2023)</span>
                                 </li>
                             </ul>
                         </div>
@@ -498,11 +512,11 @@
         <!-- Footer -->
         <footer class="w-full border-t border-[#8e1b2e40] bg-[#030102] py-8 text-center text-xs text-[var(--text-muted)] font-mono mt-auto z-10 relative">
             <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center px-6">
-                <p>© 2026 OCEADRA OS. ALL RIGHTS RESERVED. // YOGYAKARTA, ID.</p>
+                <p data-i18n="footer-copy">© 2026 OCEADRA OS. ALL RIGHTS RESERVED. // YOGYAKARTA, ID.</p>
                 <div class="flex gap-4 mt-4 md:mt-0">
                     <a href="https://github.com/OurinEdnes/" target="_blank" class="hover:text-[var(--ellen-light)] transition-colors hover:drop-shadow-[0_0_5px_#d83a56]">GITHUB</a>
                     <span class="text-[var(--ellen-maroon)]">|</span>
-                    <a href="mailto:banunajieh@gmail.com" class="hover:text-[var(--ellen-light)] transition-colors hover:drop-shadow-[0_0_5px_#d83a56]">EMAIL</a>
+                    <a href="mailto:Banunajieh@gmail.com" class="hover:text-[var(--ellen-light)] transition-colors hover:drop-shadow-[0_0_5px_#d83a56]">EMAIL</a>
                     <span class="text-[var(--ellen-maroon)]">|</span>
                     <span class="hover:text-[var(--neon-cyan)] transition-colors drop-shadow-[0_0_2px_#00e5ff]">+62 859 6591-1133</span>
                 </div>
@@ -511,6 +525,136 @@
     </div>
 
     <script>
+        // ==========================================
+        // 0. MULTI-LANGUAGE DICTIONARY (AIKOO'S TRANSLATOR)
+        // ==========================================
+        const translations = {
+            id: {
+                "nav-overview": "RINGKASAN",
+                "nav-arsenal": "ARSENAL",
+                "nav-records": "REKAM JEJAK",
+                "nav-archives": "ARSIP DATA",
+                "proxy-level": "TINGKAT PROXY: MAHASISWA INFORMATIKA",
+                "bio-text": "Mahasiswa Informatika Universitas Ahmad Dahlan (UAD) yang bersemangat dan inovatif. Memiliki ketertarikan tinggi pada <span class=\"text-[var(--accent-cyan)] font-bold drop-shadow-[0_0_5px_#00e5ff]\">Computer Vision</span> dan <span class=\"text-[var(--ellen-light)] font-bold drop-shadow-[0_0_5px_#d83a56]\">Software Development</span>. Selalu antusias memecahkan masalah melalui barisan kode dan mengeksekusi *bugs* dengan presisi!",
+                "btn-github": "TAUTAN GITHUB",
+                "btn-contact": "HUBUNGI SAYA",
+                "3d-drag": "[ GESER UNTUK MEMUTAR ]",
+                "sec-arsenal-1": "Arsenal",
+                "sec-arsenal-2": "Operator",
+                "card-prog": "01 // PEMROGRAMAN & AI",
+                "card-hard": "02 // PERANGKAT KERAS",
+                "card-db": "03 // BASIS DATA",
+                "card-design": "04 // DESAIN & MANAJEMEN",
+                "sec-records-1": "Rekam Jejak",
+                "sec-records-2": "Tempur",
+                "proj1-tag": "[ 2025 ] // KONTES REGIONAL",
+                "proj1-title": "Integrasi Jaringan & Komunikasi UAV",
+                "proj1-sub": "Tim Universitas - Kontes Robot Terbang Indonesia (KRTI)",
+                "proj1-desc": "Bertanggung jawab penuh atas konfigurasi, manajemen jaringan, dan konektivitas pada perangkat Raspberry Pi di wahana udara nirawak (UAV). Mengamankan integrasi data dan memastikan transmisi komunikasi stabil secara *real-time* antara sistem robot terbang dan stasiun kendali darat.",
+                "proj2-title": "Proyek A.R.C.S",
+                "proj2-sub": "Pengembang Perangkat Lunak (Aerial Rescue & Color Search)",
+                "proj2-desc": "Mengembangkan purwarupa perangkat lunak berbasis Java untuk mendukung operasi penyelamatan (SAR). Mengimplementasikan algoritma deteksi warna HSV dan pelacakan objek secara *real-time* menggunakan simulasi input kamera.",
+                "proj3-title": "Sistem Hand-Landmark HCI",
+                "proj3-sub": "Pengembang Perangkat Lunak",
+                "proj3-desc": "Merancang sistem interaksi manusia-komputer berbasis pengenalan gerakan tangan. Mengimplementasikan arsitektur MediaPipe untuk mendeteksi *hand-landmark* akurat guna optimasi kontrol kursor dan *virtual keyboard*.",
+                "sec-archives-1": "Arsip",
+                "sec-archives-2": "Data",
+                "edu1-tag": "STATUS SAAT INI",
+                "edu1-title": "Universitas Ahmad Dahlan",
+                "edu1-sub": "Jurusan Informatika",
+                "edu2-tag": "CATATAN PELATIHAN KHUSUS",
+                "edu2-li1": "Pelatihan Public Speaking HMIF - <strong class=\"text-white\">Predikat: The Best Student</strong> (2024)",
+                "edu2-li2": "Pelatihan Bahasa Inggris - Mr. Language Pare (2023)",
+                "footer-copy": "© 2026 OCEADRA OS. SEMUA HAK CIPTA DILINDUNGI. // YOGYAKARTA, ID."
+            },
+            en: {
+                "nav-overview": "OVERVIEW",
+                "nav-arsenal": "ARSENAL",
+                "nav-records": "COMBAT RECORDS",
+                "nav-archives": "ARCHIVES",
+                "proxy-level": "PROXY LEVEL: INFORMATICS STUDENT",
+                "bio-text": "Passionate and innovative Informatics Student at Ahmad Dahlan University (UAD). Highly interested in <span class=\"text-[var(--accent-cyan)] font-bold drop-shadow-[0_0_5px_#00e5ff]\">Computer Vision</span> and <span class=\"text-[var(--ellen-light)] font-bold drop-shadow-[0_0_5px_#d83a56]\">Software Development</span>. Always enthusiastic about solving problems through lines of code and executing *bugs* with precision!",
+                "btn-github": "GITHUB LINK",
+                "btn-contact": "CONTACT ME",
+                "3d-drag": "[ DRAG TO ROTATE ]",
+                "sec-arsenal-1": "Operator",
+                "sec-arsenal-2": "Arsenal",
+                "card-prog": "01 // PROG. & AI",
+                "card-hard": "02 // HARDWARE",
+                "card-db": "03 // DATABASE",
+                "card-design": "04 // DESIGN & MGMT",
+                "sec-records-1": "Combat",
+                "sec-records-2": "Records",
+                "proj1-tag": "[ 2025 ] // REGIONAL CONTEST",
+                "proj1-title": "UAV Network & Comms Integration",
+                "proj1-sub": "University Team - Indonesia Flying Robot Contest (KRTI)",
+                "proj1-desc": "Fully responsible for configuration, network management, and connectivity on Raspberry Pi devices for Unmanned Aerial Vehicles (UAVs). Secured data integration and ensured stable real-time communication transmission between the flying robot system and the ground control station.",
+                "proj2-title": "A.R.C.S Project",
+                "proj2-sub": "Software Developer (Aerial Rescue & Color Search)",
+                "proj2-desc": "Developed a Java-based software prototype to support search and rescue (SAR) operations. Implemented HSV color detection algorithms and real-time object tracking using camera input simulation.",
+                "proj3-title": "HCI Hand-Landmark System",
+                "proj3-sub": "Software Developer",
+                "proj3-desc": "Designed a human-computer interaction system based on hand gesture recognition. Implemented the MediaPipe architecture to accurately detect hand-landmarks to optimize cursor control and virtual keyboards.",
+                "sec-archives-1": "Data",
+                "sec-archives-2": "Archives",
+                "edu1-tag": "CURRENT STATUS",
+                "edu1-title": "Ahmad Dahlan University",
+                "edu1-sub": "Informatics Department",
+                "edu2-tag": "SPECIAL TRAINING LOGS",
+                "edu2-li1": "HMIF Public Speaking Training - <strong class=\"text-white\">Title: The Best Student</strong> (2024)",
+                "edu2-li2": "English Training - Mr. Language Pare (2023)",
+                "footer-copy": "© 2026 OCEADRA OS. ALL RIGHTS RESERVED. // YOGYAKARTA, ID."
+            },
+            ja: {
+                "nav-overview": "概要",
+                "nav-arsenal": "アーセナル",
+                "nav-records": "戦闘記録",
+                "nav-archives": "アーカイブ",
+                "proxy-level": "プロキシレベル：情報学の学生",
+                "bio-text": "アフマド・ダーラン大学（UAD）の情熱的で革新的な情報学の学生。<span class=\"text-[var(--accent-cyan)] font-bold drop-shadow-[0_0_5px_#00e5ff]\">コンピュータビジョン</span>と<span class=\"text-[var(--ellen-light)] font-bold drop-shadow-[0_0_5px_#d83a56]\">ソフトウェア開発</span>に強い関心を持っています。コードを通じて問題を解決し、バグを正確に排除することに常に熱意を持っています！",
+                "btn-github": "GITHUB リンク",
+                "btn-contact": "連絡する",
+                "3d-drag": "[ ドラッグして回転 ]",
+                "sec-arsenal-1": "オペレーター",
+                "sec-arsenal-2": "アーセナル",
+                "card-prog": "01 // プログラミング & AI",
+                "card-hard": "02 // ハードウェア",
+                "card-db": "03 // データベース",
+                "card-design": "04 // デザイン & 管理",
+                "sec-records-1": "戦闘",
+                "sec-records-2": "記録",
+                "proj1-tag": "[ 2025 ] // 地方大会",
+                "proj1-title": "UAVネットワークと通信の統合",
+                "proj1-sub": "大学チーム - インドネシア飛行ロボットコンテスト (KRTI)",
+                "proj1-desc": "無人航空機（UAV）用のRaspberry Piデバイスの構成、ネットワーク管理、および接続を完全に担当しました。データ統合を保護し、飛行ロボットシステムと地上管制ステーション間の安定したリアルタイム通信伝送を確保しました。",
+                "proj2-title": "A.R.C.S プロジェクト",
+                "proj2-sub": "ソフトウェア開発者（空中救助と色検索）",
+                "proj2-desc": "捜索救助（SAR）活動を支援するJavaベースのソフトウェアプロトタイプを開発しました。カメラ入力シミュレーションを使用して、HSV色検出アルゴリズムとリアルタイムのオブジェクト追跡を実装しました。",
+                "proj3-title": "HCI ハンドランドマークシステム",
+                "proj3-sub": "ソフトウェア開発者",
+                "proj3-desc": "手のジェスチャー認識に基づくヒューマンコンピュータインタラクションシステムを設計しました。MediaPipeアーキテクチャを実装してハンドランドマークを正確に検出し、カーソル制御と仮想キーボードを最適化しました。",
+                "sec-archives-1": "データ",
+                "sec-archives-2": "アーカイブ",
+                "edu1-tag": "現在のステータス",
+                "edu1-title": "アフマド・ダーラン大学",
+                "edu1-sub": "情報学部",
+                "edu2-tag": "特別訓練記録",
+                "edu2-li1": "HMIFパブリックスピーキングトレーニング - <strong class=\"text-white\">称号：最優秀学生</strong> (2024)",
+                "edu2-li2": "英語トレーニング - Mr. Language Pare (2023)",
+                "footer-copy": "© 2026 OCEADRA OS. 全著作権所有. // インドネシア、ジョグジャカルタ."
+            }
+        };
+
+        function setLanguage(lang) {
+            document.querySelectorAll('[data-i18n]').forEach(element => {
+                const key = element.getAttribute('data-i18n');
+                if (translations[lang] && translations[lang][key]) {
+                    element.innerHTML = translations[lang][key];
+                }
+            });
+            document.getElementById('current-lang').innerText = lang.toUpperCase();
+        }
+
         // ==========================================
         // 1. TERMINAL BOOT SEQUENCE LOGIC
         // ==========================================
