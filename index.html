@@ -1,17 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>OCEADRA • Ocean Lab</title>
     <link rel="icon" type="image/png" href="Resource/Icon.jpg">
-    
+
     <!-- Fonts: Rajdhani for Sci-Fi UI, Fira Code for Terminal -->
-    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
-    
+    <link
+        href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Rajdhani:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+
     <!-- Tailwind CSS for layout -->
     <script src="https://cdn.tailwindcss.com"></script>
-    
+
     <!-- Three.js for 3D Rendering -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 
@@ -19,12 +22,11 @@
     <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.1.1/model-viewer.min.js"></script>
 
     <style>
-
         :root {
             --ellen-maroon: #8e1b2e;
             --ellen-light: #d83a56;
             --ellen-dark: #4a0d17;
-            
+
             /* Warna Neon Baru untuk Class Operator */
             --neon-cyan: #00e5ff;
             --neon-amber: #ffb703;
@@ -41,7 +43,7 @@
         body {
             margin: 0;
             background-color: #050508;
-            background-image: 
+            background-image:
                 radial-gradient(circle at 10% 20%, rgba(142, 27, 46, 0.15) 0%, transparent 40%),
                 radial-gradient(circle at 90% 80%, rgba(0, 229, 255, 0.08) 0%, transparent 40%);
             color: var(--text-main);
@@ -53,15 +55,28 @@
         }
 
         /* Custom Scrollbar */
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: #030102; }
-        ::-webkit-scrollbar-thumb { background: var(--ellen-maroon); border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: var(--ellen-light); }
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #030102;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--ellen-maroon);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--ellen-light);
+        }
 
         /* Arknights Angled Cut Style */
         .ak-cut {
             clip-path: polygon(0 0, calc(100% - 20px) 0, 100% 20px, 100% 100%, 20px 100%, 0 calc(100% - 20px));
         }
+
         .ak-cut-bottom {
             clip-path: polygon(0 0, 100% 0, 100% calc(100% - 20px), calc(100% - 20px) 100%, 0 100%);
         }
@@ -69,7 +84,10 @@
         /* Scanline Overlay for aesthetic */
         .scanlines {
             position: fixed;
-            top: 0; left: 0; width: 100vw; height: 100vh;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
             background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
             background-size: 100% 4px, 3px 100%;
             pointer-events: none;
@@ -79,7 +97,10 @@
 
         #boot-screen {
             position: fixed;
-            top: 0; left: 0; width: 100vw; height: 100vh;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
             background-color: #030102;
             color: var(--ellen-light);
             font-family: 'Fira Code', monospace;
@@ -91,9 +112,25 @@
             transition: opacity 1s ease-out;
         }
 
-        .terminal-line { margin-bottom: 5px; font-size: 0.9rem; text-shadow: 0 0 5px var(--ellen-maroon); }
-        .cursor { display: inline-block; width: 10px; height: 1.2rem; background-color: var(--ellen-light); animation: blink 1s step-end infinite; }
-        @keyframes blink { 50% { opacity: 0; } }
+        .terminal-line {
+            margin-bottom: 5px;
+            font-size: 0.9rem;
+            text-shadow: 0 0 5px var(--ellen-maroon);
+        }
+
+        .cursor {
+            display: inline-block;
+            width: 10px;
+            height: 1.2rem;
+            background-color: var(--ellen-light);
+            animation: blink 1s step-end infinite;
+        }
+
+        @keyframes blink {
+            50% {
+                opacity: 0;
+            }
+        }
 
         #main-ui {
             opacity: 0;
@@ -110,7 +147,10 @@
             background-size: 24px 24px;
             background-position: 0 0;
             position: fixed;
-            top: 0; left: 0; width: 100vw; height: 100vh;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
             z-index: -1;
         }
 
@@ -120,13 +160,31 @@
             color: white;
             text-shadow: 2px 0 var(--ellen-maroon), -2px 0 var(--neon-cyan);
         }
+
         @keyframes glitch-anim {
-            0% { transform: translate(0) }
-            20% { transform: translate(-2px, 2px) }
-            40% { transform: translate(-2px, -2px) }
-            60% { transform: translate(2px, 2px) }
-            80% { transform: translate(2px, -2px) }
-            100% { transform: translate(0) }
+            0% {
+                transform: translate(0)
+            }
+
+            20% {
+                transform: translate(-2px, 2px)
+            }
+
+            40% {
+                transform: translate(-2px, -2px)
+            }
+
+            60% {
+                transform: translate(2px, 2px)
+            }
+
+            80% {
+                transform: translate(2px, -2px)
+            }
+
+            100% {
+                transform: translate(0)
+            }
         }
 
         #canvas-container {
@@ -134,7 +192,10 @@
             height: 100%;
             cursor: grab;
         }
-        #canvas-container:active { cursor: grabbing; }
+
+        #canvas-container:active {
+            cursor: grabbing;
+        }
 
         /* Neon Card Effect (Arsenal) */
         .arsenal-card {
@@ -145,22 +206,29 @@
             border-bottom: 1px solid rgba(255, 255, 255, 0.05);
             border-right: 1px solid rgba(255, 255, 255, 0.05);
         }
+
         .arsenal-card::before {
             content: '';
             position: absolute;
-            top: 0; left: 0; right: 0; height: 40px;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 40px;
             background: linear-gradient(to bottom, var(--neon-color), transparent);
             opacity: 0.05;
             transition: opacity 0.4s ease;
         }
+
         .arsenal-card:hover {
             transform: translateY(-8px) scale(1.02);
             box-shadow: 0 10px 30px -10px var(--neon-color);
             z-index: 10;
         }
+
         .arsenal-card:hover::before {
             opacity: 0.2;
         }
+
         .card-title {
             color: white;
             text-shadow: 0 0 8px var(--neon-color);
@@ -168,6 +236,7 @@
             opacity: 0.8;
             transition: opacity 0.3s ease;
         }
+
         .arsenal-card:hover .card-title {
             opacity: 1;
         }
@@ -183,6 +252,7 @@
             transition: all 0.3s ease;
             clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px));
         }
+
         .arsenal-card:hover .tech-tag:hover {
             background: var(--neon-color);
             color: #000;
@@ -198,6 +268,7 @@
             border-bottom: 2px solid transparent;
             background-color: var(--bg-card);
         }
+
         .archive-item:hover {
             transform: translateX(15px);
             background-color: rgba(142, 27, 46, 0.1);
@@ -216,12 +287,12 @@
             top: 6px;
             transform: rotate(45deg);
         }
-        
+
         /* CSS Khusus untuk efek Hologram pada Model-Viewer */
         #ellen-model {
             opacity: 0.8;
             filter: drop-shadow(0 0 10px var(--ellen-light)) drop-shadow(0 0 20px var(--ellen-light));
-            mix-blend-mode: screen; 
+            mix-blend-mode: screen;
         }
 
         /* Endfield-style UI Utilities */
@@ -229,56 +300,177 @@
             mask-image: linear-gradient(to right, transparent 0%, black 40%, black 100%);
             -webkit-mask-image: linear-gradient(to right, transparent 0%, black 40%, black 100%);
         }
+
         .hide-scrollbar::-webkit-scrollbar {
             display: none;
         }
+
         .hide-scrollbar {
             -ms-overflow-style: none;
             scrollbar-width: none;
         }
+
         .clip-diagonal {
             clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
         }
 
         /* UAV Mission Terminal CSS Utilities */
-        .terminal-bg { background-color: #090A0F; }
+        .terminal-bg {
+            background-color: #090A0F;
+        }
+
         .terminal-grid {
             background-size: 30px 30px;
-            background-image: 
+            background-image:
                 linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
                 linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
         }
+
         .terminal-noise {
             background-image: url('data:image/svg+xml;utf8,%3Csvg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="noiseFilter"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="3" stitchTiles="stitch"/%3E%3C/filter%3E%3Crect width="100%25" height="100%25" filter="url(%23noiseFilter)"/%3E%3C/svg%3E');
-            opacity: 0.05; pointer-events: none; mix-blend-mode: overlay;
+            opacity: 0.05;
+            pointer-events: none;
+            mix-blend-mode: overlay;
         }
+
         .terminal-scanline {
             background: linear-gradient(to bottom, transparent 50%, rgba(0, 0, 0, 0.3) 51%);
-            background-size: 100% 4px; pointer-events: none;
+            background-size: 100% 4px;
+            pointer-events: none;
         }
-        .terminal-corner-tl { position: absolute; top: 20px; left: 20px; width: 60px; height: 60px; border-top: 2px solid rgba(255,255,255,0.2); border-left: 2px solid rgba(255,255,255,0.2); pointer-events: none; }
-        .terminal-corner-tr { position: absolute; top: 20px; right: 20px; width: 60px; height: 60px; border-top: 2px solid rgba(255,255,255,0.2); border-right: 2px solid rgba(255,255,255,0.2); pointer-events: none; }
-        .terminal-corner-bl { position: absolute; bottom: 20px; left: 20px; width: 60px; height: 60px; border-bottom: 2px solid rgba(255,255,255,0.2); border-left: 2px solid rgba(255,255,255,0.2); pointer-events: none; }
-        .terminal-corner-br { position: absolute; bottom: 20px; right: 20px; width: 60px; height: 60px; border-bottom: 2px solid rgba(255,255,255,0.2); border-right: 2px solid rgba(255,255,255,0.2); pointer-events: none; }
-        
+
+        .terminal-corner-tl {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            width: 60px;
+            height: 60px;
+            border-top: 2px solid rgba(255, 255, 255, 0.2);
+            border-left: 2px solid rgba(255, 255, 255, 0.2);
+            pointer-events: none;
+        }
+
+        .terminal-corner-tr {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 60px;
+            height: 60px;
+            border-top: 2px solid rgba(255, 255, 255, 0.2);
+            border-right: 2px solid rgba(255, 255, 255, 0.2);
+            pointer-events: none;
+        }
+
+        .terminal-corner-bl {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            width: 60px;
+            height: 60px;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+            border-left: 2px solid rgba(255, 255, 255, 0.2);
+            pointer-events: none;
+        }
+
+        .terminal-corner-br {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            width: 60px;
+            height: 60px;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+            border-right: 2px solid rgba(255, 255, 255, 0.2);
+            pointer-events: none;
+        }
+
         .terminal-sidebar {
-            width: 110px; margin-top: 72px; margin-bottom: 72px; border-radius: 20px;
-            background: rgba(15, 15, 20, 0.75); backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.08); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+            width: 110px;
+            margin-top: 72px;
+            margin-bottom: 72px;
+            border-radius: 20px;
+            background: rgba(15, 15, 20, 0.75);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
             animation: slideLeft 300ms ease-out forwards;
         }
-        
-        .nav-btn-terminal { transition: all 180ms ease; }
-        .nav-btn-terminal:hover { transform: scale(1.08); }
-        .nav-btn-terminal:hover .nav-ring { opacity: 0.5; }
-        
-        .terminal-indicator { position: absolute; left: -14px; top: 50%; transform: translateY(-50%); color: #00D9FF; font-size: 14px; transition: opacity 180ms; opacity: 0;}
-        .terminal-active-decoration { position: absolute; top: -18px; left: 50%; transform: translateX(-50%); color: #00D9FF; font-size: 10px; letter-spacing: -1px; transition: opacity 180ms; white-space: nowrap; opacity: 0;}
-        .terminal-active-decoration-bottom { position: absolute; bottom: -18px; left: 50%; transform: translateX(-50%); color: #00D9FF; font-size: 10px; letter-spacing: -1px; transition: opacity 180ms; white-space: nowrap; opacity: 0;}
-        
-        @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes slideLeft { from { opacity: 0; transform: translateX(-30px); } to { opacity: 1; transform: translateX(0); } }
-        .terminal-title-anim { animation: fadeUp 300ms ease-out forwards; }
+
+        .nav-btn-terminal {
+            transition: all 180ms ease;
+        }
+
+        .nav-btn-terminal:hover {
+            transform: scale(1.08);
+        }
+
+        .nav-btn-terminal:hover .nav-ring {
+            opacity: 0.5;
+        }
+
+        .terminal-indicator {
+            position: absolute;
+            left: -14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #00D9FF;
+            font-size: 14px;
+            transition: opacity 180ms;
+            opacity: 0;
+        }
+
+        .terminal-active-decoration {
+            position: absolute;
+            top: -18px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #00D9FF;
+            font-size: 10px;
+            letter-spacing: -1px;
+            transition: opacity 180ms;
+            white-space: nowrap;
+            opacity: 0;
+        }
+
+        .terminal-active-decoration-bottom {
+            position: absolute;
+            bottom: -18px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #00D9FF;
+            font-size: 10px;
+            letter-spacing: -1px;
+            transition: opacity 180ms;
+            white-space: nowrap;
+            opacity: 0;
+        }
+
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .terminal-title-anim {
+            animation: fadeUp 300ms ease-out forwards;
+        }
 
 
         /* Language Toggle Dropdown CSS */
@@ -287,12 +479,13 @@
             transform: scaleY(0);
             transition: transform 0.2s ease-out;
         }
+
         .lang-container:hover .lang-dropdown {
             transform: scaleY(1);
         }
-
     </style>
 </head>
+
 <body>
 
     <!-- Cursor Canvas -->
@@ -304,7 +497,8 @@
     <div id="boot-screen">
         <div id="terminal-content"></div>
         <div class="mt-4"><span id="active-typing"></span><span class="cursor"></span></div>
-        <div class="absolute bottom-5 right-5 text-sm text-gray-500 cursor-pointer hover:text-white" onclick="skipBoot()">[ CLICK TO SKIP BOOT ]</div>
+        <div class="absolute bottom-5 right-5 text-sm text-gray-500 cursor-pointer hover:text-white"
+            onclick="skipBoot()">[ CLICK TO SKIP BOOT ]</div>
     </div>
 
     <!-- MAIN UI -->
@@ -315,32 +509,45 @@
         <header class="w-full border-b border-[#8e1b2e40] bg-[#050508aa] backdrop-blur-md sticky top-0 z-40">
             <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
                 <div class="flex items-center gap-4">
-                    <div class="w-10 h-10 bg-[var(--ellen-maroon)] ak-cut flex items-center justify-center font-bold text-xl text-white shadow-[0_0_10px_#8e1b2e]">O</div>
+                    <div
+                        class="w-10 h-10 bg-[var(--ellen-maroon)] ak-cut flex items-center justify-center font-bold text-xl text-white shadow-[0_0_10px_#8e1b2e]">
+                        O</div>
                     <div>
-                        <h1 class="text-2xl font-bold tracking-widest text-[var(--ellen-light)]">OCEADRA<span class="text-white">_SYS</span></h1>
+                        <h1 class="text-2xl font-bold tracking-widest text-[var(--ellen-light)]">OCEADRA<span
+                                class="text-white">_SYS</span></h1>
                         <p class="text-xs text-[var(--ellen-maroon)] tracking-widest font-mono">OP_ID: OCEADRA</p>
                     </div>
                 </div>
-                
+
                 <!-- Navbar Container (Menu + Lang Toggle) -->
                 <div class="flex items-center gap-8">
                     <nav class="hidden md:flex gap-8 text-sm tracking-widest font-bold">
-                        <a href="#overview" data-i18n="nav-overview" class="hover:text-[var(--ellen-light)] transition-colors hover:drop-shadow-[0_0_5px_#d83a56]">OVERVIEW</a>
-                        <a href="#arsenal" data-i18n="nav-arsenal" class="hover:text-[var(--neon-cyan)] transition-colors hover:drop-shadow-[0_0_5px_#00e5ff]">ARSENAL</a>
-                        <a href="#records" data-i18n="nav-records" class="hover:text-[var(--ellen-light)] transition-colors hover:drop-shadow-[0_0_5px_#d83a56]">COMBAT RECORDS</a>
-                        <a href="#archives" data-i18n="nav-archives" class="hover:text-[var(--ellen-light)] transition-colors hover:drop-shadow-[0_0_5px_#d83a56]">ARCHIVES</a>
+                        <a href="#overview" data-i18n="nav-overview"
+                            class="hover:text-[var(--ellen-light)] transition-colors hover:drop-shadow-[0_0_5px_#d83a56]">OVERVIEW</a>
+                        <a href="#arsenal" data-i18n="nav-arsenal"
+                            class="hover:text-[var(--neon-cyan)] transition-colors hover:drop-shadow-[0_0_5px_#00e5ff]">ARSENAL</a>
+                        <a href="#records" data-i18n="nav-records"
+                            class="hover:text-[var(--ellen-light)] transition-colors hover:drop-shadow-[0_0_5px_#d83a56]">COMBAT
+                            RECORDS</a>
+                        <a href="#archives" data-i18n="nav-archives"
+                            class="hover:text-[var(--ellen-light)] transition-colors hover:drop-shadow-[0_0_5px_#d83a56]">ARCHIVES</a>
                     </nav>
 
                     <!-- Language Switcher Dropdown -->
                     <div class="lang-container relative z-50">
-                        <button class="flex items-center gap-2 text-xs font-mono text-[var(--neon-cyan)] border border-[var(--neon-cyan)] px-3 py-1 bg-[#0a0a0eaa] hover:bg-[var(--neon-cyan)] hover:text-black transition-colors ak-cut">
+                        <button
+                            class="flex items-center gap-2 text-xs font-mono text-[var(--neon-cyan)] border border-[var(--neon-cyan)] px-3 py-1 bg-[#0a0a0eaa] hover:bg-[var(--neon-cyan)] hover:text-black transition-colors ak-cut">
                             <span id="current-lang">ID</span>
                             <span>▼</span>
                         </button>
-                        <div class="lang-dropdown absolute right-0 mt-1 w-24 bg-[var(--bg-card)] border border-[var(--neon-cyan)] flex flex-col ak-cut shadow-[0_0_15px_rgba(0,229,255,0.2)]">
-                            <button onclick="setLanguage('id')" class="text-left px-3 py-2 text-xs font-mono text-[var(--neon-cyan)] hover:bg-[var(--neon-cyan)] hover:text-black transition-colors">INDONESIA</button>
-                            <button onclick="setLanguage('en')" class="text-left px-3 py-2 text-xs font-mono text-[var(--neon-cyan)] hover:bg-[var(--neon-cyan)] hover:text-black transition-colors">ENGLISH</button>
-                            <button onclick="setLanguage('ja')" class="text-left px-3 py-2 text-xs font-mono text-[var(--neon-cyan)] hover:bg-[var(--neon-cyan)] hover:text-black transition-colors">JAPANESE</button>
+                        <div
+                            class="lang-dropdown absolute right-0 mt-1 w-24 bg-[var(--bg-card)] border border-[var(--neon-cyan)] flex flex-col ak-cut shadow-[0_0_15px_rgba(0,229,255,0.2)]">
+                            <button onclick="setLanguage('id')"
+                                class="text-left px-3 py-2 text-xs font-mono text-[var(--neon-cyan)] hover:bg-[var(--neon-cyan)] hover:text-black transition-colors">INDONESIA</button>
+                            <button onclick="setLanguage('en')"
+                                class="text-left px-3 py-2 text-xs font-mono text-[var(--neon-cyan)] hover:bg-[var(--neon-cyan)] hover:text-black transition-colors">ENGLISH</button>
+                            <button onclick="setLanguage('ja')"
+                                class="text-left px-3 py-2 text-xs font-mono text-[var(--neon-cyan)] hover:bg-[var(--neon-cyan)] hover:text-black transition-colors">JAPANESE</button>
                         </div>
                     </div>
                 </div>
@@ -349,30 +556,45 @@
 
         <!-- Main Content Grid -->
         <main class="max-w-7xl mx-auto px-6 py-12 flex-grow w-full space-y-32">
-            
+
             <!-- Hero Section -->
             <section id="overview" class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center pt-8">
                 <!-- Left: Text & Info -->
                 <div class="space-y-6 relative z-10">
-                    <div class="absolute -left-6 top-0 w-1 h-full bg-gradient-to-b from-[var(--ellen-maroon)] to-transparent opacity-50"></div>
-                    
-                    <div data-i18n="proxy-level" class="inline-block border border-[var(--ellen-maroon)] text-[var(--ellen-light)] px-3 py-1 text-xs font-mono mb-2 bg-[#8e1b2e20] shadow-[0_0_10px_rgba(142,27,46,0.3)]">
+                    <div
+                        class="absolute -left-6 top-0 w-1 h-full bg-gradient-to-b from-[var(--ellen-maroon)] to-transparent opacity-50">
+                    </div>
+
+                    <div data-i18n="proxy-level"
+                        class="inline-block border border-[var(--ellen-maroon)] text-[var(--ellen-light)] px-3 py-1 text-xs font-mono mb-2 bg-[#8e1b2e20] shadow-[0_0_10px_rgba(142,27,46,0.3)]">
                         PROXY LEVEL: INFORMATICS STUDENT
                     </div>
                     <h2 class="text-5xl lg:text-7xl font-bold uppercase leading-none tracking-tighter drop-shadow-lg">
                         Tech <span class="text-[var(--ellen-maroon)] glitch">Proxy</span><br>
                         Oceadra
                     </h2>
-                    <p data-i18n="bio-text" class="text-[var(--text-muted)] text-lg max-w-lg leading-relaxed mt-4 bg-[#0a0a0e80] backdrop-blur-sm p-4 rounded-xl border-l-2 border-[var(--neon-cyan)] shadow-[0_4px_20px_rgba(0,229,255,0.05)]">
-                        Mahasiswa Informatika Universitas Ahmad Dahlan dengan spesialisasi <span class="text-[var(--neon-cyan)] font-bold drop-shadow-[0_0_5px_#00e5ff]">Computer Vision</span>, <span class="text-[var(--ellen-light)] font-bold drop-shadow-[0_0_5px_#d83a56]">Integrasi Hardware (IoT)</span>, dan <span class="text-[var(--neon-amber)] font-bold drop-shadow-[0_0_5px_#ffb703]">Rekayasa Perangkat Lunak</span>. Berpengalaman merancang sistem cerdas <i>real-time</i> dan mengintegrasikannya dengan perangkat keras terapan. Diakui memiliki kepemimpinan dan komunikasi publik yang kuat (The Best Student Public Speaking). Terbiasa memecahkan masalah teknis kompleks menjadi solusi inovatif.
+                    <p data-i18n="bio-text"
+                        class="text-[var(--text-muted)] text-lg max-w-lg leading-relaxed mt-4 bg-[#0a0a0e80] backdrop-blur-sm p-4 rounded-xl border-l-2 border-[var(--neon-cyan)] shadow-[0_4px_20px_rgba(0,229,255,0.05)]">
+                        Mahasiswa Informatika Universitas Ahmad Dahlan dengan spesialisasi <span
+                            class="text-[var(--neon-cyan)] font-bold drop-shadow-[0_0_5px_#00e5ff]">Computer
+                            Vision</span>, <span
+                            class="text-[var(--ellen-light)] font-bold drop-shadow-[0_0_5px_#d83a56]">Integrasi Hardware
+                            (IoT)</span>, dan <span
+                            class="text-[var(--neon-amber)] font-bold drop-shadow-[0_0_5px_#ffb703]">Rekayasa Perangkat
+                            Lunak</span>. Berpengalaman merancang sistem cerdas <i>real-time</i> dan mengintegrasikannya
+                        dengan perangkat keras terapan. Diakui memiliki kepemimpinan dan komunikasi publik yang kuat
+                        (The Best Student Public Speaking). Terbiasa memecahkan masalah teknis kompleks menjadi solusi
+                        inovatif.
                     </p>
-                    
+
                     <!-- Quick Stats -->
                     <div class="flex gap-4 pt-4">
-                        <a href="https://github.com/OurinEdnes/" target="_blank" class="bg-[var(--ellen-maroon)] hover:bg-[var(--ellen-light)] text-white px-6 py-3 font-bold ak-cut transition-all flex items-center gap-2 hover:shadow-[0_0_15px_#d83a56]">
+                        <a href="https://github.com/OurinEdnes/" target="_blank"
+                            class="bg-[var(--ellen-maroon)] hover:bg-[var(--ellen-light)] text-white px-6 py-3 font-bold ak-cut transition-all flex items-center gap-2 hover:shadow-[0_0_15px_#d83a56]">
                             <span data-i18n="btn-github">GITHUB LINK</span>
                         </a>
-                        <a href="mailto:Banunajieh@gmail.com" class="bg-transparent border border-[var(--neon-cyan)] text-[var(--neon-cyan)] hover:bg-[#00e5ff20] px-6 py-3 font-bold ak-cut transition-all hover:shadow-[inset_0_0_10px_#00e5ff]">
+                        <a href="mailto:Banunajieh@gmail.com"
+                            class="bg-transparent border border-[var(--neon-cyan)] text-[var(--neon-cyan)] hover:bg-[#00e5ff20] px-6 py-3 font-bold ak-cut transition-all hover:shadow-[inset_0_0_10px_#00e5ff]">
                             <span data-i18n="btn-contact">CONTACT ME</span>
                         </a>
                     </div>
@@ -380,37 +602,38 @@
 
                 <!-- Right: 3D Canvas Switcher Container -->
                 <div class="relative w-full flex justify-center items-center h-[400px]">
-                    <div class="absolute inset-0 border border-[#8e1b2e30] ak-cut pointer-events-none shadow-[inset_0_0_30px_rgba(142,27,46,0.1)] z-10"></div>
-                    <div class="absolute top-[-10px] left-[-10px] w-5 h-5 border-t-2 border-l-2 border-[var(--neon-cyan)] drop-shadow-[0_0_5px_#00e5ff] z-10"></div>
-                    <div class="absolute bottom-[-10px] right-[-10px] w-5 h-5 border-b-2 border-r-2 border-[var(--ellen-maroon)] drop-shadow-[0_0_5px_#8e1b2e] z-10"></div>
-                    
-                    <div data-i18n="3d-drag" class="absolute top-4 left-4 text-xs font-mono text-[var(--neon-cyan)] pointer-events-none z-20 animate-pulse">
+                    <div
+                        class="absolute inset-0 border border-[#8e1b2e30] ak-cut pointer-events-none shadow-[inset_0_0_30px_rgba(142,27,46,0.1)] z-10">
+                    </div>
+                    <div
+                        class="absolute top-[-10px] left-[-10px] w-5 h-5 border-t-2 border-l-2 border-[var(--neon-cyan)] drop-shadow-[0_0_5px_#00e5ff] z-10">
+                    </div>
+                    <div
+                        class="absolute bottom-[-10px] right-[-10px] w-5 h-5 border-b-2 border-r-2 border-[var(--ellen-maroon)] drop-shadow-[0_0_5px_#8e1b2e] z-10">
+                    </div>
+
+                    <div data-i18n="3d-drag"
+                        class="absolute top-4 left-4 text-xs font-mono text-[var(--neon-cyan)] pointer-events-none z-20 animate-pulse">
                         [ DRAG TO ROTATE ]
                     </div>
 
                     <!-- Tombol Ganti Model -->
-                    <button id="btn-switch-model" class="absolute top-4 right-4 bg-[#0a0a0eaa] border border-[var(--neon-cyan)] text-[var(--neon-cyan)] text-xs font-mono px-3 py-1 hover:bg-[var(--neon-cyan)] hover:text-black transition-all z-30 cursor-pointer shadow-[0_0_10px_rgba(0,229,255,0.2)]">
+                    <button id="btn-switch-model"
+                        class="absolute top-4 right-4 bg-[#0a0a0eaa] border border-[var(--neon-cyan)] text-[var(--neon-cyan)] text-xs font-mono px-3 py-1 hover:bg-[var(--neon-cyan)] hover:text-black transition-all z-30 cursor-pointer shadow-[0_0_10px_rgba(0,229,255,0.2)]">
                         SWITCH MODEL // REAPER UAV
                     </button>
-                    
+
                     <!-- 3D AREA 1: Three.js Canvas Container (Untuk UAV) -->
-                    <div id="canvas-container" class="absolute inset-0 w-full h-full ak-cut bg-[#050508aa] backdrop-blur-sm z-0"></div>
+                    <div id="canvas-container"
+                        class="absolute inset-0 w-full h-full ak-cut bg-[#050508aa] backdrop-blur-sm z-0"></div>
 
                     <!-- 3D AREA 2: Model-Viewer (Untuk Senjata Ellen Joe) -->
-                    <model-viewer
-                        id="ellen-model"
+                    <model-viewer id="ellen-model"
                         src="Resource/weapon-ellen-joe-by-ghost73/source/weapon-ellen-joe/weapon.ellen.joe.gltf"
-                        alt="3D model Senjata Ellen Joe"
-                        auto-rotate 
-                        rotation-per-second="30deg" 
-                        camera-controls
-                        camera-orbit="0deg 90deg auto" 
-                        orientation="-90deg -40deg 0deg" 
-                        exposure="2" 
-                        shadow-intensity="0" 
-                        environment-image="neutral"
-                        class="absolute inset-0 w-full h-full ak-cut hidden z-0"
-                        style="background-color: transparent;">
+                        alt="3D model Senjata Ellen Joe" auto-rotate rotation-per-second="30deg" camera-controls
+                        camera-orbit="0deg 90deg auto" orientation="-90deg -40deg 0deg" exposure="2"
+                        shadow-intensity="0" environment-image="neutral"
+                        class="absolute inset-0 w-full h-full ak-cut hidden z-0" style="background-color: transparent;">
                     </model-viewer>
                 </div>
             </section>
@@ -418,8 +641,10 @@
             <!-- Skills / Arsenal Section -->
             <section id="arsenal">
                 <div class="flex items-center gap-4 mb-10">
-                    <h3 class="text-3xl font-bold uppercase tracking-wider text-white drop-shadow-[0_0_8px_rgba(255,255,255,0.2)]">
-                        <span data-i18n="sec-arsenal-1">Operator</span> <span class="text-[var(--ellen-maroon)]" data-i18n="sec-arsenal-2">Arsenal</span>
+                    <h3
+                        class="text-3xl font-bold uppercase tracking-wider text-white drop-shadow-[0_0_8px_rgba(255,255,255,0.2)]">
+                        <span data-i18n="sec-arsenal-1">Operator</span> <span class="text-[var(--ellen-maroon)]"
+                            data-i18n="sec-arsenal-2">Arsenal</span>
                     </h3>
                     <div class="flex-grow h-[1px] bg-gradient-to-r from-[var(--ellen-maroon)] to-transparent"></div>
                     <div class="text-xs font-mono text-[var(--text-muted)]">SYS.CAPABILITIES</div>
@@ -427,7 +652,8 @@
 
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                     <div class="p-6 ak-cut arsenal-card" style="--neon-color: var(--neon-cyan);">
-                        <h4 data-i18n="card-prog" class="font-bold mb-4 font-mono text-sm border-b pb-2 card-title">01 // PROG. & AI</h4>
+                        <h4 data-i18n="card-prog" class="font-bold mb-4 font-mono text-sm border-b pb-2 card-title">01
+                            // PROG. & AI</h4>
                         <div class="flex flex-wrap gap-2">
                             <span class="tech-tag">Java</span>
                             <span class="tech-tag">C++</span>
@@ -439,7 +665,8 @@
                         </div>
                     </div>
                     <div class="p-6 ak-cut arsenal-card" style="--neon-color: var(--neon-amber);">
-                        <h4 data-i18n="card-hard" class="font-bold mb-4 font-mono text-sm border-b pb-2 card-title">02 // HARDWARE</h4>
+                        <h4 data-i18n="card-hard" class="font-bold mb-4 font-mono text-sm border-b pb-2 card-title">02
+                            // HARDWARE</h4>
                         <div class="flex flex-wrap gap-2">
                             <span class="tech-tag">Raspberry Pi</span>
                             <span class="tech-tag">Network Config</span>
@@ -448,7 +675,8 @@
                         </div>
                     </div>
                     <div class="p-6 ak-cut arsenal-card" style="--neon-color: var(--neon-purple);">
-                        <h4 data-i18n="card-db" class="font-bold mb-4 font-mono text-sm border-b pb-2 card-title">03 // DATABASE</h4>
+                        <h4 data-i18n="card-db" class="font-bold mb-4 font-mono text-sm border-b pb-2 card-title">03 //
+                            DATABASE</h4>
                         <div class="flex flex-wrap gap-2">
                             <span class="tech-tag">SQL</span>
                             <span class="tech-tag">MariaDB</span>
@@ -458,7 +686,8 @@
                         </div>
                     </div>
                     <div class="p-6 ak-cut arsenal-card" style="--neon-color: var(--neon-rose);">
-                        <h4 data-i18n="card-design" class="font-bold mb-4 font-mono text-sm border-b pb-2 card-title">04 // DESIGN & MGMT</h4>
+                        <h4 data-i18n="card-design" class="font-bold mb-4 font-mono text-sm border-b pb-2 card-title">04
+                            // DESIGN & MGMT</h4>
                         <div class="flex flex-wrap gap-2">
                             <span class="tech-tag">UI/UX Design</span>
                             <span class="tech-tag">Figma</span>
@@ -485,360 +714,488 @@
                 </div>
 
                 <!-- Terminal Container -->
-                <div class="relative w-full h-[600px] md:h-[700px] terminal-bg overflow-hidden flex shadow-2xl border border-[#ffffff10] rounded-xl group">
-                    
+                <div
+                    class="relative w-full h-[600px] md:h-[700px] terminal-bg overflow-hidden flex shadow-2xl border border-[#ffffff10] rounded-xl group">
+
                     <!-- Background Layers -->
                     <div class="absolute inset-0 terminal-grid z-0"></div>
                     <div class="absolute inset-0 terminal-noise z-0"></div>
-                    
+
                     <div class="terminal-corner-tl z-10"></div>
                     <div class="terminal-corner-tr z-10"></div>
                     <div class="terminal-corner-bl z-10"></div>
                     <div class="terminal-corner-br z-10"></div>
 
                     <!-- Ornaments -->
-                    <div class="absolute top-8 right-8 text-[var(--text-muted)] opacity-20 text-xs font-mono tracking-[4px] z-10 select-none text-right">
+                    <div
+                        class="absolute top-8 right-8 text-[var(--text-muted)] opacity-20 text-xs font-mono tracking-[4px] z-10 select-none text-right">
                         MISSION REC // 01<br>+ /// ----
                     </div>
-                    
+
                     <!-- Left Navbar (Bubbles) -->
-                    <div class="terminal-sidebar z-20 flex flex-col items-center py-4 ml-6 mr-4 shrink-0 relative overflow-hidden">
+                    <div
+                        class="terminal-sidebar z-20 flex flex-col items-center py-4 ml-6 mr-4 shrink-0 relative overflow-hidden">
                         <!-- Decorations inside sidebar -->
                         <div class="absolute left-3 top-0 bottom-0 w-[1px] bg-[#ffffff10]"></div>
                         <div class="absolute inset-0 terminal-scanline opacity-10"></div>
-                        
+
                         <!-- Up Arrow -->
-                        <button onclick="scrollNav(-1)" class="mb-4 w-8 h-8 md:w-10 md:h-10 flex items-center justify-center rounded-full bg-[#111115] shadow-[inset_2px_2px_5px_rgba(255,255,255,0.05),inset_-2px_-2px_5px_rgba(0,0,0,0.5)] border border-[#ffffff10] hover:bg-[#1a1a24] hover:shadow-[0_0_10px_#00D9FF] hover:-translate-y-1 active:translate-y-0 active:scale-90 transition-all duration-300 group shrink-0 relative z-10">
-                            <svg class="w-4 h-4 text-gray-400 group-hover:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 15l7-7 7 7"></path></svg>
+                        <button onclick="scrollNav(-1)"
+                            class="mb-4 w-8 h-8 md:w-10 md:h-10 flex items-center justify-center rounded-full bg-[#111115] shadow-[inset_2px_2px_5px_rgba(255,255,255,0.05),inset_-2px_-2px_5px_rgba(0,0,0,0.5)] border border-[#ffffff10] hover:bg-[#1a1a24] hover:shadow-[0_0_10px_#00D9FF] hover:-translate-y-1 active:translate-y-0 active:scale-90 transition-all duration-300 group shrink-0 relative z-10">
+                            <svg class="w-4 h-4 text-gray-400 group-hover:text-white" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 15l7-7 7 7">
+                                </path>
+                            </svg>
                         </button>
-                        
+
                         <!-- Scrollable Nav Container -->
-                        <div id="project-nav-container" class="flex flex-col items-center gap-8 overflow-y-auto hide-scrollbar w-full px-2 scroll-smooth relative z-10" style="max-height: 420px;">
+                        <div id="project-nav-container"
+                            class="flex flex-col items-center gap-8 overflow-y-auto hide-scrollbar w-full px-2 scroll-smooth relative z-10"
+                            style="max-height: 420px;">
                             <!-- Nav 1: UAV -->
-                            <button onclick="switchProject(1)" id="nav-btn-1" class="project-nav-btn relative w-14 h-14 md:w-16 md:h-16 rounded-full focus:outline-none nav-btn-terminal group shrink-0">
+                            <button onclick="switchProject(1)" id="nav-btn-1"
+                                class="project-nav-btn relative w-14 h-14 md:w-16 md:h-16 rounded-full focus:outline-none nav-btn-terminal group shrink-0">
                                 <div class="terminal-indicator opacity-100">▌</div>
                                 <div class="terminal-active-decoration opacity-100">════════</div>
                                 <div class="terminal-active-decoration-bottom opacity-100">════════</div>
-                                <div class="nav-ring absolute inset-[-6px] rounded-full border border-[#00D9FF] transition-all duration-300 opacity-100 shadow-[0_0_15px_#00D9FF,inset_0_0_10px_#00D9FF]"></div>
-                                <div class="w-full h-full rounded-full p-[2px] bg-[#111115] shadow-[3px_3px_8px_#020203,-3px_-3px_8px_#1a1a24]">
-                                    <img src="Resource/Icon.jpg" class="w-full h-full object-cover rounded-full border border-[#00D9FF]">
+                                <div
+                                    class="nav-ring absolute inset-[-6px] rounded-full border border-[#00D9FF] transition-all duration-300 opacity-100 shadow-[0_0_15px_#00D9FF,inset_0_0_10px_#00D9FF]">
+                                </div>
+                                <div
+                                    class="w-full h-full rounded-full p-[2px] bg-[#111115] shadow-[3px_3px_8px_#020203,-3px_-3px_8px_#1a1a24]">
+                                    <img src="Resource/Icon.jpg"
+                                        class="w-full h-full object-cover rounded-full border border-[#00D9FF]">
                                 </div>
                             </button>
                             <!-- Nav 2: ARCS -->
-                            <button onclick="switchProject(2)" id="nav-btn-2" class="project-nav-btn relative w-14 h-14 md:w-16 md:h-16 rounded-full focus:outline-none nav-btn-terminal group shrink-0">
+                            <button onclick="switchProject(2)" id="nav-btn-2"
+                                class="project-nav-btn relative w-14 h-14 md:w-16 md:h-16 rounded-full focus:outline-none nav-btn-terminal group shrink-0">
                                 <div class="terminal-indicator">▌</div>
                                 <div class="terminal-active-decoration">════════</div>
                                 <div class="terminal-active-decoration-bottom">════════</div>
-                                <div class="nav-ring absolute inset-[-6px] rounded-full border border-[#00D9FF] transition-all duration-300 opacity-0 shadow-[0_0_15px_#00D9FF,inset_0_0_10px_#00D9FF]"></div>
-                                <div class="w-full h-full rounded-full p-[2px] bg-[#111115] shadow-[3px_3px_8px_#020203,-3px_-3px_8px_#1a1a24]">
-                                    <img src="Resource/ARCS.png" class="w-full h-full object-cover rounded-full border border-[#333]">
+                                <div
+                                    class="nav-ring absolute inset-[-6px] rounded-full border border-[#00D9FF] transition-all duration-300 opacity-0 shadow-[0_0_15px_#00D9FF,inset_0_0_10px_#00D9FF]">
+                                </div>
+                                <div
+                                    class="w-full h-full rounded-full p-[2px] bg-[#111115] shadow-[3px_3px_8px_#020203,-3px_-3px_8px_#1a1a24]">
+                                    <img src="Resource/ARCS.png"
+                                        class="w-full h-full object-cover rounded-full border border-[#333]">
                                 </div>
                             </button>
                             <!-- Nav 3: HCI -->
-                            <button onclick="switchProject(3)" id="nav-btn-3" class="project-nav-btn relative w-14 h-14 md:w-16 md:h-16 rounded-full focus:outline-none nav-btn-terminal group shrink-0">
+                            <button onclick="switchProject(3)" id="nav-btn-3"
+                                class="project-nav-btn relative w-14 h-14 md:w-16 md:h-16 rounded-full focus:outline-none nav-btn-terminal group shrink-0">
                                 <div class="terminal-indicator">▌</div>
                                 <div class="terminal-active-decoration">════════</div>
                                 <div class="terminal-active-decoration-bottom">════════</div>
-                                <div class="nav-ring absolute inset-[-6px] rounded-full border border-[#00D9FF] transition-all duration-300 opacity-0 shadow-[0_0_15px_#00D9FF,inset_0_0_10px_#00D9FF]"></div>
-                                <div class="w-full h-full rounded-full p-[2px] bg-[#111115] shadow-[3px_3px_8px_#020203,-3px_-3px_8px_#1a1a24]">
-                                    <img src="Resource/HCI.png" class="w-full h-full object-cover rounded-full border border-[#333]">
+                                <div
+                                    class="nav-ring absolute inset-[-6px] rounded-full border border-[#00D9FF] transition-all duration-300 opacity-0 shadow-[0_0_15px_#00D9FF,inset_0_0_10px_#00D9FF]">
+                                </div>
+                                <div
+                                    class="w-full h-full rounded-full p-[2px] bg-[#111115] shadow-[3px_3px_8px_#020203,-3px_-3px_8px_#1a1a24]">
+                                    <img src="Resource/HCI.png"
+                                        class="w-full h-full object-cover rounded-full border border-[#333]">
                                 </div>
                             </button>
                             <!-- Nav 4: TypeShark -->
-                            <button onclick="switchProject(4)" id="nav-btn-4" class="project-nav-btn relative w-14 h-14 md:w-16 md:h-16 rounded-full focus:outline-none nav-btn-terminal group shrink-0">
+                            <button onclick="switchProject(4)" id="nav-btn-4"
+                                class="project-nav-btn relative w-14 h-14 md:w-16 md:h-16 rounded-full focus:outline-none nav-btn-terminal group shrink-0">
                                 <div class="terminal-indicator">▌</div>
                                 <div class="terminal-active-decoration">════════</div>
                                 <div class="terminal-active-decoration-bottom">════════</div>
-                                <div class="nav-ring absolute inset-[-6px] rounded-full border border-[#00D9FF] transition-all duration-300 opacity-0 shadow-[0_0_15px_#00D9FF,inset_0_0_10px_#00D9FF]"></div>
-                                <div class="w-full h-full rounded-full p-[2px] bg-[#111115] shadow-[3px_3px_8px_#020203,-3px_-3px_8px_#1a1a24]">
-                                    <img src="Resource/Type Shark.png" class="w-full h-full object-cover rounded-full border border-[#333]">
+                                <div
+                                    class="nav-ring absolute inset-[-6px] rounded-full border border-[#00D9FF] transition-all duration-300 opacity-0 shadow-[0_0_15px_#00D9FF,inset_0_0_10px_#00D9FF]">
+                                </div>
+                                <div
+                                    class="w-full h-full rounded-full p-[2px] bg-[#111115] shadow-[3px_3px_8px_#020203,-3px_-3px_8px_#1a1a24]">
+                                    <img src="Resource/Type Shark.png"
+                                        class="w-full h-full object-cover rounded-full border border-[#333]">
                                 </div>
                             </button>
                             <!-- Nav 5: Smart Fincare -->
-                            <button onclick="switchProject(5)" id="nav-btn-5" class="project-nav-btn relative w-14 h-14 md:w-16 md:h-16 rounded-full focus:outline-none nav-btn-terminal group shrink-0">
+                            <button onclick="switchProject(5)" id="nav-btn-5"
+                                class="project-nav-btn relative w-14 h-14 md:w-16 md:h-16 rounded-full focus:outline-none nav-btn-terminal group shrink-0">
                                 <div class="terminal-indicator">▌</div>
                                 <div class="terminal-active-decoration">════════</div>
                                 <div class="terminal-active-decoration-bottom">════════</div>
-                                <div class="nav-ring absolute inset-[-6px] rounded-full border border-[#00D9FF] transition-all duration-300 opacity-0 shadow-[0_0_15px_#00D9FF,inset_0_0_10px_#00D9FF]"></div>
-                                <div class="w-full h-full rounded-full p-[2px] bg-[#111115] shadow-[3px_3px_8px_#020203,-3px_-3px_8px_#1a1a24]">
-                                    <img src="Resource/Smart Fincare.png" class="w-full h-full object-cover rounded-full border border-[#333]">
+                                <div
+                                    class="nav-ring absolute inset-[-6px] rounded-full border border-[#00D9FF] transition-all duration-300 opacity-0 shadow-[0_0_15px_#00D9FF,inset_0_0_10px_#00D9FF]">
+                                </div>
+                                <div
+                                    class="w-full h-full rounded-full p-[2px] bg-[#111115] shadow-[3px_3px_8px_#020203,-3px_-3px_8px_#1a1a24]">
+                                    <img src="Resource/Smart Fincare.png"
+                                        class="w-full h-full object-cover rounded-full border border-[#333]">
                                 </div>
                             </button>
                             <!-- Nav 6: Solar System -->
-                            <button onclick="switchProject(6)" id="nav-btn-6" class="project-nav-btn relative w-14 h-14 md:w-16 md:h-16 rounded-full focus:outline-none nav-btn-terminal group shrink-0">
+                            <button onclick="switchProject(6)" id="nav-btn-6"
+                                class="project-nav-btn relative w-14 h-14 md:w-16 md:h-16 rounded-full focus:outline-none nav-btn-terminal group shrink-0">
                                 <div class="terminal-indicator">▌</div>
                                 <div class="terminal-active-decoration">════════</div>
                                 <div class="terminal-active-decoration-bottom">════════</div>
-                                <div class="nav-ring absolute inset-[-6px] rounded-full border border-[#00D9FF] transition-all duration-300 opacity-0 shadow-[0_0_15px_#00D9FF,inset_0_0_10px_#00D9FF]"></div>
-                                <div class="w-full h-full rounded-full p-[2px] bg-[#111115] shadow-[3px_3px_8px_#020203,-3px_-3px_8px_#1a1a24]">
-                                    <img src="Resource/Solar System.png" class="w-full h-full object-cover rounded-full border border-[#333]">
+                                <div
+                                    class="nav-ring absolute inset-[-6px] rounded-full border border-[#00D9FF] transition-all duration-300 opacity-0 shadow-[0_0_15px_#00D9FF,inset_0_0_10px_#00D9FF]">
+                                </div>
+                                <div
+                                    class="w-full h-full rounded-full p-[2px] bg-[#111115] shadow-[3px_3px_8px_#020203,-3px_-3px_8px_#1a1a24]">
+                                    <img src="Resource/Solar System.png"
+                                        class="w-full h-full object-cover rounded-full border border-[#333]">
                                 </div>
                             </button>
                             <!-- Nav 7: Finance Shark -->
-                            <button onclick="switchProject(7)" id="nav-btn-7" class="project-nav-btn relative w-14 h-14 md:w-16 md:h-16 rounded-full focus:outline-none nav-btn-terminal group shrink-0">
+                            <button onclick="switchProject(7)" id="nav-btn-7"
+                                class="project-nav-btn relative w-14 h-14 md:w-16 md:h-16 rounded-full focus:outline-none nav-btn-terminal group shrink-0">
                                 <div class="terminal-indicator">▌</div>
                                 <div class="terminal-active-decoration">════════</div>
                                 <div class="terminal-active-decoration-bottom">════════</div>
-                                <div class="nav-ring absolute inset-[-6px] rounded-full border border-[#00D9FF] transition-all duration-300 opacity-0 shadow-[0_0_15px_#00D9FF,inset_0_0_10px_#00D9FF]"></div>
-                                <div class="w-full h-full rounded-full p-[2px] bg-[#111115] shadow-[3px_3px_8px_#020203,-3px_-3px_8px_#1a1a24]">
-                                    <img src="Resource/Bot AI.png" class="w-full h-full object-cover rounded-full border border-[#333]">
+                                <div
+                                    class="nav-ring absolute inset-[-6px] rounded-full border border-[#00D9FF] transition-all duration-300 opacity-0 shadow-[0_0_15px_#00D9FF,inset_0_0_10px_#00D9FF]">
+                                </div>
+                                <div
+                                    class="w-full h-full rounded-full p-[2px] bg-[#111115] shadow-[3px_3px_8px_#020203,-3px_-3px_8px_#1a1a24]">
+                                    <img src="Resource/Bot AI.png"
+                                        class="w-full h-full object-cover rounded-full border border-[#333]">
                                 </div>
                             </button>
                             <!-- Nav 8: Warehouse -->
-                            <button onclick="switchProject(8)" id="nav-btn-8" class="project-nav-btn relative w-14 h-14 md:w-16 md:h-16 rounded-full focus:outline-none nav-btn-terminal group shrink-0">
+                            <button onclick="switchProject(8)" id="nav-btn-8"
+                                class="project-nav-btn relative w-14 h-14 md:w-16 md:h-16 rounded-full focus:outline-none nav-btn-terminal group shrink-0">
                                 <div class="terminal-indicator">▌</div>
                                 <div class="terminal-active-decoration">════════</div>
                                 <div class="terminal-active-decoration-bottom">════════</div>
-                                <div class="nav-ring absolute inset-[-6px] rounded-full border border-[#00D9FF] transition-all duration-300 opacity-0 shadow-[0_0_15px_#00D9FF,inset_0_0_10px_#00D9FF]"></div>
-                                <div class="w-full h-full rounded-full p-[2px] bg-[#111115] shadow-[3px_3px_8px_#020203,-3px_-3px_8px_#1a1a24]">
-                                    <img src="Resource/Warehouse inventory management.png" class="w-full h-full object-cover rounded-full border border-[#333]">
+                                <div
+                                    class="nav-ring absolute inset-[-6px] rounded-full border border-[#00D9FF] transition-all duration-300 opacity-0 shadow-[0_0_15px_#00D9FF,inset_0_0_10px_#00D9FF]">
+                                </div>
+                                <div
+                                    class="w-full h-full rounded-full p-[2px] bg-[#111115] shadow-[3px_3px_8px_#020203,-3px_-3px_8px_#1a1a24]">
+                                    <img src="Resource/Warehouse inventory management.png"
+                                        class="w-full h-full object-cover rounded-full border border-[#333]">
                                 </div>
                             </button>
                         </div>
-                        
+
                         <!-- Down Arrow -->
-                        <button onclick="scrollNav(1)" class="mt-4 w-8 h-8 md:w-10 md:h-10 flex items-center justify-center rounded-full bg-[#111115] shadow-[inset_2px_2px_5px_rgba(255,255,255,0.05),inset_-2px_-2px_5px_rgba(0,0,0,0.5)] border border-[#ffffff10] hover:bg-[#1a1a24] hover:shadow-[0_0_10px_#00D9FF] hover:translate-y-1 active:translate-y-0 active:scale-90 transition-all duration-300 group shrink-0 relative z-10">
-                            <svg class="w-4 h-4 text-gray-400 group-hover:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M19 9l-7 7-7-7"></path></svg>
+                        <button onclick="scrollNav(1)"
+                            class="mt-4 w-8 h-8 md:w-10 md:h-10 flex items-center justify-center rounded-full bg-[#111115] shadow-[inset_2px_2px_5px_rgba(255,255,255,0.05),inset_-2px_-2px_5px_rgba(0,0,0,0.5)] border border-[#ffffff10] hover:bg-[#1a1a24] hover:shadow-[0_0_10px_#00D9FF] hover:translate-y-1 active:translate-y-0 active:scale-90 transition-all duration-300 group shrink-0 relative z-10">
+                            <svg class="w-4 h-4 text-gray-400 group-hover:text-white" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3"
+                                    d="M19 9l-7 7-7-7"></path>
+                            </svg>
                         </button>
                     </div>
 
                     <!-- Right Content Area -->
                     <div class="flex-1 relative z-10 overflow-hidden bg-[rgba(9,10,15,0.85)]">
                         <!-- Project 1 -->
-                        <div id="proj-content-1" class="project-content absolute inset-0 flex transition-opacity duration-500 opacity-100 z-10 pointer-events-auto">
+                        <div id="proj-content-1"
+                            class="project-content absolute inset-0 flex transition-opacity duration-500 opacity-100 z-10 pointer-events-auto">
                             <!-- Info Left -->
                             <div class="w-full md:w-3/5 p-8 md:p-12 flex flex-col justify-center z-20 h-full">
-                                <h4 class="terminal-title-anim text-3xl md:text-5xl font-[900] text-white uppercase tracking-[2px] leading-tight mb-4 flex gap-3">
+                                <h4
+                                    class="terminal-title-anim text-3xl md:text-5xl font-[900] text-white uppercase tracking-[2px] leading-tight mb-4 flex gap-3">
                                     <span class="text-[var(--text-muted)] opacity-50">[01]</span>
                                     <span data-i18n="proj1-title">Integrasi Jaringan & Komunikasi UAV</span>
                                 </h4>
-                                <div class="flex flex-wrap gap-4 mb-8 font-mono text-[10px] md:text-xs uppercase tracking-wider terminal-title-anim" style="animation-delay: 50ms;">
-                                    <div class="bg-[rgba(255,255,255,0.04)] border border-[#ffffff10] text-white flex rounded-sm overflow-hidden">
-                                        <span class="bg-[#FFC107] text-black px-3 py-1 font-bold">ROLE</span> 
+                                <div class="flex flex-wrap gap-4 mb-8 font-mono text-[10px] md:text-xs uppercase tracking-wider terminal-title-anim"
+                                    style="animation-delay: 50ms;">
+                                    <div
+                                        class="bg-[rgba(255,255,255,0.04)] border border-[#ffffff10] text-white flex rounded-sm overflow-hidden">
+                                        <span class="bg-[#FFC107] text-black px-3 py-1 font-bold">ROLE</span>
                                         <span class="px-4 py-1" data-i18n="proj1-sub">Tim Universitas - KRTI</span>
                                     </div>
-                                    <div class="bg-[rgba(255,255,255,0.04)] border border-[#ffffff10] text-white flex rounded-sm overflow-hidden">
-                                        <span class="bg-[#FFC107] text-black px-3 py-1 font-bold">YEAR</span> 
+                                    <div
+                                        class="bg-[rgba(255,255,255,0.04)] border border-[#ffffff10] text-white flex rounded-sm overflow-hidden">
+                                        <span class="bg-[#FFC107] text-black px-3 py-1 font-bold">YEAR</span>
                                         <span class="px-4 py-1">2025</span>
                                     </div>
                                 </div>
-                                <div class="bg-[rgba(0,0,0,0.45)] backdrop-blur-[14px] border-l-[4px] border-[#FFC107] p-6 max-w-xl terminal-title-anim shadow-[0_10px_30px_rgba(0,0,0,0.5)]" style="animation-delay: 100ms;">
+                                <div class="bg-[rgba(0,0,0,0.45)] backdrop-blur-[14px] border-l-[4px] border-[#FFC107] p-6 max-w-xl terminal-title-anim shadow-[0_10px_30px_rgba(0,0,0,0.5)]"
+                                    style="animation-delay: 100ms;">
                                     <p data-i18n="proj1-desc" class="text-white leading-relaxed text-sm">
-                                        Bertanggung jawab penuh atas konfigurasi, manajemen jaringan, dan konektivitas pada perangkat Raspberry Pi di wahana udara nirawak (UAV). Mengamankan integrasi data dan memastikan transmisi komunikasi stabil secara *real-time* antara sistem robot terbang dan stasiun kendali darat.
+                                        Bertanggung jawab penuh atas konfigurasi, manajemen jaringan, dan konektivitas
+                                        pada perangkat Raspberry Pi di wahana udara nirawak (UAV). Mengamankan integrasi
+                                        data dan memastikan transmisi komunikasi stabil secara *real-time* antara sistem
+                                        robot terbang dan stasiun kendali darat.
                                     </p>
                                 </div>
                             </div>
                             <!-- Image Right -->
                             <div class="absolute right-0 top-0 bottom-0 w-full md:w-3/4 -z-10 mask-image-left">
-                                <video class="w-full h-full object-cover mix-blend-screen opacity-50" autoplay loop muted poster="Resource/Icon.jpg">
+                                <video class="w-full h-full object-cover mix-blend-screen opacity-50" autoplay loop
+                                    muted poster="Resource/Icon.jpg">
                                     <source src="Resource/YoloV8 UAV.mp4" type="video/mp4">
                                 </video>
                             </div>
                         </div>
 
                         <!-- Project 2 -->
-                        <div id="proj-content-2" class="project-content absolute inset-0 flex transition-opacity duration-500 opacity-0 z-0 pointer-events-none">
+                        <div id="proj-content-2"
+                            class="project-content absolute inset-0 flex transition-opacity duration-500 opacity-0 z-0 pointer-events-none">
                             <div class="w-full md:w-3/5 p-8 md:p-12 flex flex-col justify-center z-20 h-full">
-                                <h4 class="terminal-title-anim text-3xl md:text-5xl font-[900] text-white uppercase tracking-[2px] leading-tight mb-4 flex gap-3">
+                                <h4
+                                    class="terminal-title-anim text-3xl md:text-5xl font-[900] text-white uppercase tracking-[2px] leading-tight mb-4 flex gap-3">
                                     <span class="text-[var(--text-muted)] opacity-50">[02]</span>
                                     <span data-i18n="proj2-title">Proyek A.R.C.S</span>
                                 </h4>
-                                <div class="flex flex-wrap gap-4 mb-8 font-mono text-[10px] md:text-xs uppercase tracking-wider terminal-title-anim" style="animation-delay: 50ms;">
-                                    <div class="bg-[rgba(255,255,255,0.04)] border border-[#ffffff10] text-white flex rounded-sm overflow-hidden">
-                                        <span class="bg-[#FFC107] text-black px-3 py-1 font-bold">ROLE</span> 
+                                <div class="flex flex-wrap gap-4 mb-8 font-mono text-[10px] md:text-xs uppercase tracking-wider terminal-title-anim"
+                                    style="animation-delay: 50ms;">
+                                    <div
+                                        class="bg-[rgba(255,255,255,0.04)] border border-[#ffffff10] text-white flex rounded-sm overflow-hidden">
+                                        <span class="bg-[#FFC107] text-black px-3 py-1 font-bold">ROLE</span>
                                         <span class="px-4 py-1" data-i18n="proj2-sub">Software Developer</span>
                                     </div>
-                                    <div class="bg-[rgba(255,255,255,0.04)] border border-[#ffffff10] text-white flex rounded-sm overflow-hidden">
-                                        <span class="bg-[#FFC107] text-black px-3 py-1 font-bold">YEAR</span> 
+                                    <div
+                                        class="bg-[rgba(255,255,255,0.04)] border border-[#ffffff10] text-white flex rounded-sm overflow-hidden">
+                                        <span class="bg-[#FFC107] text-black px-3 py-1 font-bold">YEAR</span>
                                         <span class="px-4 py-1">2025</span>
                                     </div>
                                 </div>
-                                <div class="bg-[rgba(0,0,0,0.45)] backdrop-blur-[14px] border-l-[4px] border-[#FFC107] p-6 max-w-xl terminal-title-anim shadow-[0_10px_30px_rgba(0,0,0,0.5)]" style="animation-delay: 100ms;">
+                                <div class="bg-[rgba(0,0,0,0.45)] backdrop-blur-[14px] border-l-[4px] border-[#FFC107] p-6 max-w-xl terminal-title-anim shadow-[0_10px_30px_rgba(0,0,0,0.5)]"
+                                    style="animation-delay: 100ms;">
                                     <p data-i18n="proj2-desc" class="text-white leading-relaxed text-sm">
-                                        Mengembangkan purwarupa perangkat lunak berbasis Java untuk mendukung operasi penyelamatan (SAR). Mengimplementasikan algoritma deteksi warna HSV dan pelacakan objek secara *real-time* menggunakan simulasi input kamera.
+                                        Mengembangkan purwarupa perangkat lunak berbasis Java untuk mendukung operasi
+                                        penyelamatan (SAR). Mengimplementasikan algoritma deteksi warna HSV dan
+                                        pelacakan objek secara *real-time* menggunakan simulasi input kamera.
                                     </p>
                                 </div>
                             </div>
                             <div class="absolute right-0 top-0 bottom-0 w-full md:w-3/4 -z-10 mask-image-left">
-                                <img src="Resource/ARCS.png" class="w-full h-full object-cover mix-blend-screen opacity-30">
+                                <img src="Resource/ARCS.png"
+                                    class="w-full h-full object-cover mix-blend-screen opacity-30">
                             </div>
                         </div>
 
                         <!-- Project 3 -->
-                        <div id="proj-content-3" class="project-content absolute inset-0 flex transition-opacity duration-500 opacity-0 z-0 pointer-events-none">
+                        <div id="proj-content-3"
+                            class="project-content absolute inset-0 flex transition-opacity duration-500 opacity-0 z-0 pointer-events-none">
                             <div class="w-full md:w-3/5 p-8 md:p-12 flex flex-col justify-center z-20 h-full">
-                                <h4 class="terminal-title-anim text-3xl md:text-5xl font-[900] text-white uppercase tracking-[2px] leading-tight mb-4 flex gap-3">
+                                <h4
+                                    class="terminal-title-anim text-3xl md:text-5xl font-[900] text-white uppercase tracking-[2px] leading-tight mb-4 flex gap-3">
                                     <span class="text-[var(--text-muted)] opacity-50">[03]</span>
                                     <span data-i18n="proj3-title">HCI Hand-Landmark System</span>
                                 </h4>
-                                <div class="flex flex-wrap gap-4 mb-8 font-mono text-[10px] md:text-xs uppercase tracking-wider terminal-title-anim" style="animation-delay: 50ms;">
-                                    <div class="bg-[rgba(255,255,255,0.04)] border border-[#ffffff10] text-white flex rounded-sm overflow-hidden">
-                                        <span class="bg-[#FFC107] text-black px-3 py-1 font-bold">ROLE</span> 
+                                <div class="flex flex-wrap gap-4 mb-8 font-mono text-[10px] md:text-xs uppercase tracking-wider terminal-title-anim"
+                                    style="animation-delay: 50ms;">
+                                    <div
+                                        class="bg-[rgba(255,255,255,0.04)] border border-[#ffffff10] text-white flex rounded-sm overflow-hidden">
+                                        <span class="bg-[#FFC107] text-black px-3 py-1 font-bold">ROLE</span>
                                         <span class="px-4 py-1" data-i18n="proj3-sub">Software Developer</span>
                                     </div>
-                                    <div class="bg-[rgba(255,255,255,0.04)] border border-[#ffffff10] text-white flex rounded-sm overflow-hidden">
-                                        <span class="bg-[#FFC107] text-black px-3 py-1 font-bold">YEAR</span> 
+                                    <div
+                                        class="bg-[rgba(255,255,255,0.04)] border border-[#ffffff10] text-white flex rounded-sm overflow-hidden">
+                                        <span class="bg-[#FFC107] text-black px-3 py-1 font-bold">YEAR</span>
                                         <span class="px-4 py-1">2026 - Present</span>
                                     </div>
                                 </div>
-                                <div class="bg-[rgba(0,0,0,0.45)] backdrop-blur-[14px] border-l-[4px] border-[#FFC107] p-6 max-w-xl terminal-title-anim shadow-[0_10px_30px_rgba(0,0,0,0.5)]" style="animation-delay: 100ms;">
+                                <div class="bg-[rgba(0,0,0,0.45)] backdrop-blur-[14px] border-l-[4px] border-[#FFC107] p-6 max-w-xl terminal-title-anim shadow-[0_10px_30px_rgba(0,0,0,0.5)]"
+                                    style="animation-delay: 100ms;">
                                     <p data-i18n="proj3-desc" class="text-white leading-relaxed text-sm">
-                                        Merancang sistem interaksi manusia-komputer berbasis pengenalan gerakan tangan. Mengimplementasikan arsitektur MediaPipe untuk mendeteksi *hand-landmark* akurat guna optimasi kontrol kursor dan *virtual keyboard*.
+                                        Merancang sistem interaksi manusia-komputer berbasis pengenalan gerakan tangan.
+                                        Mengimplementasikan arsitektur MediaPipe untuk mendeteksi *hand-landmark* akurat
+                                        guna optimasi kontrol kursor dan *virtual keyboard*.
                                     </p>
                                 </div>
                             </div>
                             <div class="absolute right-0 top-0 bottom-0 w-full md:w-3/4 -z-10 mask-image-left">
-                                <img src="Resource/HCI.png" class="w-full h-full object-cover mix-blend-screen opacity-30">
+                                <img src="Resource/HCI.png"
+                                    class="w-full h-full object-cover mix-blend-screen opacity-30">
                             </div>
                         </div>
 
                         <!-- Project 4 -->
-                        <div id="proj-content-4" class="project-content absolute inset-0 flex transition-opacity duration-500 opacity-0 z-0 pointer-events-none">
+                        <div id="proj-content-4"
+                            class="project-content absolute inset-0 flex transition-opacity duration-500 opacity-0 z-0 pointer-events-none">
                             <div class="w-full md:w-3/5 p-8 md:p-12 flex flex-col justify-center z-20 h-full">
-                                <h4 class="terminal-title-anim text-3xl md:text-5xl font-[900] text-white uppercase tracking-[2px] leading-tight mb-4 flex gap-3">
+                                <h4
+                                    class="terminal-title-anim text-3xl md:text-5xl font-[900] text-white uppercase tracking-[2px] leading-tight mb-4 flex gap-3">
                                     <span class="text-[var(--text-muted)] opacity-50">[04]</span>
                                     <span data-i18n="proj4-title">TypeShark Application</span>
                                 </h4>
-                                <div class="flex flex-wrap gap-4 mb-8 font-mono text-[10px] md:text-xs uppercase tracking-wider terminal-title-anim" style="animation-delay: 50ms;">
-                                    <div class="bg-[rgba(255,255,255,0.04)] border border-[#ffffff10] text-white flex rounded-sm overflow-hidden">
-                                        <span class="bg-[#FFC107] text-black px-3 py-1 font-bold">ROLE</span> 
+                                <div class="flex flex-wrap gap-4 mb-8 font-mono text-[10px] md:text-xs uppercase tracking-wider terminal-title-anim"
+                                    style="animation-delay: 50ms;">
+                                    <div
+                                        class="bg-[rgba(255,255,255,0.04)] border border-[#ffffff10] text-white flex rounded-sm overflow-hidden">
+                                        <span class="bg-[#FFC107] text-black px-3 py-1 font-bold">ROLE</span>
                                         <span class="px-4 py-1" data-i18n="proj4-sub">Software Developer</span>
                                     </div>
-                                    <div class="bg-[rgba(255,255,255,0.04)] border border-[#ffffff10] text-white flex rounded-sm overflow-hidden">
-                                        <span class="bg-[#FFC107] text-black px-3 py-1 font-bold">YEAR</span> 
+                                    <div
+                                        class="bg-[rgba(255,255,255,0.04)] border border-[#ffffff10] text-white flex rounded-sm overflow-hidden">
+                                        <span class="bg-[#FFC107] text-black px-3 py-1 font-bold">YEAR</span>
                                         <span class="px-4 py-1">2024</span>
                                     </div>
                                 </div>
-                                <div class="bg-[rgba(0,0,0,0.45)] backdrop-blur-[14px] border-l-[4px] border-[#FFC107] p-6 max-w-xl terminal-title-anim shadow-[0_10px_30px_rgba(0,0,0,0.5)]" style="animation-delay: 100ms;">
+                                <div class="bg-[rgba(0,0,0,0.45)] backdrop-blur-[14px] border-l-[4px] border-[#FFC107] p-6 max-w-xl terminal-title-anim shadow-[0_10px_30px_rgba(0,0,0,0.5)]"
+                                    style="animation-delay: 100ms;">
                                     <p data-i18n="proj4-desc" class="text-white leading-relaxed text-sm">
-                                        Mengembangkan aplikasi desktop tutor mengetik yang bebas distraksi menggunakan framework Electron, JavaScript, HTML, dan CSS. Mengimplementasikan pelacakan statistik real-time seperti WPM dan akurasi.
+                                        Mengembangkan aplikasi desktop tutor mengetik yang bebas distraksi menggunakan
+                                        framework Electron, JavaScript, HTML, dan CSS. Mengimplementasikan pelacakan
+                                        statistik real-time seperti WPM dan akurasi.
                                     </p>
                                 </div>
                             </div>
                             <div class="absolute right-0 top-0 bottom-0 w-full md:w-3/4 -z-10 mask-image-left">
-                                <img src="Resource/Type Shark.png" class="w-full h-full object-cover mix-blend-screen opacity-30">
+                                <img src="Resource/Type Shark.png"
+                                    class="w-full h-full object-cover mix-blend-screen opacity-30">
                             </div>
                         </div>
 
                         <!-- Project 5 -->
-                        <div id="proj-content-5" class="project-content absolute inset-0 flex transition-opacity duration-500 opacity-0 z-0 pointer-events-none">
+                        <div id="proj-content-5"
+                            class="project-content absolute inset-0 flex transition-opacity duration-500 opacity-0 z-0 pointer-events-none">
                             <div class="w-full md:w-3/5 p-8 md:p-12 flex flex-col justify-center z-20 h-full">
-                                <h4 class="terminal-title-anim text-3xl md:text-5xl font-[900] text-white uppercase tracking-[2px] leading-tight mb-4 flex gap-3">
+                                <h4
+                                    class="terminal-title-anim text-3xl md:text-5xl font-[900] text-white uppercase tracking-[2px] leading-tight mb-4 flex gap-3">
                                     <span class="text-[var(--text-muted)] opacity-50">[05]</span>
                                     <span data-i18n="proj5-title">UI/UX Smart Fincare</span>
                                 </h4>
-                                <div class="flex flex-wrap gap-4 mb-8 font-mono text-[10px] md:text-xs uppercase tracking-wider terminal-title-anim" style="animation-delay: 50ms;">
-                                    <div class="bg-[rgba(255,255,255,0.04)] border border-[#ffffff10] text-white flex rounded-sm overflow-hidden">
-                                        <span class="bg-[#FFC107] text-black px-3 py-1 font-bold">ROLE</span> 
+                                <div class="flex flex-wrap gap-4 mb-8 font-mono text-[10px] md:text-xs uppercase tracking-wider terminal-title-anim"
+                                    style="animation-delay: 50ms;">
+                                    <div
+                                        class="bg-[rgba(255,255,255,0.04)] border border-[#ffffff10] text-white flex rounded-sm overflow-hidden">
+                                        <span class="bg-[#FFC107] text-black px-3 py-1 font-bold">ROLE</span>
                                         <span class="px-4 py-1" data-i18n="proj5-sub">UI/UX Researcher</span>
                                     </div>
-                                    <div class="bg-[rgba(255,255,255,0.04)] border border-[#ffffff10] text-white flex rounded-sm overflow-hidden">
-                                        <span class="bg-[#FFC107] text-black px-3 py-1 font-bold">YEAR</span> 
+                                    <div
+                                        class="bg-[rgba(255,255,255,0.04)] border border-[#ffffff10] text-white flex rounded-sm overflow-hidden">
+                                        <span class="bg-[#FFC107] text-black px-3 py-1 font-bold">YEAR</span>
                                         <span class="px-4 py-1">2024</span>
                                     </div>
                                 </div>
-                                <div class="bg-[rgba(0,0,0,0.45)] backdrop-blur-[14px] border-l-[4px] border-[#FFC107] p-6 max-w-xl terminal-title-anim shadow-[0_10px_30px_rgba(0,0,0,0.5)]" style="animation-delay: 100ms;">
+                                <div class="bg-[rgba(0,0,0,0.45)] backdrop-blur-[14px] border-l-[4px] border-[#FFC107] p-6 max-w-xl terminal-title-anim shadow-[0_10px_30px_rgba(0,0,0,0.5)]"
+                                    style="animation-delay: 100ms;">
                                     <p data-i18n="proj5-desc" class="text-white leading-relaxed text-sm">
-                                        Menyelesaikan riset pengguna dan perancangan UI/UX komprehensif untuk aplikasi manajemen keuangan Smart Fincare. Menghasilkan laporan evaluasi Sistem Usability Scale (SUS) dan dokumen pengujian fungsional.
+                                        Menyelesaikan riset pengguna dan perancangan UI/UX komprehensif untuk aplikasi
+                                        manajemen keuangan Smart Fincare. Menghasilkan laporan evaluasi Sistem Usability
+                                        Scale (SUS) dan dokumen pengujian fungsional.
                                     </p>
                                 </div>
                             </div>
                             <div class="absolute right-0 top-0 bottom-0 w-full md:w-3/4 -z-10 mask-image-left">
-                                <img src="Resource/Smart Fincare.png" class="w-full h-full object-cover mix-blend-screen opacity-30">
+                                <img src="Resource/Smart Fincare.png"
+                                    class="w-full h-full object-cover mix-blend-screen opacity-30">
                             </div>
                         </div>
 
                         <!-- Project 6 -->
-                        <div id="proj-content-6" class="project-content absolute inset-0 flex transition-opacity duration-500 opacity-0 z-0 pointer-events-none">
+                        <div id="proj-content-6"
+                            class="project-content absolute inset-0 flex transition-opacity duration-500 opacity-0 z-0 pointer-events-none">
                             <div class="w-full md:w-3/5 p-8 md:p-12 flex flex-col justify-center z-20 h-full">
-                                <h4 class="terminal-title-anim text-3xl md:text-5xl font-[900] text-white uppercase tracking-[2px] leading-tight mb-4 flex gap-3">
+                                <h4
+                                    class="terminal-title-anim text-3xl md:text-5xl font-[900] text-white uppercase tracking-[2px] leading-tight mb-4 flex gap-3">
                                     <span class="text-[var(--text-muted)] opacity-50">[06]</span>
                                     <span data-i18n="proj6-title">Simulasi 3D Tata Surya</span>
                                 </h4>
-                                <div class="flex flex-wrap gap-4 mb-8 font-mono text-[10px] md:text-xs uppercase tracking-wider terminal-title-anim" style="animation-delay: 50ms;">
-                                    <div class="bg-[rgba(255,255,255,0.04)] border border-[#ffffff10] text-white flex rounded-sm overflow-hidden">
-                                        <span class="bg-[#FFC107] text-black px-3 py-1 font-bold">ROLE</span> 
+                                <div class="flex flex-wrap gap-4 mb-8 font-mono text-[10px] md:text-xs uppercase tracking-wider terminal-title-anim"
+                                    style="animation-delay: 50ms;">
+                                    <div
+                                        class="bg-[rgba(255,255,255,0.04)] border border-[#ffffff10] text-white flex rounded-sm overflow-hidden">
+                                        <span class="bg-[#FFC107] text-black px-3 py-1 font-bold">ROLE</span>
                                         <span class="px-4 py-1" data-i18n="proj6-sub">C++ OpenGL Dev</span>
                                     </div>
-                                    <div class="bg-[rgba(255,255,255,0.04)] border border-[#ffffff10] text-white flex rounded-sm overflow-hidden">
-                                        <span class="bg-[#FFC107] text-black px-3 py-1 font-bold">YEAR</span> 
+                                    <div
+                                        class="bg-[rgba(255,255,255,0.04)] border border-[#ffffff10] text-white flex rounded-sm overflow-hidden">
+                                        <span class="bg-[#FFC107] text-black px-3 py-1 font-bold">YEAR</span>
                                         <span class="px-4 py-1">2023</span>
                                     </div>
                                 </div>
-                                <div class="bg-[rgba(0,0,0,0.45)] backdrop-blur-[14px] border-l-[4px] border-[#FFC107] p-6 max-w-xl terminal-title-anim shadow-[0_10px_30px_rgba(0,0,0,0.5)]" style="animation-delay: 100ms;">
+                                <div class="bg-[rgba(0,0,0,0.45)] backdrop-blur-[14px] border-l-[4px] border-[#FFC107] p-6 max-w-xl terminal-title-anim shadow-[0_10px_30px_rgba(0,0,0,0.5)]"
+                                    style="animation-delay: 100ms;">
                                     <p data-i18n="proj6-desc" class="text-white leading-relaxed text-sm">
-                                        Membangun proyek grafika komputer yang menyimulasikan pergerakan tata surya dan galaksi secara 3D menggunakan bahasa C++ dan library OpenGL.
+                                        Membangun proyek grafika komputer yang menyimulasikan pergerakan tata surya dan
+                                        galaksi secara 3D menggunakan bahasa C++ dan library OpenGL.
                                     </p>
                                 </div>
                             </div>
                             <div class="absolute right-0 top-0 bottom-0 w-full md:w-3/4 -z-10 mask-image-left">
-                                <img src="Resource/Solar System.png" class="w-full h-full object-cover mix-blend-screen opacity-30">
+                                <img src="Resource/Solar System.png"
+                                    class="w-full h-full object-cover mix-blend-screen opacity-30">
                             </div>
                         </div>
 
                         <!-- Project 7 -->
-                        <div id="proj-content-7" class="project-content absolute inset-0 flex transition-opacity duration-500 opacity-0 z-0 pointer-events-none">
+                        <div id="proj-content-7"
+                            class="project-content absolute inset-0 flex transition-opacity duration-500 opacity-0 z-0 pointer-events-none">
                             <div class="w-full md:w-3/5 p-8 md:p-12 flex flex-col justify-center z-20 h-full">
-                                <h4 class="terminal-title-anim text-3xl md:text-5xl font-[900] text-white uppercase tracking-[2px] leading-tight mb-4 flex gap-3">
+                                <h4
+                                    class="terminal-title-anim text-3xl md:text-5xl font-[900] text-white uppercase tracking-[2px] leading-tight mb-4 flex gap-3">
                                     <span class="text-[var(--text-muted)] opacity-50">[07]</span>
                                     <span data-i18n="proj7-title">Finance Shark AI</span>
                                 </h4>
-                                <div class="flex flex-wrap gap-4 mb-8 font-mono text-[10px] md:text-xs uppercase tracking-wider terminal-title-anim" style="animation-delay: 50ms;">
-                                    <div class="bg-[rgba(255,255,255,0.04)] border border-[#ffffff10] text-white flex rounded-sm overflow-hidden">
-                                        <span class="bg-[#FFC107] text-black px-3 py-1 font-bold">ROLE</span> 
+                                <div class="flex flex-wrap gap-4 mb-8 font-mono text-[10px] md:text-xs uppercase tracking-wider terminal-title-anim"
+                                    style="animation-delay: 50ms;">
+                                    <div
+                                        class="bg-[rgba(255,255,255,0.04)] border border-[#ffffff10] text-white flex rounded-sm overflow-hidden">
+                                        <span class="bg-[#FFC107] text-black px-3 py-1 font-bold">ROLE</span>
                                         <span class="px-4 py-1" data-i18n="proj7-sub">AI Developer</span>
                                     </div>
-                                    <div class="bg-[rgba(255,255,255,0.04)] border border-[#ffffff10] text-white flex rounded-sm overflow-hidden">
-                                        <span class="bg-[#FFC107] text-black px-3 py-1 font-bold">YEAR</span> 
+                                    <div
+                                        class="bg-[rgba(255,255,255,0.04)] border border-[#ffffff10] text-white flex rounded-sm overflow-hidden">
+                                        <span class="bg-[#FFC107] text-black px-3 py-1 font-bold">YEAR</span>
                                         <span class="px-4 py-1">2023</span>
                                     </div>
                                 </div>
-                                <div class="bg-[rgba(0,0,0,0.45)] backdrop-blur-[14px] border-l-[4px] border-[#FFC107] p-6 max-w-xl terminal-title-anim shadow-[0_10px_30px_rgba(0,0,0,0.5)]" style="animation-delay: 100ms;">
+                                <div class="bg-[rgba(0,0,0,0.45)] backdrop-blur-[14px] border-l-[4px] border-[#FFC107] p-6 max-w-xl terminal-title-anim shadow-[0_10px_30px_rgba(0,0,0,0.5)]"
+                                    style="animation-delay: 100ms;">
                                     <p data-i18n="proj7-desc" class="text-white leading-relaxed text-sm">
-                                        Membangun sistem asisten bot AI cerdas untuk memantau, menganalisis, dan memberikan notifikasi terkait data manajemen secara terotomatisasi.
+                                        Membangun sistem asisten bot AI cerdas untuk memantau, menganalisis, dan
+                                        memberikan notifikasi terkait data manajemen secara terotomatisasi.
                                     </p>
                                 </div>
                             </div>
                             <div class="absolute right-0 top-0 bottom-0 w-full md:w-3/4 -z-10 mask-image-left">
-                                <img src="Resource/Bot AI.png" class="w-full h-full object-cover mix-blend-screen opacity-30">
+                                <img src="Resource/Bot AI.png"
+                                    class="w-full h-full object-cover mix-blend-screen opacity-30">
                             </div>
                         </div>
 
                         <!-- Project 8 -->
-                        <div id="proj-content-8" class="project-content absolute inset-0 flex transition-opacity duration-500 opacity-0 z-0 pointer-events-none">
+                        <div id="proj-content-8"
+                            class="project-content absolute inset-0 flex transition-opacity duration-500 opacity-0 z-0 pointer-events-none">
                             <div class="w-full md:w-3/5 p-8 md:p-12 flex flex-col justify-center z-20 h-full">
-                                <h4 class="terminal-title-anim text-3xl md:text-5xl font-[900] text-white uppercase tracking-[2px] leading-tight mb-4 flex gap-3">
+                                <h4
+                                    class="terminal-title-anim text-3xl md:text-5xl font-[900] text-white uppercase tracking-[2px] leading-tight mb-4 flex gap-3">
                                     <span class="text-[var(--text-muted)] opacity-50">[08]</span>
                                     <span data-i18n="proj8-title">Warehouse Manager</span>
                                 </h4>
-                                <div class="flex flex-wrap gap-4 mb-8 font-mono text-[10px] md:text-xs uppercase tracking-wider terminal-title-anim" style="animation-delay: 50ms;">
-                                    <div class="bg-[rgba(255,255,255,0.04)] border border-[#ffffff10] text-white flex rounded-sm overflow-hidden">
-                                        <span class="bg-[#FFC107] text-black px-3 py-1 font-bold">ROLE</span> 
+                                <div class="flex flex-wrap gap-4 mb-8 font-mono text-[10px] md:text-xs uppercase tracking-wider terminal-title-anim"
+                                    style="animation-delay: 50ms;">
+                                    <div
+                                        class="bg-[rgba(255,255,255,0.04)] border border-[#ffffff10] text-white flex rounded-sm overflow-hidden">
+                                        <span class="bg-[#FFC107] text-black px-3 py-1 font-bold">ROLE</span>
                                         <span class="px-4 py-1" data-i18n="proj8-sub">Python Developer</span>
                                     </div>
-                                    <div class="bg-[rgba(255,255,255,0.04)] border border-[#ffffff10] text-white flex rounded-sm overflow-hidden">
-                                        <span class="bg-[#FFC107] text-black px-3 py-1 font-bold">YEAR</span> 
+                                    <div
+                                        class="bg-[rgba(255,255,255,0.04)] border border-[#ffffff10] text-white flex rounded-sm overflow-hidden">
+                                        <span class="bg-[#FFC107] text-black px-3 py-1 font-bold">YEAR</span>
                                         <span class="px-4 py-1">2022</span>
                                     </div>
                                 </div>
-                                <div class="bg-[rgba(0,0,0,0.45)] backdrop-blur-[14px] border-l-[4px] border-[#FFC107] p-6 max-w-xl terminal-title-anim shadow-[0_10px_30px_rgba(0,0,0,0.5)]" style="animation-delay: 100ms;">
+                                <div class="bg-[rgba(0,0,0,0.45)] backdrop-blur-[14px] border-l-[4px] border-[#FFC107] p-6 max-w-xl terminal-title-anim shadow-[0_10px_30px_rgba(0,0,0,0.5)]"
+                                    style="animation-delay: 100ms;">
                                     <p data-i18n="proj8-desc" class="text-white leading-relaxed text-sm">
-                                        Mengembangkan sistem manajemen gudang (Warehouse Management Application) berbasis Python untuk mengelola stok, inventaris, dan pencatatan barang secara efisien.
+                                        Mengembangkan sistem manajemen gudang (Warehouse Management Application)
+                                        berbasis Python untuk mengelola stok, inventaris, dan pencatatan barang secara
+                                        efisien.
                                     </p>
                                 </div>
                             </div>
                             <div class="absolute right-0 top-0 bottom-0 w-full md:w-3/4 -z-10 mask-image-left">
-                                <img src="Resource/Warehouse inventory management.png" class="w-full h-full object-cover mix-blend-screen opacity-30">
+                                <img src="Resource/Warehouse inventory management.png"
+                                    class="w-full h-full object-cover mix-blend-screen opacity-30">
                             </div>
                         </div>
                     </div>
                 </div>
-            </section>    </section>
+            </section>
+            </section>
 
             <section id="archives">
                 <div class="flex items-center gap-4 mb-10">
                     <h3 class="text-3xl font-bold uppercase tracking-wider text-white">
-                        <span data-i18n="sec-archives-1">Data</span> <span class="text-[var(--ellen-maroon)]" data-i18n="sec-archives-2">Archives</span>
+                        <span data-i18n="sec-archives-1">Data</span> <span class="text-[var(--ellen-maroon)]"
+                            data-i18n="sec-archives-2">Archives</span>
                     </h3>
                     <div class="flex-grow h-[1px] bg-gradient-to-r from-[var(--ellen-maroon)] to-transparent"></div>
                     <div class="text-xs font-mono text-[var(--text-muted)]">EDU.LOGS</div>
@@ -846,26 +1203,40 @@
 
                 <div class="relative pl-6 border-l-2 border-[#8e1b2e40] space-y-8">
                     <div class="relative group">
-                        <div class="timeline-dot group-hover:scale-125 group-hover:bg-[var(--neon-cyan)] group-hover:border-[var(--neon-cyan)] group-hover:shadow-[0_0_15px_#00e5ff] transition-all"></div>
+                        <div
+                            class="timeline-dot group-hover:scale-125 group-hover:bg-[var(--neon-cyan)] group-hover:border-[var(--neon-cyan)] group-hover:shadow-[0_0_15px_#00e5ff] transition-all">
+                        </div>
                         <div class="p-5 ak-cut ml-4 archive-item">
-                            <span data-i18n="edu1-tag" class="text-[var(--ellen-maroon)] text-sm font-mono font-bold block mb-1 group-hover:text-[var(--neon-cyan)] transition-colors">CURRENT STATUS</span>
-                            <h4 data-i18n="edu1-title" class="text-xl font-bold text-white">Universitas Ahmad Dahlan</h4>
-                            <p data-i18n="edu1-sub" class="text-[var(--text-muted)] group-hover:text-gray-300 transition-colors">Jurusan Informatika</p>
+                            <span data-i18n="edu1-tag"
+                                class="text-[var(--ellen-maroon)] text-sm font-mono font-bold block mb-1 group-hover:text-[var(--neon-cyan)] transition-colors">CURRENT
+                                STATUS</span>
+                            <h4 data-i18n="edu1-title" class="text-xl font-bold text-white">Universitas Ahmad Dahlan
+                            </h4>
+                            <p data-i18n="edu1-sub"
+                                class="text-[var(--text-muted)] group-hover:text-gray-300 transition-colors">Jurusan
+                                Informatika</p>
                         </div>
                     </div>
 
                     <div class="relative group">
-                        <div class="timeline-dot group-hover:scale-125 group-hover:bg-[var(--neon-cyan)] group-hover:border-[var(--neon-cyan)] group-hover:shadow-[0_0_15px_#00e5ff] transition-all"></div>
+                        <div
+                            class="timeline-dot group-hover:scale-125 group-hover:bg-[var(--neon-cyan)] group-hover:border-[var(--neon-cyan)] group-hover:shadow-[0_0_15px_#00e5ff] transition-all">
+                        </div>
                         <div class="p-5 ak-cut ml-4 archive-item">
-                            <span data-i18n="edu2-tag" class="text-[var(--ellen-maroon)] text-sm font-mono font-bold block mb-1 group-hover:text-[var(--neon-cyan)] transition-colors">SPECIAL TRAINING LOGS</span>
-                            <ul class="text-[var(--text-muted)] space-y-2 mt-2 group-hover:text-gray-300 transition-colors">
+                            <span data-i18n="edu2-tag"
+                                class="text-[var(--ellen-maroon)] text-sm font-mono font-bold block mb-1 group-hover:text-[var(--neon-cyan)] transition-colors">SPECIAL
+                                TRAINING LOGS</span>
+                            <ul
+                                class="text-[var(--text-muted)] space-y-2 mt-2 group-hover:text-gray-300 transition-colors">
                                 <li class="flex items-start gap-2">
-                                    <span class="text-[var(--ellen-light)] mt-1 drop-shadow-[0_0_3px_#d83a56]">▹</span> 
-                                    <span data-i18n="edu2-li1">Pelatihan Public Speaking HMIF - <strong class="text-white">Predikat: The Best Student</strong> (2024)</span>
+                                    <span class="text-[var(--ellen-light)] mt-1 drop-shadow-[0_0_3px_#d83a56]">▹</span>
+                                    <span data-i18n="edu2-li1">Pelatihan Public Speaking HMIF - <strong
+                                            class="text-white">Predikat: The Best Student</strong> (2024)</span>
                                 </li>
                                 <li class="flex items-start gap-2">
-                                    <span class="text-[var(--ellen-light)] mt-1 drop-shadow-[0_0_3px_#d83a56]">▹</span> 
-                                    <span data-i18n="edu2-li2">Pelatihan Bahasa Inggris - Mr. Language Pare (2023)</span>
+                                    <span class="text-[var(--ellen-light)] mt-1 drop-shadow-[0_0_3px_#d83a56]">▹</span>
+                                    <span data-i18n="edu2-li2">Pelatihan Bahasa Inggris - Mr. Language Pare
+                                        (2023)</span>
                                 </li>
                             </ul>
                         </div>
@@ -878,15 +1249,19 @@
         <!-- Modal System Disabled: Replaced by Endfield-Style Inline Tabs -->
 
         <!-- Footer -->
-        <footer class="w-full border-t border-[#8e1b2e40] bg-[#030102] py-8 text-center text-xs text-[var(--text-muted)] font-mono mt-auto z-10 relative">
+        <footer
+            class="w-full border-t border-[#8e1b2e40] bg-[#030102] py-8 text-center text-xs text-[var(--text-muted)] font-mono mt-auto z-10 relative">
             <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center px-6">
                 <p data-i18n="footer-copy">© 2026 OCEADRA OS. ALL RIGHTS RESERVED. // YOGYAKARTA, ID.</p>
                 <div class="flex gap-4 mt-4 md:mt-0">
-                    <a href="https://github.com/OurinEdnes/" target="_blank" class="hover:text-[var(--ellen-light)] transition-colors hover:drop-shadow-[0_0_5px_#d83a56]">GITHUB</a>
+                    <a href="https://github.com/OurinEdnes/" target="_blank"
+                        class="hover:text-[var(--ellen-light)] transition-colors hover:drop-shadow-[0_0_5px_#d83a56]">GITHUB</a>
                     <span class="text-[var(--ellen-maroon)]">|</span>
-                    <a href="mailto:Banunajieh@gmail.com" class="hover:text-[var(--ellen-light)] transition-colors hover:drop-shadow-[0_0_5px_#d83a56]">EMAIL</a>
+                    <a href="mailto:Banunajieh@gmail.com"
+                        class="hover:text-[var(--ellen-light)] transition-colors hover:drop-shadow-[0_0_5px_#d83a56]">EMAIL</a>
                     <span class="text-[var(--ellen-maroon)]">|</span>
-                    <span class="hover:text-[var(--neon-cyan)] transition-colors drop-shadow-[0_0_2px_#00e5ff]">+62 859 6591-1133</span>
+                    <span class="hover:text-[var(--neon-cyan)] transition-colors drop-shadow-[0_0_2px_#00e5ff]">+62 859
+                        6591-1133</span>
                 </div>
             </div>
         </footer>
@@ -898,21 +1273,21 @@
         // ==========================================
         function scrollNav(direction) {
             const container = document.getElementById('project-nav-container');
-            if(container) {
+            if (container) {
                 container.scrollBy({ top: direction * 100, behavior: 'smooth' });
             }
         }
 
         function switchProject(index) {
-            for(let i=1; i<=8; i++) {
+            for (let i = 1; i <= 8; i++) {
                 const btn = document.getElementById(`nav-btn-${i}`);
-                if(!btn) continue;
+                if (!btn) continue;
                 const ring = btn.querySelector('.nav-ring');
                 const img = btn.querySelector('img');
                 const ind = btn.querySelector('.terminal-indicator');
                 const decT = btn.querySelector('.terminal-active-decoration');
                 const decB = btn.querySelector('.terminal-active-decoration-bottom');
-                
+
                 // Dim non-active buttons
                 if (ring) {
                     ring.classList.replace('opacity-100', 'opacity-0');
@@ -925,25 +1300,25 @@
                 if (ind) ind.classList.remove('opacity-100', 'text-white', '!left-[-10px]');
                 if (decT) decT.classList.remove('opacity-100');
                 if (decB) decB.classList.remove('opacity-100');
-                
+
                 // Hide content
                 const content = document.getElementById(`proj-content-${i}`);
-                if(content) {
+                if (content) {
                     content.classList.replace('opacity-100', 'opacity-0');
                     content.classList.replace('pointer-events-auto', 'pointer-events-none');
                     content.classList.replace('z-10', 'z-0');
                 }
             }
-            
+
             // Activate selected button
             const activeBtn = document.getElementById(`nav-btn-${index}`);
-            if(activeBtn) {
+            if (activeBtn) {
                 const ring = activeBtn.querySelector('.nav-ring');
                 const img = activeBtn.querySelector('img');
                 const ind = activeBtn.querySelector('.terminal-indicator');
                 const decT = activeBtn.querySelector('.terminal-active-decoration');
                 const decB = activeBtn.querySelector('.terminal-active-decoration-bottom');
-                
+
                 if (ring) {
                     ring.classList.replace('opacity-0', 'opacity-100');
                     ring.classList.replace('scale-75', 'scale-100');
@@ -956,10 +1331,10 @@
                 if (decT) decT.classList.add('opacity-100');
                 if (decB) decB.classList.add('opacity-100');
             }
-            
+
             // Show selected content
             const activeContent = document.getElementById(`proj-content-${index}`);
-            if(activeContent) {
+            if (activeContent) {
                 activeContent.classList.replace('opacity-0', 'opacity-100');
                 activeContent.classList.replace('pointer-events-none', 'pointer-events-auto');
                 activeContent.classList.replace('z-0', 'z-10');
@@ -1171,7 +1546,7 @@
 
             if (lineIndex < bootSequence.length) {
                 const currentLine = bootSequence[lineIndex];
-                
+
                 if (charIndex < currentLine.length) {
                     activeTyping.innerHTML += currentLine.charAt(charIndex);
                     charIndex++;
@@ -1181,11 +1556,11 @@
                     div.className = 'terminal-line';
                     div.innerHTML = activeTyping.innerHTML;
                     terminalContent.appendChild(div);
-                    
+
                     activeTyping.innerHTML = '';
                     charIndex = 0;
                     lineIndex++;
-                    
+
                     setTimeout(typeLine, Math.random() * 150 + 50);
                 }
             } else {
@@ -1194,19 +1569,19 @@
         }
 
         function endBoot() {
-            if(!isBooting) return;
+            if (!isBooting) return;
             isBooting = false;
             bootScreen.style.opacity = '0';
             setTimeout(() => {
                 bootScreen.style.display = 'none';
                 mainUI.style.visibility = 'visible';
                 mainUI.style.opacity = '1';
-                initThreeJS(); 
+                initThreeJS();
             }, 800);
         }
 
         function skipBoot() {
-            if(isBooting) endBoot();
+            if (isBooting) endBoot();
         }
 
         window.onload = () => {
@@ -1222,29 +1597,29 @@
         function initSmoothScroll() {
             // Ambil semua navbar links dengan href # 
             const navLinks = document.querySelectorAll('nav a[href*="#"]');
-            
+
             navLinks.forEach(link => {
-                link.addEventListener('click', function(e) {
+                link.addEventListener('click', function (e) {
                     const href = this.getAttribute('href');
                     // Hanya prevent default jika ada hash
                     if (href.startsWith('#')) {
                         e.preventDefault();
-                        
+
                         const targetId = href.substring(1); // hapus # dari awal
                         const targetElement = document.getElementById(targetId);
-                        
+
                         if (targetElement) {
                             // Hitung posisi target dengan offset untuk sticky header
                             const headerHeight = 90; // sesuai scroll-padding-top
                             const targetPosition = targetElement.getBoundingClientRect().top + window.scrollY - headerHeight;
-                            
+
                             // Gunakan window.scrollTo dengan smooth behavior
                             window.scrollTo({
                                 top: targetPosition,
                                 behavior: 'smooth',
                                 duration: 1000
                             });
-                            
+
                             // Highlight effect pada navbar
                             navLinks.forEach(l => l.style.opacity = '0.6');
                             this.style.opacity = '1';
@@ -1262,11 +1637,11 @@
         function initThreeJS() {
             const container = document.getElementById('canvas-container');
             const ellenModel = document.getElementById('ellen-model');
-            if(!container) return;
-            
+            if (!container) return;
+
             const scene = new THREE.Scene();
             const camera = new THREE.PerspectiveCamera(45, container.clientWidth / container.clientHeight, 0.1, 1000);
-            camera.position.z = 5; 
+            camera.position.z = 5;
 
             const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
             renderer.setSize(container.clientWidth, container.clientHeight);
@@ -1292,7 +1667,7 @@
             // MODEL 1: UAV (REAPER STYLE) - PROCEDURAL (Three.js)
             // =====================================
             const uavGroup = new THREE.Group();
-            
+
             // Badan Utama Pesawat
             const bodyGeo = new THREE.CylinderGeometry(0.15, 0.1, 2.5, 16);
             const body = createMeshPart(bodyGeo, innerMat, outerMat, 1.05);
@@ -1348,8 +1723,8 @@
             uavGroup.add(propGroup);
 
             uavGroup.userData.propeller = propGroup;
-            uavGroup.rotation.y = Math.PI / 4; 
-            uavGroup.rotation.z = Math.PI / 12; 
+            uavGroup.rotation.y = Math.PI / 4;
+            uavGroup.rotation.z = Math.PI / 12;
 
             coreGroup.add(uavGroup);
             scene.add(coreGroup);
@@ -1369,7 +1744,7 @@
             // =====================================
             // LOGIKA TOMBOL GANTI MODEL (HYBRID)
             // =====================================
-            let currentModel = 'UAV'; 
+            let currentModel = 'UAV';
             const btnSwitch = document.getElementById('btn-switch-model');
 
             btnSwitch.addEventListener('click', () => {
@@ -1377,7 +1752,7 @@
                     // Sembunyikan Three.js (UAV), Tampilkan Model-Viewer (Ellen)
                     container.classList.add('hidden');
                     ellenModel.classList.remove('hidden');
-                    
+
                     currentModel = 'ELLEN';
                     btnSwitch.innerHTML = "SWITCH MODEL // ELLEN'S WEAPON";
                     btnSwitch.style.borderColor = "var(--ellen-light)";
@@ -1386,7 +1761,7 @@
                     // Sembunyikan Model-Viewer (Ellen), Tampilkan Three.js (UAV)
                     ellenModel.classList.add('hidden');
                     container.classList.remove('hidden');
-                    
+
                     currentModel = 'UAV';
                     btnSwitch.innerHTML = "SWITCH MODEL // REAPER UAV";
                     btnSwitch.style.borderColor = "var(--neon-cyan)";
@@ -1413,11 +1788,11 @@
                 previousMousePosition = { x: e.offsetX, y: e.offsetY };
             });
             window.addEventListener('mouseup', () => { isDragging = false; });
-            
+
             container.addEventListener('touchstart', (e) => {
                 isDragging = true;
                 previousMousePosition = { x: e.touches[0].clientX, y: e.touches[0].clientY };
-            }, {passive: true});
+            }, { passive: true });
             container.addEventListener('touchmove', (e) => {
                 if (isDragging) {
                     const deltaMove = {
@@ -1428,25 +1803,25 @@
                     coreGroup.rotation.x += deltaMove.y * 0.01;
                     previousMousePosition = { x: e.touches[0].clientX, y: e.touches[0].clientY };
                 }
-            }, {passive: true});
+            }, { passive: true });
             window.addEventListener('touchend', () => { isDragging = false; });
 
             function animate() {
                 requestAnimationFrame(animate);
-                
+
                 // Animasi UAV muter-muter aja, karena Ellen sekarang diurus sama <model-viewer>
                 if (!isDragging) {
                     uavGroup.rotation.y -= 0.005;
                 }
                 if (uavGroup.userData.propeller) {
-                    uavGroup.userData.propeller.rotation.x -= 0.2; 
+                    uavGroup.userData.propeller.rotation.x -= 0.2;
                 }
-                
+
                 renderer.render(scene, camera);
             }
 
             window.addEventListener('resize', () => {
-                if(container.clientWidth > 0) {
+                if (container.clientWidth > 0) {
                     camera.aspect = container.clientWidth / container.clientHeight;
                     camera.updateProjectionMatrix();
                     renderer.setSize(container.clientWidth, container.clientHeight);
@@ -1461,7 +1836,7 @@
         // ----------------------------------------------------
         const cursorCanvas = document.getElementById('cursor-canvas');
         const cursorCtx = cursorCanvas.getContext('2d');
-        
+
         let cw, ch;
         let cursorParticles = [];
         let mousePos = { x: -1000, y: -1000 };
@@ -1484,20 +1859,20 @@
         class CursorParticle {
             constructor(x, y) {
                 const angle = Math.random() * Math.PI * 2;
-                const radius = Math.random() * 30 + 15; 
+                const radius = Math.random() * 30 + 15;
                 this.x = x + Math.cos(angle) * radius;
                 this.y = y + Math.sin(angle) * radius;
-                
+
                 this.vx = Math.cos(angle) * (Math.random() * 0.2);
                 this.vy = Math.sin(angle) * (Math.random() * 0.2);
-                
+
                 this.size = Math.random() * 2 + 1;
                 this.color = particleColors[Math.floor(Math.random() * particleColors.length)];
                 this.life = 1;
                 this.decay = Math.random() * 0.01 + 0.005;
-                
-                this.maxOpacity = 0.5 - (radius / 100); 
-                if(this.maxOpacity < 0.05) this.maxOpacity = 0.05;
+
+                this.maxOpacity = 0.5 - (radius / 100);
+                if (this.maxOpacity < 0.05) this.maxOpacity = 0.05;
             }
 
             update() {
@@ -1518,17 +1893,17 @@
 
         function animateCursor() {
             cursorCtx.clearRect(0, 0, cw, ch);
-            
-            if(mousePos.x > 0 && mousePos.x < cw && mousePos.y > 0 && mousePos.y < ch) {
-                if(Math.random() > 0.4) { 
+
+            if (mousePos.x > 0 && mousePos.x < cw && mousePos.y > 0 && mousePos.y < ch) {
+                if (Math.random() > 0.4) {
                     cursorParticles.push(new CursorParticle(mousePos.x, mousePos.y));
                 }
             }
-            
-            for(let i = cursorParticles.length - 1; i >= 0; i--) {
+
+            for (let i = cursorParticles.length - 1; i >= 0; i--) {
                 let p = cursorParticles[i];
                 p.update();
-                if(p.life <= 0) {
+                if (p.life <= 0) {
                     cursorParticles.splice(i, 1);
                 } else {
                     p.draw();
@@ -1536,8 +1911,9 @@
             }
             requestAnimationFrame(animateCursor);
         }
-        
+
         animateCursor();
     </script>
 </body>
+
 </html>
