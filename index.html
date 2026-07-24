@@ -19,6 +19,7 @@
     <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.1.1/model-viewer.min.js"></script>
 
     <style>
+
         :root {
             --ellen-maroon: #8e1b2e;
             --ellen-light: #d83a56;
@@ -223,6 +224,63 @@
             mix-blend-mode: screen; 
         }
 
+        /* Endfield-style UI Utilities */
+        .mask-image-left {
+            mask-image: linear-gradient(to right, transparent 0%, black 40%, black 100%);
+            -webkit-mask-image: linear-gradient(to right, transparent 0%, black 40%, black 100%);
+        }
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        .clip-diagonal {
+            clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+        }
+
+        /* UAV Mission Terminal CSS Utilities */
+        .terminal-bg { background-color: #090A0F; }
+        .terminal-grid {
+            background-size: 30px 30px;
+            background-image: 
+                linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+        }
+        .terminal-noise {
+            background-image: url('data:image/svg+xml;utf8,%3Csvg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="noiseFilter"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="3" stitchTiles="stitch"/%3E%3C/filter%3E%3Crect width="100%25" height="100%25" filter="url(%23noiseFilter)"/%3E%3C/svg%3E');
+            opacity: 0.05; pointer-events: none; mix-blend-mode: overlay;
+        }
+        .terminal-scanline {
+            background: linear-gradient(to bottom, transparent 50%, rgba(0, 0, 0, 0.3) 51%);
+            background-size: 100% 4px; pointer-events: none;
+        }
+        .terminal-corner-tl { position: absolute; top: 20px; left: 20px; width: 60px; height: 60px; border-top: 2px solid rgba(255,255,255,0.2); border-left: 2px solid rgba(255,255,255,0.2); pointer-events: none; }
+        .terminal-corner-tr { position: absolute; top: 20px; right: 20px; width: 60px; height: 60px; border-top: 2px solid rgba(255,255,255,0.2); border-right: 2px solid rgba(255,255,255,0.2); pointer-events: none; }
+        .terminal-corner-bl { position: absolute; bottom: 20px; left: 20px; width: 60px; height: 60px; border-bottom: 2px solid rgba(255,255,255,0.2); border-left: 2px solid rgba(255,255,255,0.2); pointer-events: none; }
+        .terminal-corner-br { position: absolute; bottom: 20px; right: 20px; width: 60px; height: 60px; border-bottom: 2px solid rgba(255,255,255,0.2); border-right: 2px solid rgba(255,255,255,0.2); pointer-events: none; }
+        
+        .terminal-sidebar {
+            width: 110px; margin-top: 72px; margin-bottom: 72px; border-radius: 20px;
+            background: rgba(15, 15, 20, 0.75); backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+            animation: slideLeft 300ms ease-out forwards;
+        }
+        
+        .nav-btn-terminal { transition: all 180ms ease; }
+        .nav-btn-terminal:hover { transform: scale(1.08); }
+        .nav-btn-terminal:hover .nav-ring { opacity: 0.5; }
+        
+        .terminal-indicator { position: absolute; left: -14px; top: 50%; transform: translateY(-50%); color: #00D9FF; font-size: 14px; transition: opacity 180ms; opacity: 0;}
+        .terminal-active-decoration { position: absolute; top: -18px; left: 50%; transform: translateX(-50%); color: #00D9FF; font-size: 10px; letter-spacing: -1px; transition: opacity 180ms; white-space: nowrap; opacity: 0;}
+        .terminal-active-decoration-bottom { position: absolute; bottom: -18px; left: 50%; transform: translateX(-50%); color: #00D9FF; font-size: 10px; letter-spacing: -1px; transition: opacity 180ms; white-space: nowrap; opacity: 0;}
+        
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes slideLeft { from { opacity: 0; transform: translateX(-30px); } to { opacity: 1; transform: translateX(0); } }
+        .terminal-title-anim { animation: fadeUp 300ms ease-out forwards; }
+
+
         /* Language Toggle Dropdown CSS */
         .lang-dropdown {
             transform-origin: top;
@@ -236,6 +294,9 @@
     </style>
 </head>
 <body>
+
+    <!-- Cursor Canvas -->
+    <canvas id="cursor-canvas" class="fixed inset-0 pointer-events-none z-[10000]"></canvas>
 
     <div class="scanlines"></div>
 
@@ -303,7 +364,7 @@
                         Oceadra
                     </h2>
                     <p data-i18n="bio-text" class="text-[var(--text-muted)] text-lg max-w-lg leading-relaxed mt-4 bg-[#0a0a0e80] backdrop-blur-sm p-4 rounded-xl border-l-2 border-[var(--neon-cyan)] shadow-[0_4px_20px_rgba(0,229,255,0.05)]">
-                        Mahasiswa Informatika Universitas Ahmad Dahlan (UAD) yang bersemangat dan inovatif. Memiliki ketertarikan tinggi pada <span class="text-[var(--neon-cyan)] font-bold drop-shadow-[0_0_5px_#00e5ff]">Computer Vision</span> dan <span class="text-[var(--ellen-light)] font-bold drop-shadow-[0_0_5px_#d83a56]">Software Development</span>. Selalu antusias memecahkan masalah melalui barisan kode dan mengeksekusi *bugs* dengan presisi!
+                        Mahasiswa Informatika Universitas Ahmad Dahlan dengan spesialisasi <span class="text-[var(--neon-cyan)] font-bold drop-shadow-[0_0_5px_#00e5ff]">Computer Vision</span>, <span class="text-[var(--ellen-light)] font-bold drop-shadow-[0_0_5px_#d83a56]">Integrasi Hardware (IoT)</span>, dan <span class="text-[var(--neon-amber)] font-bold drop-shadow-[0_0_5px_#ffb703]">Rekayasa Perangkat Lunak</span>. Berpengalaman merancang sistem cerdas <i>real-time</i> dan mengintegrasikannya dengan perangkat keras terapan. Diakui memiliki kepemimpinan dan komunikasi publik yang kuat (The Best Student Public Speaking). Terbiasa memecahkan masalah teknis kompleks menjadi solusi inovatif.
                     </p>
                     
                     <!-- Quick Stats -->
@@ -409,66 +470,370 @@
                 </div>
             </section>
 
-            <!-- Combat Records / Experience Section -->
-            <section id="records">
-                <div class="flex items-center gap-4 mb-10">
-                    <h3 class="text-3xl font-bold uppercase tracking-wider text-white">
-                        <span data-i18n="sec-records-1">Combat</span> <span class="text-[var(--ellen-maroon)]" data-i18n="sec-records-2">Records</span>
-                    </h3>
-                    <div class="flex-grow h-[1px] bg-gradient-to-r from-[var(--ellen-maroon)] to-transparent"></div>
-                    <div class="text-xs font-mono text-[var(--text-muted)]">OP.EXPERIENCE</div>
+            <!-- Combat Records / Experience Section -            <!-- Combat Records / Experience Section -->
+            <section id="records" class="py-12">
+                <!-- Header -->
+                <div class="mb-4">
+                    <h3 class="text-3xl font-bold tracking-wider text-white uppercase">COMBAT RECORDS</h3>
+                    <div class="my-2 h-[2px] w-full bg-[#ffffff20] relative"></div>
+                    <div class="text-[10px] md:text-xs font-mono text-[var(--text-muted)] flex gap-4 mt-2">
+                        <span>MISSION LOG</span>
+                        <span>FILE : 002</span>
+                        <span>DATE : 2025</span>
+                        <span class="text-[#00D9FF]">STATUS : ONLINE</span>
+                    </div>
                 </div>
 
-                <div class="bg-[var(--bg-panel)] ak-cut-bottom p-1 mb-12 shadow-[0_10px_30px_-15px_#8e1b2e]">
-                    <div class="bg-[#050508] p-6 ak-cut-bottom border border-[#8e1b2e30]">
-                        <div class="flex flex-col lg:flex-row gap-8">
-                            <div class="w-full lg:w-3/5 relative group cursor-pointer">
-                                <div class="absolute -inset-1 bg-gradient-to-r from-[#d83a56] to-[#00e5ff] blur opacity-20 group-hover:opacity-60 transition duration-1000"></div>
-                                <div class="relative w-full aspect-video bg-black border border-[var(--ellen-maroon)] overflow-hidden">
-                                    <div class="absolute top-2 right-2 text-red-500 text-xs font-mono z-10 bg-black/50 px-2 py-1 border border-red-500 animate-pulse">REC ⏺</div>
-                                    <div class="absolute bottom-2 left-2 text-[var(--ellen-light)] text-xs font-mono z-10 drop-shadow-md">SYS.UAV_VISION_ACTIVE</div>
-                                    
-                                    <video class="w-full h-full object-cover" controls muted poster="https://placehold.co/1280x720/101014/8e1b2e?text=UAV+Object+Detection+Feed">
-                                        <source src="Resource/YoloV8 UAV.mp4" type="video/mp4">
-                                        Browser error. System failure.
-                                    </video>
+                <!-- Terminal Container -->
+                <div class="relative w-full h-[600px] md:h-[700px] terminal-bg overflow-hidden flex shadow-2xl border border-[#ffffff10] rounded-xl group">
+                    
+                    <!-- Background Layers -->
+                    <div class="absolute inset-0 terminal-grid z-0"></div>
+                    <div class="absolute inset-0 terminal-noise z-0"></div>
+                    
+                    <div class="terminal-corner-tl z-10"></div>
+                    <div class="terminal-corner-tr z-10"></div>
+                    <div class="terminal-corner-bl z-10"></div>
+                    <div class="terminal-corner-br z-10"></div>
+
+                    <!-- Ornaments -->
+                    <div class="absolute top-8 right-8 text-[var(--text-muted)] opacity-20 text-xs font-mono tracking-[4px] z-10 select-none text-right">
+                        MISSION REC // 01<br>+ /// ----
+                    </div>
+                    
+                    <!-- Left Navbar (Bubbles) -->
+                    <div class="terminal-sidebar z-20 flex flex-col items-center py-4 ml-6 mr-4 shrink-0 relative overflow-hidden">
+                        <!-- Decorations inside sidebar -->
+                        <div class="absolute left-3 top-0 bottom-0 w-[1px] bg-[#ffffff10]"></div>
+                        <div class="absolute inset-0 terminal-scanline opacity-10"></div>
+                        
+                        <!-- Up Arrow -->
+                        <button onclick="scrollNav(-1)" class="mb-4 w-8 h-8 md:w-10 md:h-10 flex items-center justify-center rounded-full bg-[#111115] shadow-[inset_2px_2px_5px_rgba(255,255,255,0.05),inset_-2px_-2px_5px_rgba(0,0,0,0.5)] border border-[#ffffff10] hover:bg-[#1a1a24] hover:shadow-[0_0_10px_#00D9FF] hover:-translate-y-1 active:translate-y-0 active:scale-90 transition-all duration-300 group shrink-0 relative z-10">
+                            <svg class="w-4 h-4 text-gray-400 group-hover:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 15l7-7 7 7"></path></svg>
+                        </button>
+                        
+                        <!-- Scrollable Nav Container -->
+                        <div id="project-nav-container" class="flex flex-col items-center gap-8 overflow-y-auto hide-scrollbar w-full px-2 scroll-smooth relative z-10" style="max-height: 420px;">
+                            <!-- Nav 1: UAV -->
+                            <button onclick="switchProject(1)" id="nav-btn-1" class="project-nav-btn relative w-14 h-14 md:w-16 md:h-16 rounded-full focus:outline-none nav-btn-terminal group shrink-0">
+                                <div class="terminal-indicator opacity-100">▌</div>
+                                <div class="terminal-active-decoration opacity-100">════════</div>
+                                <div class="terminal-active-decoration-bottom opacity-100">════════</div>
+                                <div class="nav-ring absolute inset-[-6px] rounded-full border border-[#00D9FF] transition-all duration-300 opacity-100 shadow-[0_0_15px_#00D9FF,inset_0_0_10px_#00D9FF]"></div>
+                                <div class="w-full h-full rounded-full p-[2px] bg-[#111115] shadow-[3px_3px_8px_#020203,-3px_-3px_8px_#1a1a24]">
+                                    <img src="Resource/Icon.jpg" class="w-full h-full object-cover rounded-full border border-[#00D9FF]">
+                                </div>
+                            </button>
+                            <!-- Nav 2: ARCS -->
+                            <button onclick="switchProject(2)" id="nav-btn-2" class="project-nav-btn relative w-14 h-14 md:w-16 md:h-16 rounded-full focus:outline-none nav-btn-terminal group shrink-0">
+                                <div class="terminal-indicator">▌</div>
+                                <div class="terminal-active-decoration">════════</div>
+                                <div class="terminal-active-decoration-bottom">════════</div>
+                                <div class="nav-ring absolute inset-[-6px] rounded-full border border-[#00D9FF] transition-all duration-300 opacity-0 shadow-[0_0_15px_#00D9FF,inset_0_0_10px_#00D9FF]"></div>
+                                <div class="w-full h-full rounded-full p-[2px] bg-[#111115] shadow-[3px_3px_8px_#020203,-3px_-3px_8px_#1a1a24]">
+                                    <img src="Resource/ARCS.png" class="w-full h-full object-cover rounded-full border border-[#333]">
+                                </div>
+                            </button>
+                            <!-- Nav 3: HCI -->
+                            <button onclick="switchProject(3)" id="nav-btn-3" class="project-nav-btn relative w-14 h-14 md:w-16 md:h-16 rounded-full focus:outline-none nav-btn-terminal group shrink-0">
+                                <div class="terminal-indicator">▌</div>
+                                <div class="terminal-active-decoration">════════</div>
+                                <div class="terminal-active-decoration-bottom">════════</div>
+                                <div class="nav-ring absolute inset-[-6px] rounded-full border border-[#00D9FF] transition-all duration-300 opacity-0 shadow-[0_0_15px_#00D9FF,inset_0_0_10px_#00D9FF]"></div>
+                                <div class="w-full h-full rounded-full p-[2px] bg-[#111115] shadow-[3px_3px_8px_#020203,-3px_-3px_8px_#1a1a24]">
+                                    <img src="Resource/HCI.png" class="w-full h-full object-cover rounded-full border border-[#333]">
+                                </div>
+                            </button>
+                            <!-- Nav 4: TypeShark -->
+                            <button onclick="switchProject(4)" id="nav-btn-4" class="project-nav-btn relative w-14 h-14 md:w-16 md:h-16 rounded-full focus:outline-none nav-btn-terminal group shrink-0">
+                                <div class="terminal-indicator">▌</div>
+                                <div class="terminal-active-decoration">════════</div>
+                                <div class="terminal-active-decoration-bottom">════════</div>
+                                <div class="nav-ring absolute inset-[-6px] rounded-full border border-[#00D9FF] transition-all duration-300 opacity-0 shadow-[0_0_15px_#00D9FF,inset_0_0_10px_#00D9FF]"></div>
+                                <div class="w-full h-full rounded-full p-[2px] bg-[#111115] shadow-[3px_3px_8px_#020203,-3px_-3px_8px_#1a1a24]">
+                                    <img src="Resource/Type Shark.png" class="w-full h-full object-cover rounded-full border border-[#333]">
+                                </div>
+                            </button>
+                            <!-- Nav 5: Smart Fincare -->
+                            <button onclick="switchProject(5)" id="nav-btn-5" class="project-nav-btn relative w-14 h-14 md:w-16 md:h-16 rounded-full focus:outline-none nav-btn-terminal group shrink-0">
+                                <div class="terminal-indicator">▌</div>
+                                <div class="terminal-active-decoration">════════</div>
+                                <div class="terminal-active-decoration-bottom">════════</div>
+                                <div class="nav-ring absolute inset-[-6px] rounded-full border border-[#00D9FF] transition-all duration-300 opacity-0 shadow-[0_0_15px_#00D9FF,inset_0_0_10px_#00D9FF]"></div>
+                                <div class="w-full h-full rounded-full p-[2px] bg-[#111115] shadow-[3px_3px_8px_#020203,-3px_-3px_8px_#1a1a24]">
+                                    <img src="Resource/Smart Fincare.png" class="w-full h-full object-cover rounded-full border border-[#333]">
+                                </div>
+                            </button>
+                            <!-- Nav 6: Solar System -->
+                            <button onclick="switchProject(6)" id="nav-btn-6" class="project-nav-btn relative w-14 h-14 md:w-16 md:h-16 rounded-full focus:outline-none nav-btn-terminal group shrink-0">
+                                <div class="terminal-indicator">▌</div>
+                                <div class="terminal-active-decoration">════════</div>
+                                <div class="terminal-active-decoration-bottom">════════</div>
+                                <div class="nav-ring absolute inset-[-6px] rounded-full border border-[#00D9FF] transition-all duration-300 opacity-0 shadow-[0_0_15px_#00D9FF,inset_0_0_10px_#00D9FF]"></div>
+                                <div class="w-full h-full rounded-full p-[2px] bg-[#111115] shadow-[3px_3px_8px_#020203,-3px_-3px_8px_#1a1a24]">
+                                    <img src="Resource/Solar System.png" class="w-full h-full object-cover rounded-full border border-[#333]">
+                                </div>
+                            </button>
+                            <!-- Nav 7: Finance Shark -->
+                            <button onclick="switchProject(7)" id="nav-btn-7" class="project-nav-btn relative w-14 h-14 md:w-16 md:h-16 rounded-full focus:outline-none nav-btn-terminal group shrink-0">
+                                <div class="terminal-indicator">▌</div>
+                                <div class="terminal-active-decoration">════════</div>
+                                <div class="terminal-active-decoration-bottom">════════</div>
+                                <div class="nav-ring absolute inset-[-6px] rounded-full border border-[#00D9FF] transition-all duration-300 opacity-0 shadow-[0_0_15px_#00D9FF,inset_0_0_10px_#00D9FF]"></div>
+                                <div class="w-full h-full rounded-full p-[2px] bg-[#111115] shadow-[3px_3px_8px_#020203,-3px_-3px_8px_#1a1a24]">
+                                    <img src="Resource/Bot AI.png" class="w-full h-full object-cover rounded-full border border-[#333]">
+                                </div>
+                            </button>
+                            <!-- Nav 8: Warehouse -->
+                            <button onclick="switchProject(8)" id="nav-btn-8" class="project-nav-btn relative w-14 h-14 md:w-16 md:h-16 rounded-full focus:outline-none nav-btn-terminal group shrink-0">
+                                <div class="terminal-indicator">▌</div>
+                                <div class="terminal-active-decoration">════════</div>
+                                <div class="terminal-active-decoration-bottom">════════</div>
+                                <div class="nav-ring absolute inset-[-6px] rounded-full border border-[#00D9FF] transition-all duration-300 opacity-0 shadow-[0_0_15px_#00D9FF,inset_0_0_10px_#00D9FF]"></div>
+                                <div class="w-full h-full rounded-full p-[2px] bg-[#111115] shadow-[3px_3px_8px_#020203,-3px_-3px_8px_#1a1a24]">
+                                    <img src="Resource/Warehouse inventory management.png" class="w-full h-full object-cover rounded-full border border-[#333]">
+                                </div>
+                            </button>
+                        </div>
+                        
+                        <!-- Down Arrow -->
+                        <button onclick="scrollNav(1)" class="mt-4 w-8 h-8 md:w-10 md:h-10 flex items-center justify-center rounded-full bg-[#111115] shadow-[inset_2px_2px_5px_rgba(255,255,255,0.05),inset_-2px_-2px_5px_rgba(0,0,0,0.5)] border border-[#ffffff10] hover:bg-[#1a1a24] hover:shadow-[0_0_10px_#00D9FF] hover:translate-y-1 active:translate-y-0 active:scale-90 transition-all duration-300 group shrink-0 relative z-10">
+                            <svg class="w-4 h-4 text-gray-400 group-hover:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M19 9l-7 7-7-7"></path></svg>
+                        </button>
+                    </div>
+
+                    <!-- Right Content Area -->
+                    <div class="flex-1 relative z-10 overflow-hidden bg-[rgba(9,10,15,0.85)]">
+                        <!-- Project 1 -->
+                        <div id="proj-content-1" class="project-content absolute inset-0 flex transition-opacity duration-500 opacity-100 z-10 pointer-events-auto">
+                            <!-- Info Left -->
+                            <div class="w-full md:w-3/5 p-8 md:p-12 flex flex-col justify-center z-20 h-full">
+                                <h4 class="terminal-title-anim text-3xl md:text-5xl font-[900] text-white uppercase tracking-[2px] leading-tight mb-4 flex gap-3">
+                                    <span class="text-[var(--text-muted)] opacity-50">[01]</span>
+                                    <span data-i18n="proj1-title">Integrasi Jaringan & Komunikasi UAV</span>
+                                </h4>
+                                <div class="flex flex-wrap gap-4 mb-8 font-mono text-[10px] md:text-xs uppercase tracking-wider terminal-title-anim" style="animation-delay: 50ms;">
+                                    <div class="bg-[rgba(255,255,255,0.04)] border border-[#ffffff10] text-white flex rounded-sm overflow-hidden">
+                                        <span class="bg-[#FFC107] text-black px-3 py-1 font-bold">ROLE</span> 
+                                        <span class="px-4 py-1" data-i18n="proj1-sub">Tim Universitas - KRTI</span>
+                                    </div>
+                                    <div class="bg-[rgba(255,255,255,0.04)] border border-[#ffffff10] text-white flex rounded-sm overflow-hidden">
+                                        <span class="bg-[#FFC107] text-black px-3 py-1 font-bold">YEAR</span> 
+                                        <span class="px-4 py-1">2025</span>
+                                    </div>
+                                </div>
+                                <div class="bg-[rgba(0,0,0,0.45)] backdrop-blur-[14px] border-l-[4px] border-[#FFC107] p-6 max-w-xl terminal-title-anim shadow-[0_10px_30px_rgba(0,0,0,0.5)]" style="animation-delay: 100ms;">
+                                    <p data-i18n="proj1-desc" class="text-white leading-relaxed text-sm">
+                                        Bertanggung jawab penuh atas konfigurasi, manajemen jaringan, dan konektivitas pada perangkat Raspberry Pi di wahana udara nirawak (UAV). Mengamankan integrasi data dan memastikan transmisi komunikasi stabil secara *real-time* antara sistem robot terbang dan stasiun kendali darat.
+                                    </p>
                                 </div>
                             </div>
+                            <!-- Image Right -->
+                            <div class="absolute right-0 top-0 bottom-0 w-full md:w-3/4 -z-10 mask-image-left">
+                                <video class="w-full h-full object-cover mix-blend-screen opacity-50" autoplay loop muted poster="Resource/Icon.jpg">
+                                    <source src="Resource/YoloV8 UAV.mp4" type="video/mp4">
+                                </video>
+                            </div>
+                        </div>
 
-                            <div class="w-full lg:w-2/5 flex flex-col justify-center">
-                                <div data-i18n="proj1-tag" class="inline-block bg-[var(--ellen-maroon)] text-white text-xs font-bold px-2 py-1 mb-4 w-max ak-cut font-mono shadow-[0_0_10px_#8e1b2e]">
-                                    [ 2025 ] // KRTI REGIONAL
+                        <!-- Project 2 -->
+                        <div id="proj-content-2" class="project-content absolute inset-0 flex transition-opacity duration-500 opacity-0 z-0 pointer-events-none">
+                            <div class="w-full md:w-3/5 p-8 md:p-12 flex flex-col justify-center z-20 h-full">
+                                <h4 class="terminal-title-anim text-3xl md:text-5xl font-[900] text-white uppercase tracking-[2px] leading-tight mb-4 flex gap-3">
+                                    <span class="text-[var(--text-muted)] opacity-50">[02]</span>
+                                    <span data-i18n="proj2-title">Proyek A.R.C.S</span>
+                                </h4>
+                                <div class="flex flex-wrap gap-4 mb-8 font-mono text-[10px] md:text-xs uppercase tracking-wider terminal-title-anim" style="animation-delay: 50ms;">
+                                    <div class="bg-[rgba(255,255,255,0.04)] border border-[#ffffff10] text-white flex rounded-sm overflow-hidden">
+                                        <span class="bg-[#FFC107] text-black px-3 py-1 font-bold">ROLE</span> 
+                                        <span class="px-4 py-1" data-i18n="proj2-sub">Software Developer</span>
+                                    </div>
+                                    <div class="bg-[rgba(255,255,255,0.04)] border border-[#ffffff10] text-white flex rounded-sm overflow-hidden">
+                                        <span class="bg-[#FFC107] text-black px-3 py-1 font-bold">YEAR</span> 
+                                        <span class="px-4 py-1">2025</span>
+                                    </div>
                                 </div>
-                                <h4 data-i18n="proj1-title" class="text-2xl font-bold mb-2 text-white">UAV Network & Comms Integration</h4>
-                                <p data-i18n="proj1-sub" class="text-[var(--ellen-light)] text-sm mb-4 font-bold drop-shadow-[0_0_2px_#d83a56]">Tim Universitas - Kontes Robot Terbang Indonesia (KRTI)</p>
-                                <p data-i18n="proj1-desc" class="text-[var(--text-muted)] text-sm mb-6 leading-relaxed">
-                                    Bertanggung jawab penuh atas konfigurasi, manajemen jaringan, dan konektivitas pada perangkat Raspberry Pi di wahana udara nirawak (UAV). Mengamankan integrasi data dan memastikan transmisi komunikasi stabil secara *real-time* antara sistem robot terbang dan stasiun kendali darat.
-                                </p>
+                                <div class="bg-[rgba(0,0,0,0.45)] backdrop-blur-[14px] border-l-[4px] border-[#FFC107] p-6 max-w-xl terminal-title-anim shadow-[0_10px_30px_rgba(0,0,0,0.5)]" style="animation-delay: 100ms;">
+                                    <p data-i18n="proj2-desc" class="text-white leading-relaxed text-sm">
+                                        Mengembangkan purwarupa perangkat lunak berbasis Java untuk mendukung operasi penyelamatan (SAR). Mengimplementasikan algoritma deteksi warna HSV dan pelacakan objek secara *real-time* menggunakan simulasi input kamera.
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="absolute right-0 top-0 bottom-0 w-full md:w-3/4 -z-10 mask-image-left">
+                                <img src="Resource/ARCS.png" class="w-full h-full object-cover mix-blend-screen opacity-30">
+                            </div>
+                        </div>
+
+                        <!-- Project 3 -->
+                        <div id="proj-content-3" class="project-content absolute inset-0 flex transition-opacity duration-500 opacity-0 z-0 pointer-events-none">
+                            <div class="w-full md:w-3/5 p-8 md:p-12 flex flex-col justify-center z-20 h-full">
+                                <h4 class="terminal-title-anim text-3xl md:text-5xl font-[900] text-white uppercase tracking-[2px] leading-tight mb-4 flex gap-3">
+                                    <span class="text-[var(--text-muted)] opacity-50">[03]</span>
+                                    <span data-i18n="proj3-title">HCI Hand-Landmark System</span>
+                                </h4>
+                                <div class="flex flex-wrap gap-4 mb-8 font-mono text-[10px] md:text-xs uppercase tracking-wider terminal-title-anim" style="animation-delay: 50ms;">
+                                    <div class="bg-[rgba(255,255,255,0.04)] border border-[#ffffff10] text-white flex rounded-sm overflow-hidden">
+                                        <span class="bg-[#FFC107] text-black px-3 py-1 font-bold">ROLE</span> 
+                                        <span class="px-4 py-1" data-i18n="proj3-sub">Software Developer</span>
+                                    </div>
+                                    <div class="bg-[rgba(255,255,255,0.04)] border border-[#ffffff10] text-white flex rounded-sm overflow-hidden">
+                                        <span class="bg-[#FFC107] text-black px-3 py-1 font-bold">YEAR</span> 
+                                        <span class="px-4 py-1">2026 - Present</span>
+                                    </div>
+                                </div>
+                                <div class="bg-[rgba(0,0,0,0.45)] backdrop-blur-[14px] border-l-[4px] border-[#FFC107] p-6 max-w-xl terminal-title-anim shadow-[0_10px_30px_rgba(0,0,0,0.5)]" style="animation-delay: 100ms;">
+                                    <p data-i18n="proj3-desc" class="text-white leading-relaxed text-sm">
+                                        Merancang sistem interaksi manusia-komputer berbasis pengenalan gerakan tangan. Mengimplementasikan arsitektur MediaPipe untuk mendeteksi *hand-landmark* akurat guna optimasi kontrol kursor dan *virtual keyboard*.
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="absolute right-0 top-0 bottom-0 w-full md:w-3/4 -z-10 mask-image-left">
+                                <img src="Resource/HCI.png" class="w-full h-full object-cover mix-blend-screen opacity-30">
+                            </div>
+                        </div>
+
+                        <!-- Project 4 -->
+                        <div id="proj-content-4" class="project-content absolute inset-0 flex transition-opacity duration-500 opacity-0 z-0 pointer-events-none">
+                            <div class="w-full md:w-3/5 p-8 md:p-12 flex flex-col justify-center z-20 h-full">
+                                <h4 class="terminal-title-anim text-3xl md:text-5xl font-[900] text-white uppercase tracking-[2px] leading-tight mb-4 flex gap-3">
+                                    <span class="text-[var(--text-muted)] opacity-50">[04]</span>
+                                    <span data-i18n="proj4-title">TypeShark Application</span>
+                                </h4>
+                                <div class="flex flex-wrap gap-4 mb-8 font-mono text-[10px] md:text-xs uppercase tracking-wider terminal-title-anim" style="animation-delay: 50ms;">
+                                    <div class="bg-[rgba(255,255,255,0.04)] border border-[#ffffff10] text-white flex rounded-sm overflow-hidden">
+                                        <span class="bg-[#FFC107] text-black px-3 py-1 font-bold">ROLE</span> 
+                                        <span class="px-4 py-1" data-i18n="proj4-sub">Software Developer</span>
+                                    </div>
+                                    <div class="bg-[rgba(255,255,255,0.04)] border border-[#ffffff10] text-white flex rounded-sm overflow-hidden">
+                                        <span class="bg-[#FFC107] text-black px-3 py-1 font-bold">YEAR</span> 
+                                        <span class="px-4 py-1">2024</span>
+                                    </div>
+                                </div>
+                                <div class="bg-[rgba(0,0,0,0.45)] backdrop-blur-[14px] border-l-[4px] border-[#FFC107] p-6 max-w-xl terminal-title-anim shadow-[0_10px_30px_rgba(0,0,0,0.5)]" style="animation-delay: 100ms;">
+                                    <p data-i18n="proj4-desc" class="text-white leading-relaxed text-sm">
+                                        Mengembangkan aplikasi desktop tutor mengetik yang bebas distraksi menggunakan framework Electron, JavaScript, HTML, dan CSS. Mengimplementasikan pelacakan statistik real-time seperti WPM dan akurasi.
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="absolute right-0 top-0 bottom-0 w-full md:w-3/4 -z-10 mask-image-left">
+                                <img src="Resource/Type Shark.png" class="w-full h-full object-cover mix-blend-screen opacity-30">
+                            </div>
+                        </div>
+
+                        <!-- Project 5 -->
+                        <div id="proj-content-5" class="project-content absolute inset-0 flex transition-opacity duration-500 opacity-0 z-0 pointer-events-none">
+                            <div class="w-full md:w-3/5 p-8 md:p-12 flex flex-col justify-center z-20 h-full">
+                                <h4 class="terminal-title-anim text-3xl md:text-5xl font-[900] text-white uppercase tracking-[2px] leading-tight mb-4 flex gap-3">
+                                    <span class="text-[var(--text-muted)] opacity-50">[05]</span>
+                                    <span data-i18n="proj5-title">UI/UX Smart Fincare</span>
+                                </h4>
+                                <div class="flex flex-wrap gap-4 mb-8 font-mono text-[10px] md:text-xs uppercase tracking-wider terminal-title-anim" style="animation-delay: 50ms;">
+                                    <div class="bg-[rgba(255,255,255,0.04)] border border-[#ffffff10] text-white flex rounded-sm overflow-hidden">
+                                        <span class="bg-[#FFC107] text-black px-3 py-1 font-bold">ROLE</span> 
+                                        <span class="px-4 py-1" data-i18n="proj5-sub">UI/UX Researcher</span>
+                                    </div>
+                                    <div class="bg-[rgba(255,255,255,0.04)] border border-[#ffffff10] text-white flex rounded-sm overflow-hidden">
+                                        <span class="bg-[#FFC107] text-black px-3 py-1 font-bold">YEAR</span> 
+                                        <span class="px-4 py-1">2024</span>
+                                    </div>
+                                </div>
+                                <div class="bg-[rgba(0,0,0,0.45)] backdrop-blur-[14px] border-l-[4px] border-[#FFC107] p-6 max-w-xl terminal-title-anim shadow-[0_10px_30px_rgba(0,0,0,0.5)]" style="animation-delay: 100ms;">
+                                    <p data-i18n="proj5-desc" class="text-white leading-relaxed text-sm">
+                                        Menyelesaikan riset pengguna dan perancangan UI/UX komprehensif untuk aplikasi manajemen keuangan Smart Fincare. Menghasilkan laporan evaluasi Sistem Usability Scale (SUS) dan dokumen pengujian fungsional.
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="absolute right-0 top-0 bottom-0 w-full md:w-3/4 -z-10 mask-image-left">
+                                <img src="Resource/Smart Fincare.png" class="w-full h-full object-cover mix-blend-screen opacity-30">
+                            </div>
+                        </div>
+
+                        <!-- Project 6 -->
+                        <div id="proj-content-6" class="project-content absolute inset-0 flex transition-opacity duration-500 opacity-0 z-0 pointer-events-none">
+                            <div class="w-full md:w-3/5 p-8 md:p-12 flex flex-col justify-center z-20 h-full">
+                                <h4 class="terminal-title-anim text-3xl md:text-5xl font-[900] text-white uppercase tracking-[2px] leading-tight mb-4 flex gap-3">
+                                    <span class="text-[var(--text-muted)] opacity-50">[06]</span>
+                                    <span data-i18n="proj6-title">Simulasi 3D Tata Surya</span>
+                                </h4>
+                                <div class="flex flex-wrap gap-4 mb-8 font-mono text-[10px] md:text-xs uppercase tracking-wider terminal-title-anim" style="animation-delay: 50ms;">
+                                    <div class="bg-[rgba(255,255,255,0.04)] border border-[#ffffff10] text-white flex rounded-sm overflow-hidden">
+                                        <span class="bg-[#FFC107] text-black px-3 py-1 font-bold">ROLE</span> 
+                                        <span class="px-4 py-1" data-i18n="proj6-sub">C++ OpenGL Dev</span>
+                                    </div>
+                                    <div class="bg-[rgba(255,255,255,0.04)] border border-[#ffffff10] text-white flex rounded-sm overflow-hidden">
+                                        <span class="bg-[#FFC107] text-black px-3 py-1 font-bold">YEAR</span> 
+                                        <span class="px-4 py-1">2023</span>
+                                    </div>
+                                </div>
+                                <div class="bg-[rgba(0,0,0,0.45)] backdrop-blur-[14px] border-l-[4px] border-[#FFC107] p-6 max-w-xl terminal-title-anim shadow-[0_10px_30px_rgba(0,0,0,0.5)]" style="animation-delay: 100ms;">
+                                    <p data-i18n="proj6-desc" class="text-white leading-relaxed text-sm">
+                                        Membangun proyek grafika komputer yang menyimulasikan pergerakan tata surya dan galaksi secara 3D menggunakan bahasa C++ dan library OpenGL.
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="absolute right-0 top-0 bottom-0 w-full md:w-3/4 -z-10 mask-image-left">
+                                <img src="Resource/Solar System.png" class="w-full h-full object-cover mix-blend-screen opacity-30">
+                            </div>
+                        </div>
+
+                        <!-- Project 7 -->
+                        <div id="proj-content-7" class="project-content absolute inset-0 flex transition-opacity duration-500 opacity-0 z-0 pointer-events-none">
+                            <div class="w-full md:w-3/5 p-8 md:p-12 flex flex-col justify-center z-20 h-full">
+                                <h4 class="terminal-title-anim text-3xl md:text-5xl font-[900] text-white uppercase tracking-[2px] leading-tight mb-4 flex gap-3">
+                                    <span class="text-[var(--text-muted)] opacity-50">[07]</span>
+                                    <span data-i18n="proj7-title">Finance Shark AI</span>
+                                </h4>
+                                <div class="flex flex-wrap gap-4 mb-8 font-mono text-[10px] md:text-xs uppercase tracking-wider terminal-title-anim" style="animation-delay: 50ms;">
+                                    <div class="bg-[rgba(255,255,255,0.04)] border border-[#ffffff10] text-white flex rounded-sm overflow-hidden">
+                                        <span class="bg-[#FFC107] text-black px-3 py-1 font-bold">ROLE</span> 
+                                        <span class="px-4 py-1" data-i18n="proj7-sub">AI Developer</span>
+                                    </div>
+                                    <div class="bg-[rgba(255,255,255,0.04)] border border-[#ffffff10] text-white flex rounded-sm overflow-hidden">
+                                        <span class="bg-[#FFC107] text-black px-3 py-1 font-bold">YEAR</span> 
+                                        <span class="px-4 py-1">2023</span>
+                                    </div>
+                                </div>
+                                <div class="bg-[rgba(0,0,0,0.45)] backdrop-blur-[14px] border-l-[4px] border-[#FFC107] p-6 max-w-xl terminal-title-anim shadow-[0_10px_30px_rgba(0,0,0,0.5)]" style="animation-delay: 100ms;">
+                                    <p data-i18n="proj7-desc" class="text-white leading-relaxed text-sm">
+                                        Membangun sistem asisten bot AI cerdas untuk memantau, menganalisis, dan memberikan notifikasi terkait data manajemen secara terotomatisasi.
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="absolute right-0 top-0 bottom-0 w-full md:w-3/4 -z-10 mask-image-left">
+                                <img src="Resource/Bot AI.png" class="w-full h-full object-cover mix-blend-screen opacity-30">
+                            </div>
+                        </div>
+
+                        <!-- Project 8 -->
+                        <div id="proj-content-8" class="project-content absolute inset-0 flex transition-opacity duration-500 opacity-0 z-0 pointer-events-none">
+                            <div class="w-full md:w-3/5 p-8 md:p-12 flex flex-col justify-center z-20 h-full">
+                                <h4 class="terminal-title-anim text-3xl md:text-5xl font-[900] text-white uppercase tracking-[2px] leading-tight mb-4 flex gap-3">
+                                    <span class="text-[var(--text-muted)] opacity-50">[08]</span>
+                                    <span data-i18n="proj8-title">Warehouse Manager</span>
+                                </h4>
+                                <div class="flex flex-wrap gap-4 mb-8 font-mono text-[10px] md:text-xs uppercase tracking-wider terminal-title-anim" style="animation-delay: 50ms;">
+                                    <div class="bg-[rgba(255,255,255,0.04)] border border-[#ffffff10] text-white flex rounded-sm overflow-hidden">
+                                        <span class="bg-[#FFC107] text-black px-3 py-1 font-bold">ROLE</span> 
+                                        <span class="px-4 py-1" data-i18n="proj8-sub">Python Developer</span>
+                                    </div>
+                                    <div class="bg-[rgba(255,255,255,0.04)] border border-[#ffffff10] text-white flex rounded-sm overflow-hidden">
+                                        <span class="bg-[#FFC107] text-black px-3 py-1 font-bold">YEAR</span> 
+                                        <span class="px-4 py-1">2022</span>
+                                    </div>
+                                </div>
+                                <div class="bg-[rgba(0,0,0,0.45)] backdrop-blur-[14px] border-l-[4px] border-[#FFC107] p-6 max-w-xl terminal-title-anim shadow-[0_10px_30px_rgba(0,0,0,0.5)]" style="animation-delay: 100ms;">
+                                    <p data-i18n="proj8-desc" class="text-white leading-relaxed text-sm">
+                                        Mengembangkan sistem manajemen gudang (Warehouse Management Application) berbasis Python untuk mengelola stok, inventaris, dan pencatatan barang secara efisien.
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="absolute right-0 top-0 bottom-0 w-full md:w-3/4 -z-10 mask-image-left">
+                                <img src="Resource/Warehouse inventory management.png" class="w-full h-full object-cover mix-blend-screen opacity-30">
                             </div>
                         </div>
                     </div>
                 </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    <div class="bg-[var(--bg-card)] p-6 ak-cut border-l-4 border-[var(--neon-cyan)] relative hover:bg-[#0a0a0e] transition-colors group">
-                        <div class="absolute top-0 right-0 bg-[#00e5ff20] text-[var(--neon-cyan)] text-xs px-2 py-1 font-mono group-hover:bg-[var(--neon-cyan)] group-hover:text-black transition-colors">2025</div>
-                        <h4 data-i18n="proj2-title" class="text-xl font-bold text-white mb-2 group-hover:text-[var(--neon-cyan)] transition-colors">Proyek A.R.C.S</h4>
-                        <p data-i18n="proj2-sub" class="text-[var(--ellen-light)] text-sm mb-4 font-mono">Software Developer (Aerial Rescue & Color Search)</p>
-                        <p data-i18n="proj2-desc" class="text-[var(--text-muted)] text-sm leading-relaxed">
-                            Mengembangkan purwarupa perangkat lunak berbasis Java untuk mendukung operasi penyelamatan (SAR). Mengimplementasikan algoritma deteksi warna HSV dan pelacakan objek secara *real-time* menggunakan simulasi input kamera.
-                        </p>
-                    </div>
-
-                    <div class="bg-[var(--bg-card)] p-6 ak-cut border-l-4 border-[var(--neon-amber)] relative hover:bg-[#0a0a0e] transition-colors group">
-                        <div class="absolute top-0 right-0 bg-[#ffb70320] text-[var(--neon-amber)] text-xs px-2 py-1 font-mono group-hover:bg-[var(--neon-amber)] group-hover:text-black transition-colors">2026 - PRESENT</div>
-                        <h4 data-i18n="proj3-title" class="text-xl font-bold text-white mb-2 group-hover:text-[var(--neon-amber)] transition-colors">HCI Hand-Landmark System</h4>
-                        <p data-i18n="proj3-sub" class="text-[var(--ellen-light)] text-sm mb-4 font-mono">Software Developer</p>
-                        <p data-i18n="proj3-desc" class="text-[var(--text-muted)] text-sm leading-relaxed">
-                            Merancang sistem interaksi manusia-komputer berbasis pengenalan gerakan tangan. Mengimplementasikan arsitektur MediaPipe untuk mendeteksi *hand-landmark* akurat guna optimasi kontrol kursor dan *virtual keyboard*.
-                        </p>
-                    </div>
-                </div>
-            </section>
+            </section>    </section>
 
             <section id="archives">
                 <div class="flex items-center gap-4 mb-10">
@@ -510,6 +875,8 @@
 
         </main>
 
+        <!-- Modal System Disabled: Replaced by Endfield-Style Inline Tabs -->
+
         <!-- Footer -->
         <footer class="w-full border-t border-[#8e1b2e40] bg-[#030102] py-8 text-center text-xs text-[var(--text-muted)] font-mono mt-auto z-10 relative">
             <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center px-6">
@@ -527,6 +894,79 @@
 
     <script>
         // ==========================================
+        // ENDFIELD STYLE TAB LOGIC
+        // ==========================================
+        function scrollNav(direction) {
+            const container = document.getElementById('project-nav-container');
+            if(container) {
+                container.scrollBy({ top: direction * 100, behavior: 'smooth' });
+            }
+        }
+
+        function switchProject(index) {
+            for(let i=1; i<=8; i++) {
+                const btn = document.getElementById(`nav-btn-${i}`);
+                if(!btn) continue;
+                const ring = btn.querySelector('.nav-ring');
+                const img = btn.querySelector('img');
+                const ind = btn.querySelector('.terminal-indicator');
+                const decT = btn.querySelector('.terminal-active-decoration');
+                const decB = btn.querySelector('.terminal-active-decoration-bottom');
+                
+                // Dim non-active buttons
+                if (ring) {
+                    ring.classList.replace('opacity-100', 'opacity-0');
+                    ring.classList.replace('scale-100', 'scale-75');
+                }
+                if (img) {
+                    img.classList.remove('border-[#00D9FF]');
+                    img.classList.add('border-[#333]');
+                }
+                if (ind) ind.classList.remove('opacity-100', 'text-white', '!left-[-10px]');
+                if (decT) decT.classList.remove('opacity-100');
+                if (decB) decB.classList.remove('opacity-100');
+                
+                // Hide content
+                const content = document.getElementById(`proj-content-${i}`);
+                if(content) {
+                    content.classList.replace('opacity-100', 'opacity-0');
+                    content.classList.replace('pointer-events-auto', 'pointer-events-none');
+                    content.classList.replace('z-10', 'z-0');
+                }
+            }
+            
+            // Activate selected button
+            const activeBtn = document.getElementById(`nav-btn-${index}`);
+            if(activeBtn) {
+                const ring = activeBtn.querySelector('.nav-ring');
+                const img = activeBtn.querySelector('img');
+                const ind = activeBtn.querySelector('.terminal-indicator');
+                const decT = activeBtn.querySelector('.terminal-active-decoration');
+                const decB = activeBtn.querySelector('.terminal-active-decoration-bottom');
+                
+                if (ring) {
+                    ring.classList.replace('opacity-0', 'opacity-100');
+                    ring.classList.replace('scale-75', 'scale-100');
+                }
+                if (img) {
+                    img.classList.remove('border-[#333]');
+                    img.classList.add('border-[#00D9FF]');
+                }
+                if (ind) ind.classList.add('opacity-100', 'text-white', '!left-[-10px]');
+                if (decT) decT.classList.add('opacity-100');
+                if (decB) decB.classList.add('opacity-100');
+            }
+            
+            // Show selected content
+            const activeContent = document.getElementById(`proj-content-${index}`);
+            if(activeContent) {
+                activeContent.classList.replace('opacity-0', 'opacity-100');
+                activeContent.classList.replace('pointer-events-none', 'pointer-events-auto');
+                activeContent.classList.replace('z-0', 'z-10');
+            }
+        }
+
+        // ==========================================
         // 0. MULTI-LANGUAGE DICTIONARY (AIKOO'S TRANSLATOR)
         // ==========================================
         const translations = {
@@ -536,7 +976,7 @@
                 "nav-records": "REKAM JEJAK",
                 "nav-archives": "ARSIP DATA",
                 "proxy-level": "TINGKAT PROXY: MAHASISWA INFORMATIKA",
-                "bio-text": "Mahasiswa Informatika Universitas Ahmad Dahlan (UAD) yang bersemangat dan inovatif. Memiliki ketertarikan tinggi pada <span class=\"text-[var(--accent-cyan)] font-bold drop-shadow-[0_0_5px_#00e5ff]\">Computer Vision</span> dan <span class=\"text-[var(--ellen-light)] font-bold drop-shadow-[0_0_5px_#d83a56]\">Software Development</span>. Selalu antusias memecahkan masalah melalui barisan kode dan mengeksekusi *bugs* dengan presisi!",
+                "bio-text": "Mahasiswa Informatika Universitas Ahmad Dahlan dengan spesialisasi <span class=\"text-[var(--neon-cyan)] font-bold drop-shadow-[0_0_5px_#00e5ff]\">Computer Vision</span>, <span class=\"text-[var(--ellen-light)] font-bold drop-shadow-[0_0_5px_#d83a56]\">Integrasi Hardware (IoT)</span>, dan <span class=\"text-[var(--neon-amber)] font-bold drop-shadow-[0_0_5px_#ffb703]\">Rekayasa Perangkat Lunak</span>. Berpengalaman merancang sistem cerdas <i>real-time</i> dan mengintegrasikannya dengan perangkat keras terapan. Diakui memiliki kepemimpinan dan komunikasi publik yang kuat (The Best Student Public Speaking). Terbiasa memecahkan masalah teknis kompleks menjadi solusi inovatif.",
                 "btn-github": "TAUTAN GITHUB",
                 "btn-contact": "HUBUNGI SAYA",
                 "3d-drag": "[ GESER UNTUK MEMUTAR ]",
@@ -558,6 +998,21 @@
                 "proj3-title": "Sistem Hand-Landmark HCI",
                 "proj3-sub": "Pengembang Perangkat Lunak",
                 "proj3-desc": "Merancang sistem interaksi manusia-komputer berbasis pengenalan gerakan tangan. Mengimplementasikan arsitektur MediaPipe untuk mendeteksi *hand-landmark* akurat guna optimasi kontrol kursor dan *virtual keyboard*.",
+                "proj4-title": "Aplikasi TypeShark",
+                "proj4-sub": "Pengembang Perangkat Lunak (Electron & Web)",
+                "proj4-desc": "Mengembangkan aplikasi desktop tutor mengetik yang bebas distraksi menggunakan framework Electron, JavaScript, HTML, dan CSS. Mengimplementasikan pelacakan statistik real-time seperti WPM (Words Per Minute) dan akurasi.",
+                "proj5-title": "UI/UX Smart Fincare",
+                "proj5-sub": "Peneliti & Desainer UI/UX",
+                "proj5-desc": "Menyelesaikan riset pengguna dan perancangan UI/UX komprehensif untuk aplikasi manajemen keuangan Smart Fincare. Menghasilkan laporan evaluasi Sistem Usability Scale (SUS) dan dokumen pengujian fungsional.",
+                "proj6-title": "Simulasi 3D Tata Surya",
+                "proj6-sub": "Pengembang C++ & OpenGL",
+                "proj6-desc": "Membangun proyek grafika komputer yang menyimulasikan pergerakan tata surya dan galaksi secara 3D menggunakan bahasa C++ dan library OpenGL.",
+                "proj7-title": "Finance Shark AI",
+                "proj7-sub": "AI Developer & Engineer",
+                "proj7-desc": "Membangun sistem asisten bot AI cerdas untuk memantau, menganalisis, dan memberikan notifikasi terkait data manajemen secara terotomatisasi.",
+                "proj8-title": "Warehouse Manager",
+                "proj8-sub": "Python Developer",
+                "proj8-desc": "Mengembangkan sistem manajemen gudang (Warehouse Management Application) berbasis Python untuk mengelola stok, inventaris, dan pencatatan barang secara efisien.",
                 "sec-archives-1": "Arsip",
                 "sec-archives-2": "Data",
                 "edu1-tag": "STATUS SAAT INI",
@@ -574,7 +1029,7 @@
                 "nav-records": "COMBAT RECORDS",
                 "nav-archives": "ARCHIVES",
                 "proxy-level": "PROXY LEVEL: INFORMATICS STUDENT",
-                "bio-text": "Passionate and innovative Informatics Student at Ahmad Dahlan University (UAD). Highly interested in <span class=\"text-[var(--accent-cyan)] font-bold drop-shadow-[0_0_5px_#00e5ff]\">Computer Vision</span> and <span class=\"text-[var(--ellen-light)] font-bold drop-shadow-[0_0_5px_#d83a56]\">Software Development</span>. Always enthusiastic about solving problems through lines of code and executing *bugs* with precision!",
+                "bio-text": "Informatics Student at Ahmad Dahlan University specializing in <span class=\"text-[var(--neon-cyan)] font-bold drop-shadow-[0_0_5px_#00e5ff]\">Computer Vision</span>, <span class=\"text-[var(--ellen-light)] font-bold drop-shadow-[0_0_5px_#d83a56]\">Hardware Integration (IoT)</span>, and <span class=\"text-[var(--neon-amber)] font-bold drop-shadow-[0_0_5px_#ffb703]\">Software Engineering</span>. Experienced in designing real-time intelligent systems and integrating them with applied hardware. Recognized for strong team leadership and public communication (The Best Student Public Speaking). Accustomed to translating complex technical problems into innovative solutions.",
                 "btn-github": "GITHUB LINK",
                 "btn-contact": "CONTACT ME",
                 "3d-drag": "[ DRAG TO ROTATE ]",
@@ -596,6 +1051,21 @@
                 "proj3-title": "HCI Hand-Landmark System",
                 "proj3-sub": "Software Developer",
                 "proj3-desc": "Designed a human-computer interaction system based on hand gesture recognition. Implemented the MediaPipe architecture to accurately detect hand-landmarks to optimize cursor control and virtual keyboards.",
+                "proj4-title": "TypeShark Application",
+                "proj4-sub": "Software Developer (Electron & Web)",
+                "proj4-desc": "Developed a distraction-free typing tutor desktop application using Electron framework, JavaScript, HTML, and CSS. Implemented real-time statistical tracking for WPM (Words Per Minute) and accuracy.",
+                "proj5-title": "Smart Fincare UI/UX",
+                "proj5-sub": "UI/UX Researcher & Designer",
+                "proj5-desc": "Completed user research and comprehensive UI/UX design for the Smart Fincare financial management app. Produced System Usability Scale (SUS) evaluation reports and functional testing documents.",
+                "proj6-title": "Solar System 3D Sim",
+                "proj6-sub": "C++ & OpenGL Developer",
+                "proj6-desc": "Built a computer graphics project simulating the 3D movement of the solar system and galaxy using C++ and the OpenGL library.",
+                "proj7-title": "Finance Shark AI",
+                "proj7-sub": "AI Developer & Engineer",
+                "proj7-desc": "Built an intelligent AI bot assistant system to monitor, analyze, and provide automated notifications regarding management data.",
+                "proj8-title": "Warehouse Manager",
+                "proj8-sub": "Python Developer",
+                "proj8-desc": "Developed a Python-based Warehouse Management System to efficiently manage stock, inventory, and item recording.",
                 "sec-archives-1": "Data",
                 "sec-archives-2": "Archives",
                 "edu1-tag": "CURRENT STATUS",
@@ -612,7 +1082,7 @@
                 "nav-records": "戦闘記録",
                 "nav-archives": "アーカイブ",
                 "proxy-level": "プロキシレベル：情報学の学生",
-                "bio-text": "アフマド・ダーラン大学（UAD）の情熱的で革新的な情報学の学生。<span class=\"text-[var(--accent-cyan)] font-bold drop-shadow-[0_0_5px_#00e5ff]\">コンピュータビジョン</span>と<span class=\"text-[var(--ellen-light)] font-bold drop-shadow-[0_0_5px_#d83a56]\">ソフトウェア開発</span>に強い関心を持っています。コードを通じて問題を解決し、バグを正確に排除することに常に熱意を持っています！",
+                "bio-text": "アフマド・ダーラン大学の情報学の学生であり、<span class=\"text-[var(--neon-cyan)] font-bold drop-shadow-[0_0_5px_#00e5ff]\">コンピュータビジョン</span>、<span class=\"text-[var(--ellen-light)] font-bold drop-shadow-[0_0_5px_#d83a56]\">ハードウェア統合（IoT）</span>、および<span class=\"text-[var(--neon-amber)] font-bold drop-shadow-[0_0_5px_#ffb703]\">ソフトウェアエンジニアリング</span>を専門としています。リアルタイムのインテリジェントシステムの設計と、応用ハードウェアとの統合に経験があります。強力なチームリーダーシップとパブリックコミュニケーション（The Best Student Public Speaking）で評価されています。複雑な技術的問題を革新的な解決策に変換することに慣れています。",
                 "btn-github": "GITHUB リンク",
                 "btn-contact": "連絡する",
                 "3d-drag": "[ ドラッグして回転 ]",
@@ -634,6 +1104,21 @@
                 "proj3-title": "HCI ハンドランドマークシステム",
                 "proj3-sub": "ソフトウェア開発者",
                 "proj3-desc": "手のジェスチャー認識に基づくヒューマンコンピュータインタラクションシステムを設計しました。MediaPipeアーキテクチャを実装してハンドランドマークを正確に検出し、カーソル制御と仮想キーボードを最適化しました。",
+                "proj4-title": "TypeShark アプリケーション",
+                "proj4-sub": "ソフトウェア開発者（Electron & Web）",
+                "proj4-desc": "Electronフレームワーク、JavaScript、HTML、CSSを使用して、気を散らさないタイピングチューターデスクトップアプリケーションを開発しました。WPM（1分あたりの単語数）や精度などのリアルタイムの統計追跡を実装しました。",
+                "proj5-title": "Smart Fincare UI/UX",
+                "proj5-sub": "UI/UX リサーチャー & デザイナー",
+                "proj5-desc": "財務管理アプリSmart Fincareのユーザー調査と包括的なUI/UXデザインを完了しました。System Usability Scale（SUS）評価レポートと機能テストドキュメントを作成しました。",
+                "proj6-title": "太陽系 3D シミュレーション",
+                "proj6-sub": "C++ & OpenGL 開発者",
+                "proj6-desc": "C++およびOpenGLライブラリを使用して、太陽系と銀河の3Dの動きをシミュレートするコンピュータグラフィックスプロジェクトを構築しました。",
+                "proj7-title": "Finance Shark AI",
+                "proj7-sub": "AI 開発者 & エンジニア",
+                "proj7-desc": "管理データに関する監視、分析、および自動通知を提供するインテリジェントなAIボットアシスタントシステムを構築しました。",
+                "proj8-title": "Warehouse Manager",
+                "proj8-sub": "Python 開発者",
+                "proj8-desc": "在庫、棚卸、およびアイテムの記録を効率的に管理するためのPythonベースの倉庫管理システムを開発しました。",
                 "sec-archives-1": "データ",
                 "sec-archives-2": "アーカイブ",
                 "edu1-tag": "現在のステータス",
@@ -726,7 +1211,48 @@
 
         window.onload = () => {
             setTimeout(typeLine, 300);
+            setTimeout(() => {
+                initSmoothScroll(); // Initialize smooth scroll untuk navbar links
+            }, 100);
         };
+
+        // ==========================================
+        // SMOOTH SCROLL EFFECT UNTUK NAVBAR LINKS
+        // ==========================================
+        function initSmoothScroll() {
+            // Ambil semua navbar links dengan href # 
+            const navLinks = document.querySelectorAll('nav a[href*="#"]');
+            
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    const href = this.getAttribute('href');
+                    // Hanya prevent default jika ada hash
+                    if (href.startsWith('#')) {
+                        e.preventDefault();
+                        
+                        const targetId = href.substring(1); // hapus # dari awal
+                        const targetElement = document.getElementById(targetId);
+                        
+                        if (targetElement) {
+                            // Hitung posisi target dengan offset untuk sticky header
+                            const headerHeight = 90; // sesuai scroll-padding-top
+                            const targetPosition = targetElement.getBoundingClientRect().top + window.scrollY - headerHeight;
+                            
+                            // Gunakan window.scrollTo dengan smooth behavior
+                            window.scrollTo({
+                                top: targetPosition,
+                                behavior: 'smooth',
+                                duration: 1000
+                            });
+                            
+                            // Highlight effect pada navbar
+                            navLinks.forEach(l => l.style.opacity = '0.6');
+                            this.style.opacity = '1';
+                        }
+                    }
+                });
+            });
+        }
 
 
         // ==========================================
@@ -929,6 +1455,89 @@
 
             animate();
         }
+
+        // ----------------------------------------------------
+        // CURSOR PARTICLE EFFECT (Antigravity-style)
+        // ----------------------------------------------------
+        const cursorCanvas = document.getElementById('cursor-canvas');
+        const cursorCtx = cursorCanvas.getContext('2d');
+        
+        let cw, ch;
+        let cursorParticles = [];
+        let mousePos = { x: -1000, y: -1000 };
+        const particleColors = ['#00e5ff', '#8e1b2e', '#d83a56', '#8b99af'];
+
+        function resizeCursorCanvas() {
+            cw = window.innerWidth;
+            ch = window.innerHeight;
+            cursorCanvas.width = cw;
+            cursorCanvas.height = ch;
+        }
+        window.addEventListener('resize', resizeCursorCanvas);
+        resizeCursorCanvas();
+
+        window.addEventListener('mousemove', (e) => {
+            mousePos.x = e.clientX;
+            mousePos.y = e.clientY;
+        });
+
+        class CursorParticle {
+            constructor(x, y) {
+                const angle = Math.random() * Math.PI * 2;
+                const radius = Math.random() * 30 + 15; 
+                this.x = x + Math.cos(angle) * radius;
+                this.y = y + Math.sin(angle) * radius;
+                
+                this.vx = Math.cos(angle) * (Math.random() * 0.2);
+                this.vy = Math.sin(angle) * (Math.random() * 0.2);
+                
+                this.size = Math.random() * 2 + 1;
+                this.color = particleColors[Math.floor(Math.random() * particleColors.length)];
+                this.life = 1;
+                this.decay = Math.random() * 0.01 + 0.005;
+                
+                this.maxOpacity = 0.5 - (radius / 100); 
+                if(this.maxOpacity < 0.05) this.maxOpacity = 0.05;
+            }
+
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
+                this.life -= this.decay;
+            }
+
+            draw() {
+                cursorCtx.beginPath();
+                cursorCtx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                cursorCtx.fillStyle = this.color;
+                cursorCtx.globalAlpha = Math.max(0, this.life * this.maxOpacity);
+                cursorCtx.fill();
+                cursorCtx.globalAlpha = 1;
+            }
+        }
+
+        function animateCursor() {
+            cursorCtx.clearRect(0, 0, cw, ch);
+            
+            if(mousePos.x > 0 && mousePos.x < cw && mousePos.y > 0 && mousePos.y < ch) {
+                if(Math.random() > 0.4) { 
+                    cursorParticles.push(new CursorParticle(mousePos.x, mousePos.y));
+                }
+            }
+            
+            for(let i = cursorParticles.length - 1; i >= 0; i--) {
+                let p = cursorParticles[i];
+                p.update();
+                if(p.life <= 0) {
+                    cursorParticles.splice(i, 1);
+                } else {
+                    p.draw();
+                }
+            }
+            requestAnimationFrame(animateCursor);
+        }
+        
+        animateCursor();
     </script>
 </body>
 </html>
