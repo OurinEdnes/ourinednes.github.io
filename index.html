@@ -691,13 +691,20 @@
                             <span class="tech-tag">MediaPipe</span>
                             <span class="tech-tag">OpenCV</span>
                             <span class="tech-tag">JavaCV</span>
+                            <span class="tech-tag">YOLOv8</span>
+                            <span class="tech-tag">YOLOv11</span>
+                            <span class="tech-tag">ONNX</span>
                         </div>
                     </div>
                     <div class="p-6 ak-cut arsenal-card" style="--neon-color: var(--neon-amber);">
                         <h4 data-i18n="card-hard" class="font-bold mb-4 font-mono text-sm border-b pb-2 card-title">02
                             // HARDWARE</h4>
                         <div class="flex flex-wrap gap-2">
-                            <span class="tech-tag">Raspberry Pi</span>
+                            <span class="tech-tag">Raspberry Pi 5</span>
+                            <span class="tech-tag">ESP32</span>
+                            <span class="tech-tag">LoRa</span>
+                            <span class="tech-tag">ExpressLRS</span>
+                            <span class="tech-tag">GStreamer</span>
                             <span class="tech-tag">Network Config</span>
                             <span class="tech-tag">Interfacing</span>
                             <span class="tech-tag">UAV Comms</span>
@@ -723,6 +730,15 @@
                             <span class="tech-tag">DaVinci Resolve</span>
                             <span class="tech-tag">Team Leadership</span>
                             <span class="tech-tag">Public Speaking</span>
+                        </div>
+                    </div>
+                    <div class="p-6 ak-cut arsenal-card" style="--neon-color: var(--neon-cyan);">
+                        <h4 data-i18n="card-net" class="font-bold mb-4 font-mono text-sm border-b pb-2 card-title">05
+                            // NETWORKING & MODELING</h4>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="tech-tag">Tailscale VPN</span>
+                            <span class="tech-tag">Cisco Packet Tracer</span>
+                            <span class="tech-tag">Astah UML</span>
                         </div>
                     </div>
                 </div>
@@ -902,6 +918,36 @@
                                         class="w-full h-full object-cover rounded-full border border-[#333]">
                                 </div>
                             </button>
+                            <!-- Nav 9: iFUTURE -->
+                            <button onclick="switchProject(9)" id="nav-btn-9"
+                                class="project-nav-btn relative w-14 h-14 md:w-16 md:h-16 rounded-full focus:outline-none nav-btn-terminal group shrink-0">
+                                <div class="terminal-indicator">▌</div>
+                                <div class="terminal-active-decoration">════════</div>
+                                <div class="terminal-active-decoration-bottom">════════</div>
+                                <div
+                                    class="nav-ring absolute inset-[-6px] rounded-full border border-[#00D9FF] transition-all duration-300 opacity-0 shadow-[0_0_15px_#00D9FF,inset_0_0_10px_#00D9FF]">
+                                </div>
+                                <div
+                                    class="w-full h-full rounded-full p-[2px] bg-[#111115] shadow-[3px_3px_8px_#020203,-3px_-3px_8px_#1a1a24]">
+                                    <img src="Resource/Ifuture Image.jpg"
+                                        class="w-full h-full object-cover rounded-full border border-[#333]">
+                                </div>
+                            </button>
+                            <!-- Nav 10: JuTISI -->
+                            <button onclick="switchProject(10)" id="nav-btn-10"
+                                class="project-nav-btn relative w-14 h-14 md:w-16 md:h-16 rounded-full focus:outline-none nav-btn-terminal group shrink-0">
+                                <div class="terminal-indicator">▌</div>
+                                <div class="terminal-active-decoration">════════</div>
+                                <div class="terminal-active-decoration-bottom">════════</div>
+                                <div
+                                    class="nav-ring absolute inset-[-6px] rounded-full border border-[#00D9FF] transition-all duration-300 opacity-0 shadow-[0_0_15px_#00D9FF,inset_0_0_10px_#00D9FF]">
+                                </div>
+                                <div
+                                    class="w-full h-full rounded-full p-[2px] bg-[#111115] shadow-[3px_3px_8px_#020203,-3px_-3px_8px_#1a1a24]">
+                                    <img src="Resource/Jutisi.jpg"
+                                        class="w-full h-full object-cover rounded-full border border-[#333]">
+                                </div>
+                            </button>
                         </div>
 
                         <!-- Down/Right Arrow -->
@@ -932,7 +978,7 @@
                                     <div
                                         class="bg-[rgba(255,255,255,0.04)] border border-[#ffffff10] text-white flex rounded-sm overflow-hidden">
                                         <span class="bg-[#FFC107] text-black px-3 py-1 font-bold">ROLE</span>
-                                        <span class="px-4 py-1" data-i18n="proj1-sub">Tim Universitas - KRTI</span>
+                                        <span class="px-4 py-1" data-i18n="proj1-sub">Tech Lead @ Djayanta UAV Team</span>
                                     </div>
                                     <div
                                         class="bg-[rgba(255,255,255,0.04)] border border-[#ffffff10] text-white flex rounded-sm overflow-hidden">
@@ -978,7 +1024,7 @@
                                     <div
                                         class="bg-[rgba(255,255,255,0.04)] border border-[#ffffff10] text-white flex rounded-sm overflow-hidden">
                                         <span class="bg-[#FFC107] text-black px-3 py-1 font-bold">YEAR</span>
-                                        <span class="px-4 py-1">2025</span>
+                                        <span class="px-4 py-1">Jan 2026</span>
                                     </div>
                                 </div>
                                 <div class="bg-[rgba(0,0,0,0.45)] backdrop-blur-[14px] border-l-[4px] border-[#FFC107] p-6 max-w-xl terminal-title-anim shadow-[0_10px_30px_rgba(0,0,0,0.5)]"
@@ -1215,6 +1261,82 @@
                                     class="w-full h-full object-cover mix-blend-screen opacity-30">
                             </div>
                         </div>
+
+                        <!-- Project 9 -->
+                        <div id="proj-content-9"
+                            class="project-content absolute inset-0 flex transition-opacity duration-500 opacity-0 z-0 pointer-events-none">
+                            <div class="w-full md:w-3/5 p-8 md:p-12 flex flex-col justify-center z-20 h-full">
+                                <h4
+                                    class="terminal-title-anim text-3xl md:text-5xl font-[900] text-white uppercase tracking-[2px] leading-tight mb-4 flex gap-3">
+                                    <span class="text-[var(--text-muted)] opacity-50">[09]</span>
+                                    <span data-i18n="proj9-title">iFUTURE 2026 Summit</span>
+                                </h4>
+                                <div class="flex flex-wrap gap-4 mb-8 font-mono text-[10px] md:text-xs uppercase tracking-wider terminal-title-anim"
+                                    style="animation-delay: 50ms;">
+                                    <div
+                                        class="bg-[rgba(255,255,255,0.04)] border border-[#ffffff10] text-white flex rounded-sm overflow-hidden">
+                                        <span class="bg-[#FFC107] text-black px-3 py-1 font-bold">ROLE</span>
+                                        <span class="px-4 py-1" data-i18n="proj9-sub">International Delegate</span>
+                                    </div>
+                                    <div
+                                        class="bg-[rgba(255,255,255,0.04)] border border-[#ffffff10] text-white flex rounded-sm overflow-hidden">
+                                        <span class="bg-[#FFC107] text-black px-3 py-1 font-bold">YEAR</span>
+                                        <span class="px-4 py-1">Oktober 2026</span>
+                                    </div>
+                                </div>
+                                <div class="bg-[rgba(0,0,0,0.45)] backdrop-blur-[14px] border-l-[4px] border-[#FFC107] p-6 max-w-xl terminal-title-anim shadow-[0_10px_30px_rgba(0,0,0,0.5)]"
+                                    style="animation-delay: 100ms;">
+                                    <p data-i18n="proj9-desc" class="text-white leading-relaxed text-sm">
+                                        Berpartisipasi sebagai delegasi internasional dalam International Young Future
+                                        Leaders Summit (iFUTURE 2026) di World Trade Centre (WTC) Kuala Lumpur,
+                                        sebuah sidang kemuncak kepemimpinan strategis global yang dianjurkan oleh Kementerian
+                                        Pendidikan Tinggi (KPT) Malaysia bersama Universiti Malaysia Pahang Al-Sultan Abdullah
+                                        (UMPSA) dan Yayasan Perkasa Siswa (YPS).
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="absolute right-0 top-0 bottom-0 w-full md:w-3/4 -z-10 mask-image-left">
+                                <img src="Resource/Ifuture Image.jpg"
+                                    class="w-full h-full object-cover mix-blend-screen opacity-30">
+                            </div>
+                        </div>
+
+                        <!-- Project 10 -->
+                        <div id="proj-content-10"
+                            class="project-content absolute inset-0 flex transition-opacity duration-500 opacity-0 z-0 pointer-events-none">
+                            <div class="w-full md:w-3/5 p-8 md:p-12 flex flex-col justify-center z-20 h-full">
+                                <h4
+                                    class="terminal-title-anim text-3xl md:text-5xl font-[900] text-white uppercase tracking-[2px] leading-tight mb-4 flex gap-3">
+                                    <span class="text-[var(--text-muted)] opacity-50">[10]</span>
+                                    <span data-i18n="proj10-title">Research Paper Submission (JuTISI)</span>
+                                </h4>
+                                <div class="flex flex-wrap gap-4 mb-8 font-mono text-[10px] md:text-xs uppercase tracking-wider terminal-title-anim"
+                                    style="animation-delay: 50ms;">
+                                    <div
+                                        class="bg-[rgba(255,255,255,0.04)] border border-[#ffffff10] text-white flex rounded-sm overflow-hidden">
+                                        <span class="bg-[#FFC107] text-black px-3 py-1 font-bold">ROLE</span>
+                                        <span class="px-4 py-1" data-i18n="proj10-sub">Researcher / Author</span>
+                                    </div>
+                                    <div
+                                        class="bg-[rgba(255,255,255,0.04)] border border-[#ffffff10] text-white flex rounded-sm overflow-hidden">
+                                        <span class="bg-[#FFC107] text-black px-3 py-1 font-bold">YEAR</span>
+                                        <span class="px-4 py-1">Oktober 2026</span>
+                                    </div>
+                                </div>
+                                <div class="bg-[rgba(0,0,0,0.45)] backdrop-blur-[14px] border-l-[4px] border-[#FFC107] p-6 max-w-xl terminal-title-anim shadow-[0_10px_30px_rgba(0,0,0,0.5)]"
+                                    style="animation-delay: 100ms;">
+                                    <p data-i18n="proj10-desc" class="text-white leading-relaxed text-sm">
+                                        Mengirimkan (submitted) makalah penelitian berjudul 'Pengembangan
+                                        Prototipe Sistem Deteksi Korban Bencana Air Berbasis Pengolahan Citra
+                                        Digital' ke Jurnal Teknik Informatika dan Sistem Informasi (JuTISI).
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="absolute right-0 top-0 bottom-0 w-full md:w-3/4 -z-10 mask-image-left">
+                                <img src="Resource/Jutisi.jpg"
+                                    class="w-full h-full object-cover mix-blend-screen opacity-30">
+                            </div>
+                        </div>
                     </div>
                 </div>
             </section>
@@ -1231,6 +1353,19 @@
                 </div>
 
                 <div class="relative pl-6 border-l-2 border-[#8e1b2e40] space-y-8">
+                    <div class="relative group">
+                        <div
+                            class="timeline-dot group-hover:scale-125 group-hover:bg-[var(--neon-cyan)] group-hover:border-[var(--neon-cyan)] group-hover:shadow-[0_0_15px_#00e5ff] transition-all">
+                        </div>
+                        <div class="p-5 ak-cut ml-4 archive-item">
+                            <span data-i18n="edu0-tag"
+                                class="text-[var(--ellen-maroon)] text-sm font-mono font-bold block mb-1 group-hover:text-[var(--neon-cyan)] transition-colors">AIMS (Asian International Mobility for Students) Exchange Scholar</span>
+                            <h4 data-i18n="edu0-title" class="text-xl font-bold text-white">Universiti Malaysia Pahang Al-Sultan Abdullah (UMPSA)</h4>
+                            <p data-i18n="edu0-sub"
+                                class="text-[var(--text-muted)] group-hover:text-gray-300 transition-colors">Bachelor of Computer Science (Software Engineering) // Fall 2026</p>
+                        </div>
+                    </div>
+
                     <div class="relative group">
                         <div
                             class="timeline-dot group-hover:scale-125 group-hover:bg-[var(--neon-cyan)] group-hover:border-[var(--neon-cyan)] group-hover:shadow-[0_0_15px_#00e5ff] transition-all">
@@ -1281,7 +1416,7 @@
         <footer
             class="w-full border-t border-[#8e1b2e40] bg-[#030102] py-8 text-center text-xs text-[var(--text-muted)] font-mono mt-auto z-10 relative">
             <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center px-6">
-                <p data-i18n="footer-copy">© 2026 OCEADRA OS. ALL RIGHTS RESERVED. // YOGYAKARTA, ID.</p>
+                <p data-i18n="footer-copy">© 2026 OCEADRA OS. ALL RIGHTS RESERVED. // YOGYAKARTA, ID. x PEKAN, MY.</p>
                 <div class="flex gap-4 mt-4 md:mt-0">
                     <a href="https://github.com/OurinEdnes/" target="_blank"
                         class="hover:text-[var(--ellen-light)] transition-colors hover:drop-shadow-[0_0_5px_#d83a56]">GITHUB</a>
@@ -1325,7 +1460,7 @@
         }
 
         function switchProject(index) {
-            for (let i = 1; i <= 8; i++) {
+            for (let i = 1; i <= 10; i++) {
                 const btn = document.getElementById(`nav-btn-${i}`);
                 if (!btn) continue;
                 const ring = btn.querySelector('.nav-ring');
@@ -1411,7 +1546,8 @@
                 "sec-records-2": "Tempur",
                 "proj1-tag": "[ 2025 ] // KONTES REGIONAL",
                 "proj1-title": "Integrasi Jaringan & Komunikasi UAV",
-                "proj1-sub": "Tim Universitas - Kontes Robot Terbang Indonesia (KRTI)",
+                "card-net": "05 // JARINGAN & PEMODELAN",
+                "proj1-sub": "Tech Lead @ Djayanta UAV Team",
                 "proj1-desc": "Bertanggung jawab penuh atas konfigurasi, manajemen jaringan, dan konektivitas pada perangkat Raspberry Pi di wahana udara nirawak (UAV). Mengamankan integrasi data dan memastikan transmisi komunikasi stabil secara *real-time* antara sistem robot terbang dan stasiun kendali darat.",
                 "proj2-title": "Proyek A.R.C.S",
                 "proj2-sub": "Pengembang Perangkat Lunak (Aerial Rescue & Color Search)",
@@ -1436,13 +1572,22 @@
                 "proj8-desc": "Mengembangkan sistem manajemen gudang (Warehouse Management Application) berbasis Python untuk mengelola stok, inventaris, dan pencatatan barang secara efisien.",
                 "sec-archives-1": "Arsip",
                 "sec-archives-2": "Data",
+                "proj9-title": "iFUTURE 2026 Summit",
+                "proj9-sub": "International Delegate",
+                "proj9-desc": "Berpartisipasi sebagai delegasi internasional dalam International Young Future Leaders Summit (iFUTURE 2026) di WTC Kuala Lumpur, program kepemimpinan strategis global anjuran Kementerian Pendidikan Tinggi (KPT) Malaysia bersama UMPSA dan Yayasan Perkasa Siswa (YPS).",
+                "proj10-title": "Research Paper Submission (JuTISI)",
+                "proj10-sub": "Researcher / Author",
+                "proj10-desc": "Mengirimkan (submitted) makalah penelitian berjudul 'Pengembangan Prototipe Sistem Deteksi Korban Bencana Air Berbasis Pengolahan Citra Digital' ke Jurnal Teknik Informatika dan Sistem Informasi (JuTISI).",
+                "edu0-tag": "AIMS (Asian International Mobility for Students) Exchange Scholar",
+                "edu0-title": "Universiti Malaysia Pahang Al-Sultan Abdullah (UMPSA)",
+                "edu0-sub": "Bachelor of Computer Science (Software Engineering) // Fall 2026",
                 "edu1-tag": "STATUS SAAT INI",
                 "edu1-title": "Universitas Ahmad Dahlan",
                 "edu1-sub": "Jurusan Informatika",
                 "edu2-tag": "CATATAN PELATIHAN KHUSUS",
                 "edu2-li1": "Pelatihan Public Speaking HMIF - <strong class=\"text-white\">Predikat: The Best Student</strong> (2024)",
                 "edu2-li2": "Pelatihan Bahasa Inggris - Mr. Language Pare (2023)",
-                "footer-copy": "© 2026 OCEADRA OS. SEMUA HAK CIPTA DILINDUNGI. // YOGYAKARTA, ID."
+                "footer-copy": "© 2026 OCEADRA OS. SEMUA HAK CIPTA DILINDUNGI. // YOGYAKARTA, ID. x PEKAN, MY."
             },
             en: {
                 "nav-overview": "OVERVIEW",
@@ -1464,7 +1609,8 @@
                 "sec-records-2": "Records",
                 "proj1-tag": "[ 2025 ] // REGIONAL CONTEST",
                 "proj1-title": "UAV Network & Comms Integration",
-                "proj1-sub": "University Team - Indonesia Flying Robot Contest (KRTI)",
+                "card-net": "05 // NETWORKING & MODELING",
+                "proj1-sub": "Tech Lead @ Djayanta UAV Team",
                 "proj1-desc": "Fully responsible for configuration, network management, and connectivity on Raspberry Pi devices for Unmanned Aerial Vehicles (UAVs). Secured data integration and ensured stable real-time communication transmission between the flying robot system and the ground control station.",
                 "proj2-title": "A.R.C.S Project",
                 "proj2-sub": "Software Developer (Aerial Rescue & Color Search)",
@@ -1489,13 +1635,22 @@
                 "proj8-desc": "Developed a Python-based Warehouse Management System to efficiently manage stock, inventory, and item recording.",
                 "sec-archives-1": "Data",
                 "sec-archives-2": "Archives",
+                "proj9-title": "iFUTURE 2026 Summit",
+                "proj9-sub": "International Delegate",
+                "proj9-desc": "Participated as an international delegate in the International Young Future Leaders Summit (iFUTURE 2026) at WTC Kuala Lumpur, a prestigious global youth leadership summit organized by the Ministry of Higher Education (KPT) Malaysia with UMPSA and Yayasan Perkasa Siswa (YPS).",
+                "proj10-title": "Research Paper Submission (JuTISI)",
+                "proj10-sub": "Researcher / Author",
+                "proj10-desc": "Submitted a research paper titled 'Pengembangan Prototipe Sistem Deteksi Korban Bencana Air Berbasis Pengolahan Citra Digital' to the Journal of Informatics Engineering and Information Systems (JuTISI).",
+                "edu0-tag": "AIMS (Asian International Mobility for Students) Exchange Scholar",
+                "edu0-title": "Universiti Malaysia Pahang Al-Sultan Abdullah (UMPSA)",
+                "edu0-sub": "Bachelor of Computer Science (Software Engineering) // Fall 2026",
                 "edu1-tag": "CURRENT STATUS",
                 "edu1-title": "Ahmad Dahlan University",
                 "edu1-sub": "Informatics Department",
                 "edu2-tag": "SPECIAL TRAINING LOGS",
                 "edu2-li1": "HMIF Public Speaking Training - <strong class=\"text-white\">Title: The Best Student</strong> (2024)",
                 "edu2-li2": "English Training - Mr. Language Pare (2023)",
-                "footer-copy": "© 2026 OCEADRA OS. ALL RIGHTS RESERVED. // YOGYAKARTA, ID."
+                "footer-copy": "© 2026 OCEADRA OS. ALL RIGHTS RESERVED. // YOGYAKARTA, ID. x PEKAN, MY."
             },
             ja: {
                 "nav-overview": "概要",
@@ -1517,7 +1672,8 @@
                 "sec-records-2": "記録",
                 "proj1-tag": "[ 2025 ] // 地方大会",
                 "proj1-title": "UAVネットワークと通信の統合",
-                "proj1-sub": "大学チーム - インドネシア飛行ロボットコンテスト (KRTI)",
+                "card-net": "05 // ネットワーク & モデリング",
+                "proj1-sub": "Tech Lead @ Djayanta UAV Team",
                 "proj1-desc": "無人航空機（UAV）用のRaspberry Piデバイスの構成、ネットワーク管理、および接続を完全に担当しました。データ統合を保護し、飛行ロボットシステムと地上管制ステーション間の安定したリアルタイム通信伝送を確保しました。",
                 "proj2-title": "A.R.C.S プロジェクト",
                 "proj2-sub": "ソフトウェア開発者（空中救助と色検索）",
@@ -1542,13 +1698,22 @@
                 "proj8-desc": "在庫、棚卸、およびアイテムの記録を効率的に管理するためのPythonベースの倉庫管理システムを開発しました。",
                 "sec-archives-1": "データ",
                 "sec-archives-2": "アーカイブ",
+                "proj9-title": "iFUTURE 2026 サミット",
+                "proj9-sub": "国際代表 / 参加者",
+                "proj9-desc": "マレーシア高等教育部（KPT）とUMPSA、ヤヤサン・プルカサ・シスワ（YPS）がクアラルンプールWTCで開催した国際青年リーダーサミット（iFUTURE 2026）に国際代表として参加しました。",
+                "proj10-title": "研究論文投稿 (JuTISI)",
+                "proj10-sub": "研究者 / 著者",
+                "proj10-desc": "情報工学・情報システムジャーナル（JuTISI）に研究論文『Pengembangan Prototipe Sistem Deteksi Korban Bencana Air Berbasis Pengolahan Citra Digital』を投稿しました。",
+                "edu0-tag": "AIMS 交換留学生",
+                "edu0-title": "マレーシア・パハン・アル・スルタン・アブドラ大学 (UMPSA)",
+                "edu0-sub": "コンピュータサイエンス学部（ソフトウェアエンジニアリング） // 2026年秋",
                 "edu1-tag": "現在のステータス",
                 "edu1-title": "アフマド・ダーラン大学",
                 "edu1-sub": "情報学部",
                 "edu2-tag": "特別訓練記録",
                 "edu2-li1": "HMIFパブリックスピーキングトレーニング - <strong class=\"text-white\">称号：最優秀学生</strong> (2024)",
                 "edu2-li2": "英語トレーニング - Mr. Language Pare (2023)",
-                "footer-copy": "© 2026 OCEADRA OS. 全著作権所有. // インドネシア、ジョグジャカルタ."
+                "footer-copy": "© 2026 OCEADRA OS. 全著作権所有. // YOGYAKARTA, ID. x PEKAN, MY."
             }
         };
 
